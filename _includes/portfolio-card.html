@@ -1,0 +1,72 @@
+{% include base_path %}
+
+{% assign project = include.post %}
+
+{% if project.link %}
+  {% assign project_href = project.link %}
+  {% assign project_is_external = project.link contains '://' %}
+{% else %}
+  {% assign project_href = project.url | prepend: base_path %}
+  {% assign project_is_external = false %}
+{% endif %}
+
+<article class="project-card" itemscope itemtype="http://schema.org/SoftwareApplication">
+  <div class="project-card__inner">
+    <div class="project-card__header">
+      <p class="project-card__eyebrow">项目精选</p>
+      <h2 class="project-card__title" itemprop="name">
+        <a href="{{ project_href }}"{% if project_is_external %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ project.title }}</a>
+      </h2>
+      {% if project.summary %}
+        <p class="project-card__summary" itemprop="description">{{ project.summary }}</p>
+      {% endif %}
+    </div>
+
+    <div class="project-card__meta">
+      {% if project.date %}
+        <span class="project-card__meta-item">
+          <i class="fa fa-calendar" aria-hidden="true"></i>
+          <span class="project-card__meta-label">日期</span>
+          <time datetime="{{ project.date | date_to_xmlschema }}">{{ project.date | date: "%Y-%m-%d" }}</time>
+        </span>
+      {% endif %}
+      {% if project.week %}
+        <span class="project-card__meta-item">
+          <i class="fa fa-layer-group" aria-hidden="true"></i>
+          <span class="project-card__meta-label">周数</span>
+          <span>{{ project.week }}</span>
+        </span>
+      {% endif %}
+      {% if project.status %}
+        <span class="project-card__meta-item">
+          <i class="fa fa-bolt" aria-hidden="true"></i>
+          <span class="project-card__meta-label">状态</span>
+          <span>{{ project.status }}</span>
+        </span>
+      {% endif %}
+    </div>
+
+    {% if project.card_highlights %}
+      <ul class="project-card__highlights">
+        {% for item in project.card_highlights %}
+          <li>{{ item }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% if project.tech_tags %}
+      <div class="project-card__tags" aria-label="Technology stack">
+        {% for tag in project.tech_tags %}
+          <span class="project-card__tag">{{ tag }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="project-card__actions">
+      <a class="project-card__button" href="{{ project_href }}"{% if project_is_external %} target="_blank" rel="noopener noreferrer"{% endif %}>
+        访问项目
+      </a>
+      <a class="project-card__detail" href="{{ base_path }}{{ project.url }}">查看详情</a>
+    </div>
+  </div>
+</article>

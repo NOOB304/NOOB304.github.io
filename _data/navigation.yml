@@ -10,6 +10,9 @@ main: &english_navigation
   - title: "Blog Posts"
     url: /year-archive/
 
+  - title: "Downloads"
+    url: /downloads/
+
   - title: "CV"
     url: /cv/
 
@@ -24,6 +27,9 @@ zh:
 
   - title: "博客文章"
     url: /zh/blog/
+
+  - title: "代码下载"
+    url: /zh/downloads/
 
   - title: "个人简历"
     url: /zh/cv/

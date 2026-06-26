@@ -1,0 +1,31 @@
+/* ==========================================================================
+   LANGUAGE SWITCH
+   ========================================================================== */
+
+.language-switch {
+  a {
+    display: inline-block;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    padding-left: 0.45rem;
+    padding-right: 0.45rem;
+    font-size: $type-size-7;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+    border: 1px solid var(--global-border-color);
+    border-radius: $border-radius;
+    color: var(--global-masthead-link-color);
+    transition: $global-transition;
+
+    &:hover {
+      color: var(--global-masthead-link-color-hover);
+      border-color: var(--global-masthead-link-color-hover);
+      background: var(--global-border-color);
+    }
+
+    &:before {
+      display: none;
+    }
+  }
+}

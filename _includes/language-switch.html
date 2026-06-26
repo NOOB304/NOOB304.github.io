@@ -1,0 +1,19 @@
+{% assign current_lang = page.lang | default: "en" %}
+{% if current_lang == "zh" %}
+  {% assign target_lang = "en" %}
+  {% assign target_label = "EN" %}
+  {% assign target_url = page.translation_url | default: "/" %}
+{% else %}
+  {% assign target_lang = "zh" %}
+  {% assign target_label = "中文" %}
+  {% assign target_url = page.translation_url | default: "/zh/" %}
+{% endif %}
+{% if target_url contains "://" %}
+  {% assign switch_url = target_url %}
+{% else %}
+  {% assign switch_url = target_url | relative_url %}
+{% endif %}
+
+<li class="masthead__menu-item language-switch persist">
+  <a href="{{ switch_url }}" hreflang="{{ target_lang }}" lang="{{ target_lang }}" data-language-switch="{{ target_lang }}">{{ target_label }}</a>
+</li>

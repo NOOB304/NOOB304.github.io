@@ -1,0 +1,29 @@
+# The following links power the site header navigation.
+
+main: &english_navigation
+  - title: "Publications"
+    url: /publications/
+
+  - title: "Projects"
+    url: /projects/
+
+  - title: "Blog Posts"
+    url: /year-archive/
+
+  - title: "CV"
+    url: /cv/
+
+en: *english_navigation
+
+zh:
+  - title: "论文成果"
+    url: /zh/publications/
+
+  - title: "研究项目"
+    url: /zh/projects/
+
+  - title: "博客文章"
+    url: /zh/blog/
+
+  - title: "个人简历"
+    url: /zh/cv/

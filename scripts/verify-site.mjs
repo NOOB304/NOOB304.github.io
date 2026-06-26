@@ -15,7 +15,7 @@ const requiredFiles = [
   '_pages/about-zh.md',
   '_pages/publications.md',
   '_pages/publications-zh.md',
-  'assets/images/avatar.jpg',
+  'images/profile.jpg',
   'assets/js/main.min.js',
 ];
 
@@ -37,6 +37,7 @@ const sourceRoots = [
   '_pages',
   '_sass',
   'assets',
+  'images',
 ];
 
 const textFileExtensions = new Set([

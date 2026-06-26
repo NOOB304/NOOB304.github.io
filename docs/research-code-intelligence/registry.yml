@@ -26,11 +26,51 @@ projects:
       - "GEE 批量处理 Landsat/Sentinel/MODIS/ERA5"
       - "遥感产品快速下载、可视化和区域统计"
     recommendation_level: "A-"
+    blog_written: true
+    blog_path: "_posts/2026-06-27-geemap-gee-remote-sensing-automation.md"
+    reproduced: "当前环境未完成 Google Earth Engine 账号认证；模板代码已提供，尚未连接真实 GEE 任务运行"
+    usable_for_paper: "适合作为遥感数据自动化获取、样本表构建、批量导出和论文数据生产工具；本身更偏工具链，但可显著提高方法复现性"
+    license_note: "MIT"
+    follow_up: "用真实 GEE 项目认证后，批量提取 MODIS NDVI/NPP、ERA5-Land 气候变量和土地利用数据，并与 EconML/xclim/pylandstats 工作流衔接"
+  - name: "geetools"
+    link: "https://github.com/gee-community/geetools"
+    method_type: "Google Earth Engine Python API 扩展工具；ImageCollection 批处理；导出辅助"
+    source_type: "GitHub / Python package / GEE ecosystem"
+    applicable_topics:
+      - "GEE ImageCollection 批量处理"
+      - "遥感时间序列预处理和导出"
+    recommendation_level: "B+"
     blog_written: false
     reproduced: false
-    usable_for_paper: "适合作为遥感数据自动化获取和预处理工具，但不是单独的方法创新"
+    usable_for_paper: "适合作为 geemap/earthengine-api 的增强工具，单独方法创新性有限"
     license_note: "MIT"
-    follow_up: "后续可写 GEE + geemap 批量提取 NPP/NDVI/气候变量教程"
+    follow_up: "与 geemap 组合，构建更稳定的批量导出和时间序列处理流程"
+  - name: "eemont"
+    link: "https://github.com/davemlz/eemont"
+    method_type: "Earth Engine Python API 扩展；云掩膜、指数计算、尺度因子处理"
+    source_type: "GitHub / Python package / GEE ecosystem"
+    applicable_topics:
+      - "Landsat/Sentinel/MODIS 指数计算"
+      - "GEE 影像集合预处理"
+    recommendation_level: "B+"
+    blog_written: false
+    reproduced: false
+    usable_for_paper: "适合简化 GEE 指数计算和预处理，但需要检查不同数据集函数适配性"
+    license_note: "MIT"
+    follow_up: "后续可比较 eemont 与手写 GEE 预处理代码在 NDVI/FVC/云掩膜中的差异"
+  - name: "earthengine-api"
+    link: "https://github.com/google/earthengine-api"
+    method_type: "Google Earth Engine 官方 Python/JavaScript API"
+    source_type: "GitHub / Google official API"
+    applicable_topics:
+      - "GEE 官方脚本开发"
+      - "批量遥感数据处理、导出和区域统计"
+    recommendation_level: "A"
+    blog_written: false
+    reproduced: false
+    usable_for_paper: "所有 GEE Python 工作流的基础依赖；建议与 geemap 组合使用"
+    license_note: "Apache-2.0"
+    follow_up: "作为 geemap 文章的底层依赖记录，不单独写博客也可长期跟踪"
   - name: "rasterstats"
     link: "https://github.com/perrygeo/python-rasterstats"
     method_type: "分区统计；矢量区域内栅格统计；zonal statistics"

@@ -1,0 +1,32 @@
+{% assign list_lang = include.lang | default: page.lang | default: "en" %}
+
+<div class="publications-list">
+{% for paper in site.data.publications %}
+  <article class="publication-item">
+    <h2 class="publication-title">
+      <a href="{{ paper.url }}" target="_blank" rel="noopener">{{ paper.title }}</a>
+    </h2>
+    {% if list_lang == "zh" %}
+      <p class="publication-authors"><span>作者：</span>{{ paper.authors }}</p>
+      <p class="publication-meta">
+        <span>期刊：</span><em>{{ paper.venue }}</em>{% if paper.year %}，{{ paper.year }}{% endif %}{% if paper.details %}。{{ paper.details }}{% endif %}
+      </p>
+      {% if paper.doi %}
+        <p class="publication-doi">
+          DOI：<a href="{{ paper.url }}" target="_blank" rel="noopener">{{ paper.doi }}</a>
+        </p>
+      {% endif %}
+    {% else %}
+      <p class="publication-authors">{{ paper.authors }}</p>
+      <p class="publication-meta">
+        <em>{{ paper.venue }}</em>{% if paper.year %}, {{ paper.year }}{% endif %}{% if paper.details %}. {{ paper.details }}{% endif %}
+      </p>
+      {% if paper.doi %}
+        <p class="publication-doi">
+          DOI: <a href="{{ paper.url }}" target="_blank" rel="noopener">{{ paper.doi }}</a>
+        </p>
+      {% endif %}
+    {% endif %}
+  </article>
+{% endfor %}
+</div>

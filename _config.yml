@@ -12,7 +12,7 @@ name                     : &name "Homepage of Heng Wei"
 description              : &description "Heng Wei's academic website on global change and ecosystem carbon sinks."
 url                      : "https://noob304.github.io"
 baseurl                  : ""
-repository               : "noob304/We1heng.github.io"
+repository               : "NOOB304/NOOB304.github.io"
 timezone                 : "Asia/Shanghai"
 
 # Site Author

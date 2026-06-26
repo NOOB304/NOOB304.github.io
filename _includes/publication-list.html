@@ -2,14 +2,26 @@
 
 <div class="publications-list">
 {% for paper in site.data.publications %}
+  {% if list_lang == "zh" %}
+    {% assign display_title = paper.title_zh | default: paper.title %}
+    {% assign display_authors = paper.authors_zh | default: paper.authors %}
+    {% assign display_venue = paper.venue_zh | default: paper.venue %}
+    {% assign display_details = paper.details_zh | default: paper.details %}
+  {% else %}
+    {% assign display_title = paper.title_en | default: paper.title %}
+    {% assign display_authors = paper.authors_en | default: paper.authors %}
+    {% assign display_venue = paper.venue_en | default: paper.venue %}
+    {% assign display_details = paper.details_en | default: paper.details %}
+  {% endif %}
+
   <article class="publication-item">
     <h2 class="publication-title">
-      <a href="{{ paper.url }}" target="_blank" rel="noopener">{{ paper.title }}</a>
+      <a href="{{ paper.url }}" target="_blank" rel="noopener">{{ display_title }}</a>
     </h2>
     {% if list_lang == "zh" %}
-      <p class="publication-authors"><span>作者：</span>{{ paper.authors }}</p>
+      <p class="publication-authors"><span>作者：</span>{{ display_authors }}</p>
       <p class="publication-meta">
-        <span>期刊：</span><em>{{ paper.venue }}</em>{% if paper.year %}，{{ paper.year }}{% endif %}{% if paper.details %}。{{ paper.details }}{% endif %}
+        <span>期刊：</span><em>{{ display_venue }}</em>{% if paper.year %}，{{ paper.year }}{% endif %}{% if display_details %}。{{ display_details }}{% endif %}
       </p>
       {% if paper.doi %}
         <p class="publication-doi">
@@ -17,9 +29,9 @@
         </p>
       {% endif %}
     {% else %}
-      <p class="publication-authors">{{ paper.authors }}</p>
+      <p class="publication-authors">{{ display_authors }}</p>
       <p class="publication-meta">
-        <em>{{ paper.venue }}</em>{% if paper.year %}, {{ paper.year }}{% endif %}{% if paper.details %}. {{ paper.details }}{% endif %}
+        <em>{{ display_venue }}</em>{% if paper.year %}, {{ paper.year }}{% endif %}{% if display_details %}. {{ display_details }}{% endif %}
       </p>
       {% if paper.doi %}
         <p class="publication-doi">

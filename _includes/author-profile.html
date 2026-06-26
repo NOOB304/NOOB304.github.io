@@ -13,14 +13,12 @@
   {% assign author_location = author.location_zh | default: author.location %}
   {% assign author_employer = author.employer_zh | default: author.employer %}
   {% assign contact_label = "联系" %}
-  {% assign email_label = "邮箱" %}
 {% else %}
   {% assign author_name = author.name_en | default: author.name %}
   {% assign author_bio = author.bio_en | default: author.bio %}
   {% assign author_location = author.location_en | default: author.location %}
   {% assign author_employer = author.employer_en | default: author.employer %}
   {% assign contact_label = "Contact" %}
-  {% assign email_label = "Email" %}
 {% endif %}
 
 <div itemscope itemtype="http://schema.org/Person">
@@ -48,13 +46,13 @@
         <li class="author__desktop"><i class="fas fa-fw fa-building-columns icon-pad-right" aria-hidden="true"></i>{{ author_employer }}</li>
       {% endif %}
       {% if author.email %}
-        <li><a href="mailto:{{ author.email }}"><i class="fas fa-fw fa-envelope icon-pad-right" aria-hidden="true"></i>{{ email_label }}</a></li>
+        <li><a href="mailto:{{ author.email }}"><i class="fas fa-fw fa-envelope icon-pad-right" aria-hidden="true"></i>{{ author.email }}</a></li>
       {% endif %}
       {% if author.googlescholar %}
-        <li><a href="{{ author.googlescholar }}"><i class="ai ai-google-scholar ai-fw icon-pad-right" aria-hidden="true"></i>Google Scholar</a></li>
+        <li><a href="{{ author.googlescholar }}" target="_blank" rel="noopener"><i class="ai ai-google-scholar ai-fw icon-pad-right" aria-hidden="true"></i>Google Scholar</a></li>
       {% endif %}
       {% if author.github %}
-        <li><a href="https://github.com/{{ author.github }}"><i class="fab fa-fw fa-github icon-pad-right" aria-hidden="true"></i>GitHub</a></li>
+        <li><a href="https://github.com/{{ author.github }}" target="_blank" rel="noopener"><i class="fab fa-fw fa-github icon-pad-right" aria-hidden="true"></i>GitHub</a></li>
       {% endif %}
     </ul>
   </div>

@@ -7,18 +7,25 @@
     {% assign project_title = project.title_zh | default: project.title_en %}
     {% assign project_period = project.period_zh | default: project.period_en %}
     {% assign project_note = project.note_zh | default: project.note_en %}
+    {% assign project_role = project.role_zh | default: project.role_en %}
     {% assign period_label = "周期" %}
+    {% assign role_label = "角色" %}
   {% else %}
     {% assign project_funder = project.funder_en | default: project.funder_zh %}
     {% assign project_title = project.title_en | default: project.title_zh %}
     {% assign project_period = project.period_en | default: project.period_zh %}
     {% assign project_note = project.note_en | default: project.note_zh %}
+    {% assign project_role = project.role_en | default: project.role_zh %}
     {% assign period_label = "Period" %}
+    {% assign role_label = "Role" %}
   {% endif %}
 
   <article class="project-item">
     <p class="project-funder">{{ project_funder }}</p>
     <h2 class="project-title">{{ project_title }}</h2>
+    {% if project_role %}
+      <p class="project-role">{{ role_label }}: {{ project_role }}</p>
+    {% endif %}
     <p class="project-meta">{{ period_label }}: {{ project_period }}</p>
     {% if project_note %}
       <p class="project-note">{{ project_note }}</p>

@@ -71,8 +71,13 @@
   line-height: 1.4;
 }
 
+.project-role,
 .project-meta,
 .project-note {
   margin: 0.25em 0;
   font-size: 0.9em;
+}
+
+.project-role {
+  font-weight: 600;
 }

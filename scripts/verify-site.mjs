@@ -2,8 +2,10 @@
 
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const rootDir = process.cwd();
+const scriptDir = path.dirname(fileURLToPath(import.meta.url));
+const rootDir = path.resolve(scriptDir, '..');
 
 const requiredFiles = [
   '_config.yml',
@@ -19,7 +21,7 @@ const requiredFiles = [
 
 const forbiddenStrings = [
   'Lvyizhuo',
-  '吕逸卓',
+  '\u5415\u9038\u5353',
   'Institute of Computing Technology',
   'ICT, CAS',
   'ChatLaw',
@@ -37,6 +39,38 @@ const sourceRoots = [
   'assets',
 ];
 
+const textFileExtensions = new Set([
+  '.css',
+  '.html',
+  '.js',
+  '.json',
+  '.liquid',
+  '.md',
+  '.scss',
+  '.svg',
+  '.txt',
+  '.xml',
+  '.yml',
+  '.yaml',
+]);
+
+const binaryFileExtensions = new Set([
+  '.avif',
+  '.eot',
+  '.gif',
+  '.ico',
+  '.jpeg',
+  '.jpg',
+  '.otf',
+  '.pdf',
+  '.png',
+  '.svgz',
+  '.ttf',
+  '.webp',
+  '.woff',
+  '.woff2',
+]);
+
 const requiredBuildPaths = [
   { path: 'index.html', type: 'file' },
   { path: 'en', type: 'directory' },
@@ -47,6 +81,7 @@ const requiredBuildPaths = [
 ];
 
 let failureCount = 0;
+let skippedBinaryCount = 0;
 
 function toAbsolute(relativePath) {
   return path.join(rootDir, ...relativePath.split('/'));
@@ -54,6 +89,16 @@ function toAbsolute(relativePath) {
 
 function toDisplayPath(filePath) {
   return path.relative(rootDir, filePath).split(path.sep).join('/') || '.';
+}
+
+function shouldScanText(filePath) {
+  const extension = path.extname(filePath).toLowerCase();
+
+  if (binaryFileExtensions.has(extension)) {
+    return false;
+  }
+
+  return extension === '' || textFileExtensions.has(extension);
 }
 
 async function statIfExists(filePath) {
@@ -142,7 +187,11 @@ async function collectFiles(relativeRoot) {
       }
 
       if (entry.isFile()) {
-        files.push(absolutePath);
+        if (shouldScanText(absolutePath)) {
+          files.push(absolutePath);
+        } else {
+          skippedBinaryCount += 1;
+        }
       }
     }
   }
@@ -178,7 +227,9 @@ async function checkForbiddenStrings() {
   }
 
   if (matches.length === 0) {
-    recordPass(`no forbidden reference-author strings in source roots (${files.size} files scanned)`);
+    recordPass(
+      `no forbidden reference-author strings in source roots (${files.size} text files scanned, ${skippedBinaryCount} binary/non-text files skipped)`,
+    );
     return;
   }
 

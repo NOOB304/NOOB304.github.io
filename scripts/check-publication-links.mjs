@@ -2,119 +2,37 @@
 
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import YAML from 'yaml';
 
-const rootDir = process.cwd();
+const scriptDir = path.dirname(fileURLToPath(import.meta.url));
+const rootDir = path.resolve(scriptDir, '..');
 const publicationsPath = path.join(rootDir, '_data', 'publications.yml');
 const requestTimeoutMs = 15_000;
 
-function stripInlineComment(value) {
-  let quote = null;
-
-  for (let index = 0; index < value.length; index += 1) {
-    const char = value[index];
-    const previous = value[index - 1];
-
-    if ((char === '"' || char === "'") && previous !== '\\') {
-      quote = quote === char ? null : quote || char;
-      continue;
-    }
-
-    if (char === '#' && !quote && (index === 0 || /\s/.test(previous))) {
-      return value.slice(0, index).trim();
-    }
+class PublicationDataError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'PublicationDataError';
   }
-
-  return value.trim();
-}
-
-function parseScalar(value) {
-  const stripped = stripInlineComment(value).trim();
-
-  if (!stripped || stripped === '~' || stripped.toLowerCase() === 'null') {
-    return '';
-  }
-
-  if (
-    (stripped.startsWith('"') && stripped.endsWith('"')) ||
-    (stripped.startsWith("'") && stripped.endsWith("'"))
-  ) {
-    return stripped.slice(1, -1).trim();
-  }
-
-  return stripped;
-}
-
-function setField(publication, fieldName, value) {
-  const normalizedName = fieldName.toLowerCase();
-
-  if (normalizedName !== 'url' && normalizedName !== 'doi') {
-    return;
-  }
-
-  publication.fields[normalizedName] = parseScalar(value);
-}
-
-function parsePublications(yaml) {
-  const publications = [];
-  let current = null;
-  let listIndent = null;
-
-  yaml.split(/\r?\n/).forEach((line, index) => {
-    if (/^\s*(#|$)/.test(line)) {
-      return;
-    }
-
-    const itemMatch = line.match(/^(\s*)-\s*(.*)$/);
-    const itemIndent = itemMatch?.[1].length;
-
-    if (itemMatch && (listIndent === null || itemIndent === listIndent)) {
-      listIndent = itemIndent;
-      current = { line: index + 1, fieldIndent: null, fields: {} };
-      publications.push(current);
-
-      const inlineFieldMatch = itemMatch[2].match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
-      if (inlineFieldMatch) {
-        setField(current, inlineFieldMatch[1], inlineFieldMatch[2]);
-      }
-
-      return;
-    }
-
-    if (!current) {
-      return;
-    }
-
-    const fieldMatch = line.match(/^(\s+)([A-Za-z0-9_-]+):\s*(.*)$/);
-    if (fieldMatch) {
-      const fieldIndent = fieldMatch[1].length;
-
-      if (fieldIndent <= listIndent) {
-        return;
-      }
-
-      current.fieldIndent ??= fieldIndent;
-
-      if (fieldIndent === current.fieldIndent) {
-        setField(current, fieldMatch[2], fieldMatch[3]);
-      }
-    }
-  });
-
-  return publications;
 }
 
 function normalizeUrl(url) {
   const trimmed = url.trim();
+  const candidate = trimmed.startsWith('//') ? `https:${trimmed}` : trimmed;
 
-  if (/^https?:\/\//i.test(trimmed)) {
-    return trimmed;
+  let parsed;
+  try {
+    parsed = new URL(candidate);
+  } catch {
+    throw new PublicationDataError(`unsupported URL "${url}"`);
   }
 
-  if (trimmed.startsWith('//')) {
-    return `https:${trimmed}`;
+  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+    throw new PublicationDataError(`unsupported URL protocol "${parsed.protocol}" in "${url}"`);
   }
 
-  throw new Error(`unsupported URL "${url}"`);
+  return parsed.toString();
 }
 
 function doiToUrl(doi) {
@@ -123,29 +41,89 @@ function doiToUrl(doi) {
     .replace(/^doi:\s*/i, '')
     .replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, '');
 
-  if (!normalizedDoi) {
-    throw new Error('empty DOI');
+  if (!/^10\.\S+\/\S+$/.test(normalizedDoi)) {
+    throw new PublicationDataError(`invalid DOI "${doi}"`);
   }
 
   return `https://doi.org/${encodeURI(normalizedDoi)}`;
 }
 
-function linkForPublication(publication) {
-  if (publication.fields.url) {
-    return {
-      source: `publication starting line ${publication.line} url`,
-      url: normalizeUrl(publication.fields.url),
-    };
+function stringField(publication, fieldName, index) {
+  const value = publication[fieldName];
+
+  if (value === undefined || value === null || value === '') {
+    return '';
   }
 
-  if (publication.fields.doi) {
-    return {
-      source: `publication starting line ${publication.line} doi`,
-      url: doiToUrl(publication.fields.doi),
-    };
+  if (typeof value !== 'string') {
+    throw new PublicationDataError(`publication #${index + 1} field "${fieldName}" must be a string`);
   }
 
-  return null;
+  return value;
+}
+
+function parsePublicationsYaml(yamlText) {
+  if (yamlText.trim() === '') {
+    throw new PublicationDataError('empty _data/publications.yml; expected a YAML list of publication objects');
+  }
+
+  const document = YAML.parseDocument(yamlText, {
+    prettyErrors: false,
+    strict: true,
+  });
+
+  if (document.errors.length > 0) {
+    const firstError = document.errors[0];
+    throw new PublicationDataError(`malformed YAML: ${firstError.message}`);
+  }
+
+  const publications = document.toJS();
+
+  if (!Array.isArray(publications)) {
+    throw new PublicationDataError('expected _data/publications.yml to be a YAML list of publication objects');
+  }
+
+  for (const [index, publication] of publications.entries()) {
+    if (
+      publication === null ||
+      typeof publication !== 'object' ||
+      Array.isArray(publication)
+    ) {
+      throw new PublicationDataError(`publication #${index + 1} must be an object`);
+    }
+  }
+
+  return publications;
+}
+
+function linksFromPublications(publications) {
+  const links = [];
+
+  publications.forEach((publication, index) => {
+    const url = stringField(publication, 'url', index);
+    const doi = stringField(publication, 'doi', index);
+
+    if (url) {
+      links.push({
+        source: `publication #${index + 1} url`,
+        url: normalizeUrl(url),
+      });
+      return;
+    }
+
+    if (doi) {
+      links.push({
+        source: `publication #${index + 1} doi`,
+        url: doiToUrl(doi),
+      });
+    }
+  });
+
+  return links;
+}
+
+function extractLinksFromYaml(yamlText) {
+  return linksFromPublications(parsePublicationsYaml(yamlText));
 }
 
 async function fetchWithTimeout(url, options) {
@@ -240,7 +218,61 @@ async function readPublications() {
   }
 }
 
+function assertThrows(name, input, expectedMessage) {
+  try {
+    extractLinksFromYaml(input);
+  } catch (error) {
+    if (error instanceof PublicationDataError && error.message.includes(expectedMessage)) {
+      console.log(`PASS self-test ${name}`);
+      return;
+    }
+
+    throw new Error(`self-test ${name} failed with unexpected error: ${error.message}`);
+  }
+
+  throw new Error(`self-test ${name} failed: expected an error containing "${expectedMessage}"`);
+}
+
+function assertLinks(name, input, expectedUrls) {
+  const links = extractLinksFromYaml(input);
+  const actualUrls = links.map((link) => link.url);
+
+  if (JSON.stringify(actualUrls) !== JSON.stringify(expectedUrls)) {
+    throw new Error(
+      `self-test ${name} failed: expected ${JSON.stringify(expectedUrls)}, got ${JSON.stringify(actualUrls)}`,
+    );
+  }
+
+  console.log(`PASS self-test ${name}`);
+}
+
+function runSelfTest() {
+  console.log('Publication link parser self-tests');
+
+  assertThrows('malformed YAML fails closed', '- title: Broken\n  url: [unterminated', 'malformed YAML');
+  assertThrows('non-list YAML fails closed', 'title: Not a list\nurl: https://example.com/', 'YAML list');
+  assertThrows('empty file fails closed', '\n  \n', 'empty _data/publications.yml');
+  assertThrows('bad URL fails closed', '- title: Bad URL\n  url: ftp://example.com/file.pdf', 'unsupported URL protocol');
+  assertLinks(
+    'valid DOI and URL extraction',
+    [
+      '- title: DOI paper',
+      '  doi: 10.1000/xyz123',
+      '- title: URL paper',
+      '  url: https://example.com/paper',
+    ].join('\n'),
+    ['https://doi.org/10.1000/xyz123', 'https://example.com/paper'],
+  );
+
+  console.log('PASS publication link parser self-tests completed');
+}
+
 async function main() {
+  if (process.argv.includes('--self-test')) {
+    runSelfTest();
+    return;
+  }
+
   console.log('Publication link checks');
 
   if (typeof fetch !== 'function') {
@@ -254,31 +286,17 @@ async function main() {
     return;
   }
 
-  const publications = parsePublications(yaml);
-  const links = [];
-  const invalidEntries = [];
-
-  for (const publication of publications) {
-    try {
-      const link = linkForPublication(publication);
-      if (link) {
-        links.push(link);
-      }
-    } catch (error) {
-      invalidEntries.push({
-        line: publication.line,
-        message: error.message,
-      });
+  let links;
+  try {
+    links = extractLinksFromYaml(yaml);
+  } catch (error) {
+    if (error instanceof PublicationDataError) {
+      console.error(`FAIL publication link check: ${error.message}`);
+      process.exitCode = 1;
+      return;
     }
-  }
 
-  if (invalidEntries.length > 0) {
-    console.error(`FAIL invalid publication link fields (${invalidEntries.length})`);
-    for (const entry of invalidEntries) {
-      console.error(`  - publication starting line ${entry.line}: ${entry.message}`);
-    }
-    process.exitCode = 1;
-    return;
+    throw error;
   }
 
   if (links.length === 0) {

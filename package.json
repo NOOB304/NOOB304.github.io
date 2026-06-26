@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/academicpages/academicpages.github.io",
   "engines": {
-    "node": ">= 0.10.0"
+    "node": ">=18"
   },
   "dependencies": {
     "fitvids": "^2.1.1",
@@ -31,7 +31,8 @@
   },
   "devDependencies": {
     "onchange": "^7.1.0",
-    "uglify-js": "^3.17.4"
+    "uglify-js": "^3.17.4",
+    "yaml": "^2.8.1"
   },
   "scripts": {
     "uglify": "uglifyjs node_modules/jquery/dist/jquery.min.js node_modules/fitvids/dist/fitvids.min.js node_modules/magnific-popup/dist/jquery.magnific-popup.min.js node_modules/jquery-smooth-scroll/jquery.smooth-scroll.min.js assets/js/plugins/jquery.greedy-navigation.js assets/js/_main.js -c -m -o assets/js/main.min.js",
@@ -39,6 +40,7 @@
     "build:js": "npm run uglify",
     "test:site": "node scripts/verify-site.mjs",
     "test:links": "node scripts/check-publication-links.mjs",
+    "test:links:self": "node scripts/check-publication-links.mjs --self-test",
     "test": "npm run test:site && npm run test:links"
   }
 }

@@ -2,6 +2,61 @@ last_updated: "2026-06-27"
 owner: "魏珩 / Heng Wei"
 purpose: "遥感生态环境、植被碳汇、喀斯特生态系统与全球变化研究的开源代码情报库"
 projects:
+  - name: "xclim"
+    link: "https://github.com/Ouranosinc/xclim"
+    method_type: "气候指标计算；极端气候指数；CMIP6/ERA5 NetCDF 处理；xarray/dask 工作流"
+    source_type: "GitHub / Python package / Ouranos climate services ecosystem"
+    applicable_topics:
+      - "CMIP6/SSP 情景下植被碳汇气候胁迫指标构建"
+      - "ERA5/CRU/WorldClim 气候因子派生指标计算"
+      - "干旱、热浪、降水极端对 NPP/GPP/NDVI 的影响分析"
+      - "喀斯特生态系统未来水热限制风险识别"
+    recommendation_level: "A"
+    blog_written: true
+    blog_path: "_posts/2026-06-27-xclim-climate-indices-remote-sensing-ecology.md"
+    reproduced: "当前环境未安装 xarray/xclim/dask；已提供模板代码，尚未本机运行，尚未在真实气候数据上复现"
+    usable_for_paper: "建议深入复现；适合构建气候胁迫指标、未来情景驱动变量和生态风险分析因子"
+    license_note: "Apache-2.0"
+    follow_up: "结合 intake-esm 下载 CMIP6、多模式集合，使用 xclim 计算干旱/热浪/VPD/生长季指标，并与 NPP/GPP 响应模型衔接"
+  - name: "intake-esm"
+    link: "https://github.com/intake/intake-esm"
+    method_type: "ESM/CMIP6 数据目录检索；多模式数据加载；xarray 数据集构建"
+    source_type: "GitHub / Python package / Pangeo ecosystem"
+    applicable_topics:
+      - "CMIP6 多模式多情景数据自动检索"
+      - "SSP 情景下气候驱动变量批量构建"
+    recommendation_level: "A-"
+    blog_written: false
+    reproduced: false
+    usable_for_paper: "适合与 xclim 组合形成 CMIP6 情景处理管线"
+    license_note: "Apache-2.0"
+    follow_up: "写一篇 intake-esm + xclim 的 CMIP6 生态预测数据准备教程"
+  - name: "clisops"
+    link: "https://github.com/roocs/clisops"
+    method_type: "气候模拟数据裁剪、子集、空间/时间处理"
+    source_type: "GitHub / Python package / ROOCS"
+    applicable_topics:
+      - "CMIP6/ERA5 研究区裁剪"
+      - "气候模拟数据预处理自动化"
+    recommendation_level: "B+"
+    blog_written: false
+    reproduced: false
+    usable_for_paper: "适合作为气候数据预处理工具，建议与 xclim/intake-esm 搭配使用"
+    license_note: "BSD-3-Clause"
+    follow_up: "比较 clisops、rioxarray、CDO、NCO 在研究区裁剪中的适用性"
+  - name: "xESMF"
+    link: "https://github.com/pangeo-data/xESMF"
+    method_type: "气候/遥感网格重采样；保守重网格；双线性重网格"
+    source_type: "GitHub / Python package / Pangeo ecosystem"
+    applicable_topics:
+      - "CMIP6、ERA5 与遥感产品空间分辨率统一"
+      - "多源栅格驱动变量对齐"
+    recommendation_level: "B+"
+    blog_written: false
+    reproduced: false
+    usable_for_paper: "适合数据预处理和多源栅格融合，但需注意重网格方法对生态变量守恒性的影响"
+    license_note: "MIT"
+    follow_up: "作为未来多源栅格预处理专题的核心工具之一"
   - name: "EconML"
     link: "https://github.com/py-why/EconML"
     method_type: "因果机器学习；Double Machine Learning；Causal Forest；异质性处理效应"

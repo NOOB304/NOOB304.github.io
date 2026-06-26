@@ -1,0 +1,6 @@
+numpy
+pandas
+xarray
+dask
+netcdf4
+xclim

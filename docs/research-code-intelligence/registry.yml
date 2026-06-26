@@ -1,0 +1,60 @@
+last_updated: "2026-06-27"
+owner: "魏珩 / Heng Wei"
+purpose: "遥感生态环境、植被碳汇、喀斯特生态系统与全球变化研究的开源代码情报库"
+projects:
+  - name: "EconML"
+    link: "https://github.com/py-why/EconML"
+    method_type: "因果机器学习；Double Machine Learning；Causal Forest；异质性处理效应"
+    source_type: "GitHub / Python package / PyWhy ecosystem"
+    applicable_topics:
+      - "气候变化对 NPP/GPP/碳汇的因果效应"
+      - "生态恢复工程对植被恢复或碳汇增益的异质性影响"
+      - "土地利用变化对生态系统服务的处理效应估计"
+      - "喀斯特区生态恢复效果评估"
+    recommendation_level: "A"
+    blog_written: true
+    blog_path: "_posts/2026-06-27-econml-causal-forest-remote-sensing-attribution.md"
+    reproduced: "合成数据生成脚本已验证；当前环境未安装 econml，CausalForestDML 完整脚本尚未本机运行；尚未在真实遥感数据上复现"
+    usable_for_paper: "建议深入复现后用于方法升级或稳健性分析"
+    license_note: "GitHub API 未返回标准 SPDX；使用前需再次检查仓库 LICENSE 与引用要求"
+    follow_up: "用像元-年份面板数据复现 CausalForestDML，比较 RF/XGBoost 相关性归因与因果森林归因差异"
+  - name: "DoWhy"
+    link: "https://github.com/py-why/dowhy"
+    method_type: "因果图；因果识别；反事实估计；敏感性与稳健性检验"
+    source_type: "GitHub / Python package / PyWhy ecosystem"
+    applicable_topics:
+      - "构建气候-人类活动-生态系统响应的因果图"
+      - "对遥感归因结果做反驳检验和敏感性分析"
+    recommendation_level: "A-"
+    blog_written: false
+    reproduced: false
+    usable_for_paper: "适合作为因果假设表达与稳健性检验工具，与 EconML 组合使用更强"
+    license_note: "MIT"
+    follow_up: "下一篇可写 DoWhy + EconML 的遥感生态因果工作流"
+  - name: "mgwr"
+    link: "https://github.com/pysal/mgwr"
+    method_type: "地理加权回归；多尺度地理加权回归；空间异质性"
+    source_type: "GitHub / PySAL"
+    applicable_topics:
+      - "气候因子对植被变化影响的空间非平稳性"
+      - "生态系统服务驱动因子的尺度差异"
+      - "喀斯特生态恢复响应的空间异质性"
+    recommendation_level: "B+"
+    blog_written: false
+    reproduced: false
+    usable_for_paper: "适合空间异质性分析，但不是严格因果识别"
+    license_note: "BSD-3-Clause"
+    follow_up: "与地理探测器、SHAP、CausalForestDML 做方法对比"
+  - name: "tfcausalimpact"
+    link: "https://github.com/WillianFuks/tfcausalimpact"
+    method_type: "中断时间序列；Bayesian structural time series；政策/工程影响评估"
+    source_type: "GitHub / Python package"
+    applicable_topics:
+      - "生态修复工程实施前后植被指数变化评估"
+      - "保护政策或土地整治政策的遥感时间序列影响评估"
+    recommendation_level: "B"
+    blog_written: false
+    reproduced: false
+    usable_for_paper: "适合单区域或少量区域的干预评估；大尺度像元化应用需谨慎"
+    license_note: "Apache-2.0"
+    follow_up: "检索 Google CausalImpact 原始 R 包和近年替代方案"

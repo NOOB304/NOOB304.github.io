@@ -28,4 +28,5 @@ share: false
 ## 联系方式
 
 - 邮箱：[we1heng@outlook.com](mailto:we1heng@outlook.com)
+- Google Scholar：[学术档案](https://scholar.google.com/citations?user=LOOx2wwAAAAJ&hl=en)
 - GitHub：[noob304](https://github.com/noob304)

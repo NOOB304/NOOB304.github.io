@@ -1,0 +1,33 @@
+.publications-list {
+  margin-top: 1.5em;
+}
+
+.publication-item {
+  padding: 1.25em 0;
+  border-bottom: 1px solid $border-color;
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.publication-title {
+  margin-bottom: 0.35em;
+  font-size: 1.05em;
+  line-height: 1.35;
+}
+
+.publication-authors,
+.publication-meta,
+.publication-doi {
+  margin: 0.25em 0;
+  font-size: 0.9em;
+}
+
+.publication-doi {
+  word-break: break-word;
+}

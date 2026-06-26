@@ -40,3 +40,39 @@
   border-radius: $border-radius;
   background-color: var(--global-bg-color);
 }
+
+.projects-list {
+  margin-top: 1.5em;
+}
+
+.project-item {
+  padding: 1.25em 0;
+  border-bottom: 1px solid var(--global-border-color);
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.project-funder {
+  margin: 0 0 0.35em;
+  color: var(--global-text-color-light);
+  font-size: 0.82em;
+  letter-spacing: 0.02em;
+}
+
+.project-title {
+  margin: 0 0 0.35em;
+  font-size: 1.05em;
+  line-height: 1.4;
+}
+
+.project-meta,
+.project-note {
+  margin: 0.25em 0;
+  font-size: 0.9em;
+}

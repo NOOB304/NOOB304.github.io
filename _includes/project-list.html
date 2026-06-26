@@ -1,0 +1,28 @@
+{% assign list_lang = include.lang | default: page.lang | default: "en" %}
+
+<div class="projects-list">
+{% for project in site.data.projects %}
+  {% if list_lang == "zh" %}
+    {% assign project_funder = project.funder_zh | default: project.funder_en %}
+    {% assign project_title = project.title_zh | default: project.title_en %}
+    {% assign project_period = project.period_zh | default: project.period_en %}
+    {% assign project_note = project.note_zh | default: project.note_en %}
+    {% assign period_label = "周期" %}
+  {% else %}
+    {% assign project_funder = project.funder_en | default: project.funder_zh %}
+    {% assign project_title = project.title_en | default: project.title_zh %}
+    {% assign project_period = project.period_en | default: project.period_zh %}
+    {% assign project_note = project.note_en | default: project.note_zh %}
+    {% assign period_label = "Period" %}
+  {% endif %}
+
+  <article class="project-item">
+    <p class="project-funder">{{ project_funder }}</p>
+    <h2 class="project-title">{{ project_title }}</h2>
+    <p class="project-meta">{{ period_label }}: {{ project_period }}</p>
+    {% if project_note %}
+      <p class="project-note">{{ project_note }}</p>
+    {% endif %}
+  </article>
+{% endfor %}
+</div>

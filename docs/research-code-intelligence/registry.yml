@@ -2,6 +2,48 @@ last_updated: "2026-06-27"
 owner: "魏珩 / Heng Wei"
 purpose: "遥感生态环境、植被碳汇、喀斯特生态系统与全球变化研究的开源代码情报库"
 projects:
+  - name: "pylandstats"
+    link: "https://github.com/martibosch/pylandstats"
+    method_type: "景观格局指数；土地利用/覆被斑块分析；FRAGSTATS 风格指标；时空景观格局变化"
+    source_type: "GitHub / Python package / landscape ecology"
+    applicable_topics:
+      - "土地利用变化对生态系统服务的影响"
+      - "喀斯特区石漠化治理前后景观破碎化变化"
+      - "土地利用格局与土壤保持、水源涵养、碳汇的耦合关系"
+      - "生态恢复工程区斑块连通性和聚集度变化"
+    recommendation_level: "A-"
+    blog_written: true
+    blog_path: "_posts/2026-06-27-pylandstats-landscape-metrics-ecosystem-services.md"
+    reproduced: "当前环境未安装 rasterio/pylandstats/geopandas；已提供模板代码，尚未本机完整运行，尚未在真实土地利用数据上复现"
+    usable_for_paper: "建议深入复现；适合构建土地利用格局指标、生态系统服务驱动因子和石漠化治理景观响应指标"
+    license_note: "GPL-3.0；二次开发和代码分发需注意 GPL 传染性要求，论文引用需按项目论文和仓库说明执行"
+    follow_up: "用 2000-2020 年土地利用栅格计算景观破碎化、聚集度和多样性指标，并与土壤保持率、NPP/GPP、生态系统服务变化耦合"
+  - name: "geemap"
+    link: "https://github.com/gee-community/geemap"
+    method_type: "Google Earth Engine Python 自动化；交互式遥感分析；批量下载与制图"
+    source_type: "GitHub / Python package / GEE ecosystem"
+    applicable_topics:
+      - "GEE 批量处理 Landsat/Sentinel/MODIS/ERA5"
+      - "遥感产品快速下载、可视化和区域统计"
+    recommendation_level: "A-"
+    blog_written: false
+    reproduced: false
+    usable_for_paper: "适合作为遥感数据自动化获取和预处理工具，但不是单独的方法创新"
+    license_note: "MIT"
+    follow_up: "后续可写 GEE + geemap 批量提取 NPP/NDVI/气候变量教程"
+  - name: "rasterstats"
+    link: "https://github.com/perrygeo/python-rasterstats"
+    method_type: "分区统计；矢量区域内栅格统计；zonal statistics"
+    source_type: "GitHub / Python package"
+    applicable_topics:
+      - "行政区/流域/生态分区内 NPP、NDVI、土壤保持统计"
+      - "遥感结果表格化和论文统计制表"
+    recommendation_level: "B+"
+    blog_written: false
+    reproduced: false
+    usable_for_paper: "非常实用，但更偏基础统计工具；适合与 pylandstats/geemap 组合"
+    license_note: "BSD-3-Clause"
+    follow_up: "作为自动化论文统计表生成工具纳入后续教程"
   - name: "xclim"
     link: "https://github.com/Ouranosinc/xclim"
     method_type: "气候指标计算；极端气候指数；CMIP6/ERA5 NetCDF 处理；xarray/dask 工作流"

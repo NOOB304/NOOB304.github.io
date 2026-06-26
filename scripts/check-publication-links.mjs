@@ -133,8 +133,8 @@ async function fetchWithTimeout(url, options) {
 
   try {
     return await fetch(url, {
-      ...requestOptions,
       redirect: 'follow',
+      ...requestOptions,
       signal: controller.signal,
       headers: {
         'User-Agent': 'academic-site-link-checker/1.0',
@@ -151,11 +151,28 @@ function isAllowedStatus(status) {
   return status >= 200 && status < 400;
 }
 
-async function requestUrl(url, method) {
+function isDoiResolverUrl(url) {
+  try {
+    const parsed = new URL(url);
+    const hostname = parsed.hostname.toLowerCase();
+
+    return (hostname === 'doi.org' || hostname === 'dx.doi.org') && parsed.pathname.startsWith('/10.');
+  } catch {
+    return false;
+  }
+}
+
+async function requestUrl(url, method, options = {}) {
+  const { headers = {}, ...requestOptions } = options;
+
   try {
     const response = await fetchWithTimeout(url, {
       method,
-      headers: method === 'GET' ? { Range: 'bytes=0-0' } : {},
+      ...requestOptions,
+      headers: {
+        ...(method === 'GET' ? { Range: 'bytes=0-0' } : {}),
+        ...headers,
+      },
     });
 
     await response.body?.cancel?.();
@@ -182,14 +199,39 @@ function formatAttempt(attempt) {
   return `${attempt.method} HTTP ${attempt.status}`;
 }
 
-async function checkUrl(url) {
-  const headAttempt = await requestUrl(url, 'HEAD');
+async function checkDoiResolverUrl(url, requester) {
+  const headAttempt = await requester(url, 'HEAD', { redirect: 'manual' });
+
+  if (headAttempt.ok) {
+    return {
+      ok: true,
+      detail: `doi.org resolver ${formatAttempt(headAttempt)} (manual redirect accepted)`,
+    };
+  }
+
+  const getAttempt = await requester(url, 'GET', { redirect: 'manual' });
+
+  if (getAttempt.ok) {
+    return {
+      ok: true,
+      detail: `doi.org resolver ${formatAttempt(headAttempt)}; fallback resolver ${formatAttempt(getAttempt)} (manual redirect accepted)`,
+    };
+  }
+
+  return {
+    ok: false,
+    detail: `doi.org resolver ${formatAttempt(headAttempt)}; fallback resolver ${formatAttempt(getAttempt)}`,
+  };
+}
+
+async function checkRegularUrl(url, requester) {
+  const headAttempt = await requester(url, 'HEAD');
 
   if (headAttempt.ok) {
     return { ok: true, detail: formatAttempt(headAttempt) };
   }
 
-  const getAttempt = await requestUrl(url, 'GET');
+  const getAttempt = await requester(url, 'GET');
 
   if (getAttempt.ok) {
     return {
@@ -202,6 +244,14 @@ async function checkUrl(url) {
     ok: false,
     detail: `${formatAttempt(headAttempt)}; fallback ${formatAttempt(getAttempt)}`,
   };
+}
+
+async function checkUrl(url, requester = requestUrl) {
+  if (isDoiResolverUrl(url)) {
+    return checkDoiResolverUrl(url, requester);
+  }
+
+  return checkRegularUrl(url, requester);
 }
 
 async function readPublications() {
@@ -246,7 +296,23 @@ function assertLinks(name, input, expectedUrls) {
   console.log(`PASS self-test ${name}`);
 }
 
-function runSelfTest() {
+async function assertCheckUrl(name, url, requester, expectedOk, expectedDetailText) {
+  const result = await checkUrl(url, requester);
+
+  if (result.ok !== expectedOk) {
+    throw new Error(`self-test ${name} failed: expected ok=${expectedOk}, got ok=${result.ok} (${result.detail})`);
+  }
+
+  if (expectedDetailText && !result.detail.includes(expectedDetailText)) {
+    throw new Error(
+      `self-test ${name} failed: expected detail containing "${expectedDetailText}", got "${result.detail}"`,
+    );
+  }
+
+  console.log(`PASS self-test ${name}`);
+}
+
+async function runSelfTest() {
   console.log('Publication link parser self-tests');
 
   assertThrows('malformed YAML fails closed', '- title: Broken\n  url: [unterminated', 'malformed YAML');
@@ -264,12 +330,46 @@ function runSelfTest() {
     ['https://doi.org/10.1000/xyz123', 'https://example.com/paper'],
   );
 
+  await assertCheckUrl(
+    'DOI resolver manual redirect 3xx passes',
+    'https://doi.org/10.1000/xyz123',
+    async (_url, method, options = {}) => ({
+      method,
+      status: options.redirect === 'manual' ? 302 : 403,
+      ok: options.redirect === 'manual',
+    }),
+    true,
+    'manual redirect accepted',
+  );
+  await assertCheckUrl(
+    'DOI resolver manual 2xx passes',
+    'https://doi.org/10.1000/xyz123',
+    async (_url, method, options = {}) => ({
+      method,
+      status: options.redirect === 'manual' ? 204 : 403,
+      ok: options.redirect === 'manual',
+    }),
+    true,
+    'HTTP 204',
+  );
+  await assertCheckUrl(
+    'non-DOI 403 still fails',
+    'https://publisher.example/paper',
+    async (_url, method) => ({
+      method,
+      status: 403,
+      ok: false,
+    }),
+    false,
+    'HTTP 403',
+  );
+
   console.log('PASS publication link parser self-tests completed');
 }
 
 async function main() {
   if (process.argv.includes('--self-test')) {
-    runSelfTest();
+    await runSelfTest();
     return;
   }
 

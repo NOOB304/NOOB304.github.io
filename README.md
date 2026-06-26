@@ -21,7 +21,7 @@ Open `http://localhost:4000`.
 
 ## Deployment
 
-Push `main` to `We1heng/We1heng.github.io`. GitHub Actions builds, verifies, and deploys the site to `https://we1heng.github.io`.
+Push `main` to `noob304/We1heng.github.io`. GitHub Actions builds, verifies, and deploys the site to `https://noob304.github.io/We1heng.github.io/`.
 
 ## Attribution
 

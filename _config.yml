@@ -10,9 +10,9 @@ title                    : "Heng Wei"
 title_separator          : "-"
 name                     : &name "Homepage of Heng Wei"
 description              : &description "Heng Wei's academic website on global change and ecosystem carbon sinks."
-url                      : "https://we1heng.github.io"
+url                      : "https://noob304.github.io"
 baseurl                  : ""
-repository               : "We1heng/We1heng.github.io"
+repository               : "noob304/We1heng.github.io"
 timezone                 : "Asia/Shanghai"
 
 # Site Author
@@ -46,7 +46,7 @@ author:
   bitbucket        :
   codepen          :
   dribbble         :
-  github           : "We1heng"
+  github           : "noob304"
   kaggle           :
   stackoverflow    :
 

@@ -25,4 +25,4 @@ My work combines ecological process understanding, climate-change analysis, and 
 
 ## Publications
 
-My published work covers cropland carbon sinks, karst vegetation carbon sink change, phosphorus limitation in karst regions, and soil conservation evaluation. See the full list on the [Publications page](/publications/).
+My published work covers cropland carbon sinks, karst vegetation carbon sink change, phosphorus limitation in karst regions, and soil conservation evaluation. See the full list on the [Publications page]({{ "/publications/" | relative_url }}).

@@ -1,0 +1,10 @@
+name: invest-carbon
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.11
+  - natcap.invest=3.20.0
+  - rasterio>=1.3
+  - pandas>=1.5
+  - numpy>=1.24

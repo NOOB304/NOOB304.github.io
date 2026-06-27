@@ -175,7 +175,7 @@ class_metrics = landscape.compute_class_metrics_df(
 
 真实研究中，只需要把示例栅格替换成自己的土地利用产品，例如 CLCD、GlobeLand30、ESA WorldCover、FROM-GLC 或自分类结果。
 
-## 六、如何迁移到我的研究中
+## 六、如何迁移到遥感生态研究
 
 ### 1. 用于 NPP/GPP 对土地利用格局的响应分析
 

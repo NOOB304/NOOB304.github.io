@@ -34,7 +34,7 @@ https://noob304.github.io/assets/downloads/geemap_gee_ecology_template.zip
 
 ## 一、为什么关注这个代码
 
-你的研究方向涉及植被碳汇、喀斯特生态系统、土地利用变化、土壤保持和生态系统服务，这些主题几乎都依赖多源遥感数据：
+植被碳汇、喀斯特生态系统、土地利用变化、土壤保持和生态系统服务研究，几乎都要处理多源遥感数据：
 
 - MODIS NDVI、EVI、NPP、GPP；
 - Landsat/Sentinel 长时间序列；
@@ -201,7 +201,7 @@ python 03_extract_era5_monthly_points.py
 
 脚本默认将结果导出到 Google Drive。提交任务后，需要在 Earth Engine Tasks 或 Google Drive 中查看导出状态。
 
-## 六、如何迁移到我的研究中
+## 六、如何迁移到遥感生态研究
 
 ### 1. 用于 NPP/GPP 对气候因子的响应分析
 

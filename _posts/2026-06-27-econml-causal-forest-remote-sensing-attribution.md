@@ -232,7 +232,7 @@ pixel_id, year, lon, lat, Y, T, precip, temp, slope, elevation, land_use, human_
 
 整理完成后，就可以把 `Y`、`T`、`W` 和 `X` 替换成自己的研究变量。
 
-## 六、如何迁移到我的研究中
+## 六、如何迁移到遥感生态研究
 
 ### 1. 用于 NPP/GPP 对气候因子的响应分析
 

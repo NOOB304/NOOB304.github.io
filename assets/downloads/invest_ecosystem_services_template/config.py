@@ -28,4 +28,3 @@ ANNUAL_PRICE_CHANGE = 0.0
 
 # -1 表示在当前进程中同步运行，便于排错。
 N_WORKERS = -1
-

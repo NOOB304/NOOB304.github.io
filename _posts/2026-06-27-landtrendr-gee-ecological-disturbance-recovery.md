@@ -1,6 +1,7 @@
 ---
 title: "从两期差值到变化轨迹：用 LandTrendr/GEE 识别生态退化与恢复年份"
-date: 2026-06-27
+date: 2026-06-27 22:53:08 +0800
+article_id: "008"
 permalink: /posts/2026/06/landtrendr-gee-ecological-disturbance-recovery/
 lang: zh
 author_profile: true

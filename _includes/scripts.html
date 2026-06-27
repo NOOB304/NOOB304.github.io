@@ -1,4 +1,10 @@
 <script src="{{ base_path }}/assets/js/main.min.js"></script>
 <script src="{{ '/assets/js/language-preference.js' | relative_url }}"></script>
+{% if page.article_id == "001" %}
+<script src="{{ '/assets/js/article-router.js' | relative_url }}"></script>
+{% endif %}
+{% if page.arg_page %}
+<script src="{{ '/assets/js/arg-page.js' | relative_url }}"></script>
+{% endif %}
 
 {% include analytics.html %}

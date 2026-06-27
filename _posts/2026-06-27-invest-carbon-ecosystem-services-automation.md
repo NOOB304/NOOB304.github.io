@@ -1,6 +1,7 @@
 ---
 title: "从土地利用图到碳储量变化：用 InVEST 3.20 搭建可复现的生态系统服务评估流程"
-date: 2026-06-27
+date: 2026-06-27 12:40:02 +0800
+article_id: "007"
 permalink: /posts/2026/06/invest-carbon-ecosystem-services-automation/
 lang: zh
 author_profile: true

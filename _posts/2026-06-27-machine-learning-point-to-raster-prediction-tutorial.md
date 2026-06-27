@@ -1,6 +1,7 @@
 ---
 title: "从 0 入门：用机器学习把点位数据预测成栅格图"
-date: 2026-06-27
+date: 2026-06-27 02:09:04 +0800
+article_id: "002"
 permalink: /posts/2026/06/machine-learning-point-to-raster-prediction-tutorial/
 redirect_from:
   - /posts/2026/06/gpp-machine-learning-raster-prediction-tutorial/

@@ -9,6 +9,12 @@
 <link rel="manifest" href="{{ base_path }}/images/manifest.json?v=rabbit-20260627"/>
 <meta name="theme-color" content="#e9bf8a"/>
 <link rel="stylesheet" href="{{ base_path }}/assets/css/academicons.css"/>
+{% if page.arg_page or page.article_id == "001" %}
+<link rel="stylesheet" href="{{ '/assets/css/arg.css' | relative_url }}"/>
+{% endif %}
+{% if page.noindex %}
+<meta name="robots" content="noindex, nofollow, noarchive"/>
+{% endif %}
 
 
 <!-- Support for MatJax -->

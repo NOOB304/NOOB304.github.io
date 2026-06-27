@@ -1,0 +1,343 @@
+.article-id-value,
+.arg-record__meta,
+.arg-record__kicker,
+.arg-modal__eyebrow {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+.article-id-separator {
+  margin: 0 0.2rem;
+  color: #777;
+}
+
+.arg-previous-trigger {
+  border-style: dashed;
+}
+
+.arg-modal[hidden] {
+  display: none !important;
+}
+
+.arg-modal {
+  position: fixed;
+  z-index: 10000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+}
+
+.arg-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(3px);
+}
+
+.arg-modal__dialog {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 32rem);
+  padding: 1.6rem;
+  color: #e7e7e7;
+  background: #0b0d0c;
+  border: 1px solid #4c554f;
+  border-radius: 3px;
+  box-shadow: 0 1.5rem 5rem rgba(0, 0, 0, 0.55);
+}
+
+.arg-modal__dialog h2 {
+  margin: 0.2rem 0 0.8rem;
+  color: #fff;
+}
+
+.arg-modal__dialog label {
+  display: block;
+  margin: 1.1rem 0 0.35rem;
+  font-size: 0.85rem;
+  color: #b7c0ba;
+}
+
+.arg-modal__eyebrow {
+  margin: 0;
+  color: #8ea397;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+}
+
+.arg-modal__close {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.7rem;
+  padding: 0.15rem 0.45rem;
+  color: #aeb5b0;
+  background: transparent;
+  border: 0;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.arg-modal__input {
+  display: block;
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  color: #f4f4f4;
+  background: #050606;
+  border: 1px solid #59635d;
+  border-radius: 2px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+.arg-modal__input:focus {
+  border-color: #a3b7ab;
+  outline: 2px solid rgba(163, 183, 171, 0.22);
+  outline-offset: 1px;
+}
+
+.arg-modal__error {
+  min-height: 1.45rem;
+  margin: 0.55rem 0 0;
+  color: #d99c91;
+  font-size: 0.85rem;
+}
+
+.arg-modal__actions {
+  display: flex;
+  gap: 0.65rem;
+  justify-content: flex-end;
+  margin-top: 0.8rem;
+}
+
+.arg-button {
+  padding: 0.55rem 0.9rem;
+  color: #d9dfdb;
+  background: #171a18;
+  border: 1px solid #59635d;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.arg-button:hover,
+.arg-button:focus {
+  color: #fff;
+  background: #242925;
+}
+
+.arg-button--primary {
+  color: #08100b;
+  background: #a8b9af;
+  border-color: #a8b9af;
+}
+
+.arg-button--primary:hover,
+.arg-button--primary:focus {
+  color: #050806;
+  background: #c5d0ca;
+}
+
+body.arg-modal-open {
+  overflow: hidden;
+}
+
+body.arg-page {
+  color: #d2d6d3;
+  background: #030403;
+}
+
+body.arg-page::selection {
+  color: #050605;
+  background: #a8b9af;
+}
+
+body.arg-page .masthead,
+body.arg-page .greedy-nav,
+body.arg-page .greedy-nav .hidden-links {
+  color: #d5d9d6;
+  background: #070907;
+}
+
+body.arg-page .masthead {
+  border-bottom: 1px solid #252a26;
+  box-shadow: none;
+}
+
+body.arg-page .greedy-nav a,
+body.arg-page .greedy-nav a:visited {
+  color: #c7cec9;
+}
+
+body.arg-page #theme-toggle {
+  display: none;
+}
+
+body.arg-page .page__footer {
+  color: #7d857f;
+  background: #050605;
+  border-top: 1px solid #1f2420;
+}
+
+body.arg-page .page__footer a {
+  color: #9ba79f;
+}
+
+.arg-shell {
+  min-height: calc(100vh - 12rem);
+  padding: 3.2rem 1.2rem 4rem;
+}
+
+.arg-record {
+  width: min(100%, 880px);
+  margin: 0 auto;
+  background: #080a08;
+  border: 1px solid #272d28;
+  box-shadow: 0 1.8rem 5rem rgba(0, 0, 0, 0.36);
+}
+
+.arg-record__header {
+  padding: 1.8rem 2rem 1.5rem;
+  border-bottom: 1px solid #2a302b;
+  background: #0b0e0b;
+}
+
+.arg-record__header h1 {
+  margin: 0.45rem 0 1rem;
+  color: #f0f2f0;
+  font-size: clamp(1.65rem, 4vw, 2.4rem);
+  line-height: 1.3;
+}
+
+.arg-record__kicker {
+  margin: 0;
+  color: #829087;
+  font-size: 0.72rem;
+  letter-spacing: 0.17em;
+}
+
+.arg-record__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 1.5rem;
+  color: #98a29b;
+  font-size: 0.78rem;
+}
+
+.arg-record__content {
+  padding: 1.7rem 2rem 2.3rem;
+  line-height: 1.85;
+}
+
+.arg-record__content h2 {
+  margin-top: 2.3rem;
+  padding-bottom: 0.5rem;
+  color: #e6e9e7;
+  border-bottom: 1px solid #242a25;
+}
+
+.arg-record__content strong {
+  color: #e9ecea;
+}
+
+.arg-record__content a,
+.arg-record__content a:visited {
+  color: #a9beb2;
+}
+
+.arg-record__content code {
+  color: #b9c9c0;
+  background: #111411;
+}
+
+.arg-observation-table {
+  padding: 0.9rem 1rem;
+  color: #bcc5bf;
+  background: #050705;
+  border-left: 2px solid #66756c;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.86rem;
+}
+
+.arg-comments {
+  margin-top: 3rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid #303631;
+}
+
+.arg-comments > h2 {
+  margin-top: 0;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  letter-spacing: 0.04em;
+}
+
+.arg-comment {
+  margin: 0 0 0.9rem;
+  padding: 0.95rem 1rem;
+  background: #0d100d;
+  border: 1px solid #272d28;
+}
+
+.arg-comment--anonymous {
+  border-color: #4d544f;
+  background: #090b09;
+}
+
+.arg-comment__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.45rem;
+  color: #9eaaa2;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.78rem;
+}
+
+.arg-comment p {
+  margin: 0;
+}
+
+.arg-comments__more {
+  margin-top: 1rem;
+}
+
+.review-log {
+  margin-top: 1.2rem;
+  padding: 1rem 1.1rem;
+  color: #c5ccc7;
+  background: #050705;
+  border: 1px solid #293029;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+.review-log p {
+  margin: 0.25rem 0;
+}
+
+.review-log__time {
+  color: #85958b;
+}
+
+.review-log__damaged {
+  margin-top: 2rem;
+  color: #9c8580;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+@media (max-width: 600px) {
+  .arg-shell {
+    padding: 1.4rem 0.7rem 2.5rem;
+  }
+
+  .arg-record__header,
+  .arg-record__content {
+    padding-right: 1.1rem;
+    padding-left: 1.1rem;
+  }
+
+  .arg-modal {
+    padding: 0.7rem;
+  }
+
+  .arg-modal__dialog {
+    padding: 1.25rem 1rem;
+  }
+}

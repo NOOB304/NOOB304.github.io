@@ -1,6 +1,7 @@
 ---
 title: "从 GEE 到论文数据表：用 geemap 批量提取 NDVI、NPP、ERA5 和土地利用变量"
-date: 2026-06-27
+date: 2026-06-27 03:39:38 +0800
+article_id: "006"
 permalink: /posts/2026/06/geemap-gee-remote-sensing-automation/
 lang: zh
 author_profile: true

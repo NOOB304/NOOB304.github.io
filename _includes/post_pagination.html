@@ -1,8 +1,10 @@
 {% include base_path %}
 
-{% if page.previous or page.next %}
+{% if page.previous or page.next or page.article_id == "001" %}
   <nav class="pagination">
-    {% if page.previous %}
+    {% if page.article_id == "001" %}
+      <a href="#article-access-modal" id="article-access-trigger" class="pagination--pager arg-previous-trigger" aria-haspopup="dialog">{% if page.lang == "zh" %}上一篇{% else %}Previous{% endif %}</a>
+    {% elsif page.previous %}
       <a href="{{ base_path }}{{ page.previous.url }}" class="pagination--pager" title="{{ page.previous.title | markdownify | strip_html }}">{{ site.data.ui-text[site.locale].pagination_previous | default: "Previous" }}</a>
     {% else %}
       <a href="#" class="pagination--pager disabled">{{ site.data.ui-text[site.locale].pagination_previous | default: "Previous" }}</a>
@@ -13,4 +15,30 @@
       <a href="#" class="pagination--pager disabled">{{ site.data.ui-text[site.locale].pagination_next | default: "Next" }}</a>
     {% endif %}
   </nav>
+{% endif %}
+
+{% if page.article_id == "001" %}
+  <div class="arg-modal" id="article-access-modal" hidden>
+    <div class="arg-modal__backdrop" data-arg-close></div>
+    <section class="arg-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="article-access-title">
+      <button type="button" class="arg-modal__close" data-arg-close aria-label="关闭">×</button>
+      <p class="arg-modal__eyebrow">ARTICLE INDEX</p>
+      <h2 id="article-access-title">文章检索</h2>
+      <p>文章不存在，若您想访问其他文章请输入文章编号。</p>
+      <label for="article-id-input">文章编号</label>
+      <input id="article-id-input" class="arg-modal__input" type="text" inputmode="numeric" maxlength="12" autocomplete="off" placeholder="例如：001">
+      <p id="article-id-error" class="arg-modal__error" role="status" aria-live="polite"></p>
+      <div class="arg-modal__actions">
+        <button type="button" class="arg-button arg-button--primary" id="article-id-confirm">确认</button>
+        <button type="button" class="arg-button" data-arg-close>关闭</button>
+      </div>
+    </section>
+  </div>
+
+  <script type="application/json" id="article-route-map">
+  {
+    "000": "{{ '/observation-00/' | relative_url }}"{% for article in site.posts %}{% if article.article_id %},
+    "{{ article.article_id }}": "{{ article.url | relative_url }}"{% endif %}{% endfor %}
+  }
+  </script>
 {% endif %}

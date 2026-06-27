@@ -15,6 +15,12 @@ const requiredFiles = [
   '_pages/about-zh.md',
   '_pages/publications.md',
   '_pages/publications-zh.md',
+  '_pages/observation-00.md',
+  '_pages/review-log.md',
+  '_layouts/arg.html',
+  'assets/css/arg.css',
+  'assets/js/article-router.js',
+  'assets/js/arg-page.js',
   'images/profile.jpg',
   'assets/js/main.min.js',
 ];
@@ -78,6 +84,11 @@ const requiredBuildPaths = [
   { path: 'zh', type: 'directory' },
   { path: 'publications', type: 'directory' },
   { path: 'zh/publications', type: 'directory' },
+  { path: 'observation-00/index.html', type: 'file' },
+  { path: 'review-log/index.html', type: 'file' },
+  { path: 'assets/css/arg.css', type: 'file' },
+  { path: 'assets/js/article-router.js', type: 'file' },
+  { path: 'assets/js/arg-page.js', type: 'file' },
   { path: '404.html', type: 'file' },
 ];
 
@@ -240,6 +251,49 @@ async function checkForbiddenStrings() {
   }
 }
 
+async function checkArticleIds() {
+  const postFiles = (await collectFiles('_posts'))
+    .filter((file) => path.extname(file).toLowerCase() === '.md')
+    .sort();
+  const entries = [];
+  const missing = [];
+
+  for (const file of postFiles) {
+    const content = await fs.readFile(file, 'utf8');
+    const match = content.match(/^article_id:\s*["']?(\d{3})["']?\s*$/m);
+
+    if (!match) {
+      missing.push(toDisplayPath(file));
+      continue;
+    }
+
+    entries.push({ file: toDisplayPath(file), id: match[1] });
+  }
+
+  if (missing.length > 0) {
+    recordFail(`normal posts missing Article ID (${missing.length})`);
+    for (const file of missing) {
+      console.error(`  - ${file}`);
+    }
+    return;
+  }
+
+  const actual = entries.map((entry) => entry.id).sort();
+  const expected = entries
+    .map((_, index) => String(index + 1).padStart(3, '0'));
+  const unique = new Set(actual);
+
+  if (
+    unique.size !== actual.length
+    || actual.some((id, index) => id !== expected[index])
+  ) {
+    recordFail(`Article IDs are not unique and sequential: ${actual.join(', ')}`);
+    return;
+  }
+
+  recordPass(`normal post Article IDs are sequential (${actual.join(', ')})`);
+}
+
 async function checkBuildOutput() {
   const siteDir = toAbsolute('_site');
   const siteStats = await statIfExists(siteDir);
@@ -274,11 +328,77 @@ async function checkBuildOutput() {
   }
 }
 
+async function checkRenderedArgFeatures() {
+  const siteDir = toAbsolute('_site');
+  const siteStats = await statIfExists(siteDir);
+
+  if (!siteStats?.isDirectory()) {
+    console.log('SKIP rendered ARG checks: _site directory not found');
+    return;
+  }
+
+  const requiredContent = [
+    {
+      path: 'posts/2026/06/python-random-forest-point-to-surface-prediction/index.html',
+      terms: ['Article ID:', '001', 'article-access-trigger', 'article-route-map'],
+    },
+    {
+      path: 'observation-00/index.html',
+      terms: [
+        '第 0 篇博客：一次受限时间窗内的异常观测',
+        'Reviewer_01',
+        '我们在注视你',
+        'review-log-trigger',
+      ],
+    },
+    {
+      path: 'review-log/index.html',
+      terms: ['该模块已恢复', '你们把“看见”理解得太窄', '更多记录已损坏'],
+    },
+    {
+      path: 'zh/blog/index.html',
+      terms: ['Article ID:', '008'],
+    },
+  ];
+
+  for (const check of requiredContent) {
+    const filePath = path.join(siteDir, ...check.path.split('/'));
+    const content = await fs.readFile(filePath, 'utf8');
+    const missingTerms = check.terms.filter((term) => !content.includes(term));
+
+    if (missingTerms.length > 0) {
+      recordFail(`${check.path} is missing ARG content: ${missingTerms.join(', ')}`);
+    }
+  }
+
+  const archive = await fs.readFile(
+    path.join(siteDir, 'zh', 'blog', 'index.html'),
+    'utf8',
+  );
+  const sitemap = await fs.readFile(path.join(siteDir, 'sitemap.xml'), 'utf8');
+  const hiddenPaths = ['/observation-00/', '/review-log/'];
+
+  for (const hiddenPath of hiddenPaths) {
+    if (archive.includes(hiddenPath)) {
+      recordFail(`hidden ARG page leaked into blog archive: ${hiddenPath}`);
+    }
+    if (sitemap.includes(hiddenPath)) {
+      recordFail(`hidden ARG page leaked into sitemap: ${hiddenPath}`);
+    }
+  }
+
+  if (failureCount === 0) {
+    recordPass('rendered ARG routes, content, archive exclusion, and sitemap exclusion');
+  }
+}
+
 async function main() {
   console.log('Site integrity checks');
   await checkRequiredFiles();
   await checkForbiddenStrings();
+  await checkArticleIds();
   await checkBuildOutput();
+  await checkRenderedArgFeatures();
 
   if (failureCount > 0) {
     console.error(`FAIL site integrity checks completed with ${failureCount} failing section(s)`);

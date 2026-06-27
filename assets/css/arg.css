@@ -151,7 +151,11 @@ body.arg-page::selection {
 }
 
 body.arg-page .masthead,
+body.arg-page .masthead__inner-wrap,
+body.arg-page .masthead__menu,
 body.arg-page .greedy-nav,
+body.arg-page .greedy-nav .visible-links,
+body.arg-page .greedy-nav .visible-links li,
 body.arg-page .greedy-nav .hidden-links {
   color: #d5d9d6;
   background: #070907;
@@ -165,6 +169,18 @@ body.arg-page .masthead {
 body.arg-page .greedy-nav a,
 body.arg-page .greedy-nav a:visited {
   color: #c7cec9;
+  background: #070907;
+}
+
+body.arg-page .greedy-nav a:hover,
+body.arg-page .greedy-nav a:focus {
+  color: #fff;
+  background: #121512;
+}
+
+body.arg-page .greedy-nav button {
+  color: #c7cec9;
+  background: #070907;
 }
 
 body.arg-page #theme-toggle {
@@ -203,7 +219,7 @@ body.arg-page .page__footer a {
 .arg-record__header h1 {
   margin: 0.45rem 0 1rem;
   color: #f0f2f0;
-  font-size: clamp(1.65rem, 4vw, 2.4rem);
+  font-size: clamp(30px, 2.5vw, 39px) !important;
   line-height: 1.3;
 }
 

@@ -17,6 +17,7 @@ share: false
 |---|---|---|
 | 点位样本到栅格预测的通用机器学习流程 | [下载 rasterml_point_to_raster_template.zip](/assets/downloads/rasterml_point_to_raster_template.zip){: .btn .btn--primary} | [阅读教程](/posts/2026/06/machine-learning-point-to-raster-prediction-tutorial/) |
 | geemap 与 Google Earth Engine 遥感数据自动化 | [下载 geemap_gee_ecology_template.zip](/assets/downloads/geemap_gee_ecology_template.zip){: .btn .btn--primary} | [阅读教程](/posts/2026/06/geemap-gee-remote-sensing-automation/) |
+| LandTrendr/GEE 遥感长时间序列扰动与恢复识别 | [下载 landtrendr_ecological_change_template.zip](/assets/downloads/landtrendr_ecological_change_template.zip){: .btn .btn--primary} | [阅读教程](/posts/2026/06/landtrendr-gee-ecological-disturbance-recovery/) |
 | InVEST 3.20 碳储量与生态系统服务情景评估 | [下载 invest_ecosystem_services_template.zip](/assets/downloads/invest_ecosystem_services_template.zip){: .btn .btn--primary} | [阅读教程](/posts/2026/06/invest-carbon-ecosystem-services-automation/) |
 | EconML 因果森林与遥感归因分析 | [下载 econml_remote_sensing_causal_template.zip](/assets/downloads/econml_remote_sensing_causal_template.zip){: .btn .btn--primary} | [阅读教程](/posts/2026/06/econml-causal-forest-remote-sensing-attribution/) |
 | xclim 气候指标计算与生态模型输入整理 | [下载 xclim_climate_indices_ecology_template.zip](/assets/downloads/xclim_climate_indices_ecology_template.zip){: .btn .btn--primary} | [阅读教程](/posts/2026/06/xclim-climate-indices-remote-sensing-ecology/) |
@@ -29,6 +30,7 @@ share: false
 ```text
 https://noob304.github.io/assets/downloads/rasterml_point_to_raster_template.zip
 https://noob304.github.io/assets/downloads/geemap_gee_ecology_template.zip
+https://noob304.github.io/assets/downloads/landtrendr_ecological_change_template.zip
 https://noob304.github.io/assets/downloads/invest_ecosystem_services_template.zip
 https://noob304.github.io/assets/downloads/econml_remote_sensing_causal_template.zip
 https://noob304.github.io/assets/downloads/xclim_climate_indices_ecology_template.zip

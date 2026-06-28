@@ -27,10 +27,10 @@ stages:
         time: "2026-03-04 03:21"
         body: |-
           哥们你是懂评论区气氛的。
-      - user: "做喵的GIS"
-        time: "2026-03-04 03:29"
+      - user: "夜观星河"
+        time: "2026-03-04 03:22"
         body: |-
-          笑死，每次遥感圈出点反常的东西，评论区第一反应都是克苏鲁。
+          克苏鲁是吧，懂了懂了。
       - user: "Yuchen"
         time: "2026-03-04 03:23"
         body: |-
@@ -47,10 +47,10 @@ stages:
         body: |-
           楼主说得对。
           先看模型、原始影像、时间窗和底图对应关系。
-      - user: "夜观星河"
-        time: "2026-03-04 03:22"
+      - user: "做喵的GIS"
+        time: "2026-03-04 03:29"
         body: |-
-          克苏鲁是吧，懂了懂了。
+          笑死，每次遥感圈出点反常的东西，评论区第一反应都是克苏鲁。
       - user: "匿名用户7733"
         time: "2026-03-04 03:30"
         body: |-
@@ -447,12 +447,12 @@ stages:
         body: |-
           我后来找到两张疑似监控截图。
           一张是在路边补给点附近，时间大约 02:37。
-          另一张是在山地入口附近，时间大约 03:01。
+          另一张是在山地入口附近，时间大约 03:55。
         attachments:
           - filename: "cctv_0237.jpg"
             path: "/assets/images/arg/cctv_0237.jpg"
-          - filename: "cctv_0301.jpg"
-            path: "/assets/images/arg/cctv_0301.jpg"
+          - filename: "cctv_0355.jpg"
+            path: "/assets/images/arg/cctv_0355.jpg"
       - user: "做喵的GIS"
         time: "2026-04-06 10:48"
         body: |-

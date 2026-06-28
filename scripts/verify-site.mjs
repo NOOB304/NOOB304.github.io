@@ -25,6 +25,10 @@ const requiredFiles = [
   'assets/js/article-router.js',
   'assets/js/arg-page.js',
   'assets/js/arg-admin.js',
+  'assets/images/arg/sms_admin_recovery.jpg',
+  'assets/images/arg/missing_notice_wei.jpg',
+  'assets/images/arg/cctv_0237.jpg',
+  'assets/images/arg/cctv_0355.jpg',
   'images/arg/observation-00-figure-1.png',
   'images/arg/observation-00-figure-2.png',
   'images/profile.jpg',
@@ -98,6 +102,10 @@ const requiredBuildPaths = [
   { path: 'assets/js/article-router.js', type: 'file' },
   { path: 'assets/js/arg-page.js', type: 'file' },
   { path: 'assets/js/arg-admin.js', type: 'file' },
+  { path: 'assets/images/arg/sms_admin_recovery.jpg', type: 'file' },
+  { path: 'assets/images/arg/missing_notice_wei.jpg', type: 'file' },
+  { path: 'assets/images/arg/cctv_0237.jpg', type: 'file' },
+  { path: 'assets/images/arg/cctv_0355.jpg', type: 'file' },
   { path: 'images/arg/observation-00-figure-1.png', type: 'file' },
   { path: 'images/arg/observation-00-figure-2.png', type: 'file' },
   { path: '404.html', type: 'file' },
@@ -324,8 +332,6 @@ async function checkReviewLogSource() {
   ));
   const expectedTimestampInversions = [
     { index: 2, previous: '2026-03-04 03:18', current: '2026-03-04 03:04' },
-    { index: 7, previous: '2026-03-04 03:29', current: '2026-03-04 03:23' },
-    { index: 10, previous: '2026-03-04 03:27', current: '2026-03-04 03:22' },
   ];
   const intentionalTimestampAnomalies = (
     JSON.stringify(timestampInversions) === JSON.stringify(expectedTimestampInversions)
@@ -354,7 +360,7 @@ async function checkReviewLogSource() {
     'sms_admin_recovery.jpg',
     'missing_notice_wei.jpg',
     'cctv_0237.jpg',
-    'cctv_0301.jpg',
+    'cctv_0355.jpg',
   ];
   const missingAttachments = requiredAttachmentNames.filter(
     (filename) => !data.includes(filename),
@@ -506,7 +512,7 @@ async function checkRenderedArgFeatures() {
         'sms_admin_recovery.jpg',
         'missing_notice_wei.jpg',
         'cctv_0237.jpg',
-        'cctv_0301.jpg',
+        'cctv_0355.jpg',
         'review-system-notice',
         '系统提示',
         '更多记录已损坏。',
@@ -574,8 +580,6 @@ async function checkRenderedArgFeatures() {
   ));
   const expectedRenderedTimeInversions = [
     { index: 2, previous: '2026-03-04 03:18', current: '2026-03-04 03:04' },
-    { index: 7, previous: '2026-03-04 03:29', current: '2026-03-04 03:23' },
-    { index: 10, previous: '2026-03-04 03:27', current: '2026-03-04 03:22' },
   ];
   const renderedIntentionalTimestampAnomalies = (
     JSON.stringify(renderedTimeInversions) === JSON.stringify(expectedRenderedTimeInversions)

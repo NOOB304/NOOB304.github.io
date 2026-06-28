@@ -27,17 +27,16 @@
             <li class="masthead__menu-item"><a href="{{ link_url }}">{{ link.title }}</a></li>
           {% endfor %}
           {% include language-switch.html %}
-          {% if page.arg_admin %}
-            <li class="masthead__menu-item persist tail arg-admin-nav">
-              <a id="arg-admin-open" href="#admin-login" role="button" aria-haspopup="dialog">登录博客后台</a>
-            </li>
-          {% else %}
+          {% unless page.arg_admin %}
             <li id="theme-toggle" class="masthead__menu-item persist tail">
               <a><i id="theme-icon" class="fa-solid fa-sun" aria-hidden="true" title="toggle theme"></i></a>
             </li>
-          {% endif %}
+          {% endunless %}
         </ul>
         <ul class="hidden-links hidden"></ul>
+        {% if page.arg_admin %}
+          <a class="arg-admin-nav" id="arg-admin-open" href="#admin-login" role="button" aria-haspopup="dialog">登录博客后台</a>
+        {% endif %}
       </nav>
     </div>
   </div>

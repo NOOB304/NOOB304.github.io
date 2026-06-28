@@ -365,7 +365,7 @@ async function checkReviewLogSource() {
   const systemNoticeCorrect = !data.includes('更多记录已损坏。')
     && page.includes('class="review-system-notice"')
     && page.includes('<span>更多记录已损坏。</span>');
-  const adminTriggerInNavigation = masthead.includes('class="masthead__menu-item persist tail arg-admin-nav"')
+  const adminTriggerInNavigation = masthead.includes('class="arg-admin-nav"')
     && masthead.includes('id="arg-admin-open"')
     && masthead.includes('登录博客后台')
     && !page.includes('class="arg-admin-entry"')
@@ -622,7 +622,7 @@ async function checkRenderedArgFeatures() {
   }
   if (
     !reviewLog.includes('class="review-system-notice"')
-    || !reviewLog.includes('class="masthead__menu-item persist tail arg-admin-nav"')
+    || !reviewLog.includes('class="arg-admin-nav"')
     || reviewLog.includes('class="arg-admin-entry"')
   ) {
     recordFail('rendered review log system notice or navigation login placement is incorrect');

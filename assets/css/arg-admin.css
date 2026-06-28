@@ -167,21 +167,17 @@ body.arg-admin-page .arg-record {
   overflow-wrap: anywhere;
 }
 
-body.arg-admin-page .greedy-nav .visible-links {
-  display: flex;
-  align-items: center;
-  width: 100%;
+body.arg-admin-page .greedy-nav {
+  box-sizing: border-box;
+  padding-right: 8.5rem;
 }
 
-body.arg-admin-page .greedy-nav .visible-links > li {
+body.arg-admin-page .greedy-nav > .arg-admin-nav {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  z-index: 101;
   display: block;
-}
-
-body.arg-admin-page .arg-admin-nav {
-  margin-left: auto;
-}
-
-body.arg-admin-page .greedy-nav .arg-admin-nav a {
   margin: 0;
   padding: 0.42rem 0.72rem;
   color: #d5dbd7;
@@ -190,11 +186,18 @@ body.arg-admin-page .greedy-nav .arg-admin-nav a {
   border-radius: 2px;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-size: 0.72rem;
+  line-height: 1.2;
+  text-decoration: none;
+  transform: translateY(-50%);
   cursor: pointer;
 }
 
-body.arg-admin-page .greedy-nav .arg-admin-nav a:hover,
-body.arg-admin-page .greedy-nav .arg-admin-nav a:focus {
+body.arg-admin-page .greedy-nav > button:not(.hidden) ~ .arg-admin-nav {
+  right: 3.25rem;
+}
+
+body.arg-admin-page .greedy-nav > .arg-admin-nav:hover,
+body.arg-admin-page .greedy-nav > .arg-admin-nav:focus {
   color: #fff;
   background: #171b17;
   border-color: #87938b;

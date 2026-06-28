@@ -116,7 +116,10 @@ noindex: true
       <h2 id="arg-admin-recovery-success-title">Password Recovery</h2>
       <p class="arg-recovery-alert" role="alert">ACCESS GRANTED</p>
       <p class="arg-recovery-success-copy"><strong>IDENTITY VERIFIED.<br>PASSWORD RESET COMPLETE.</strong></p>
-      <p class="arg-admin-new-password">NEW PASSWORD: <code>W123456</code></p>
+      <p class="arg-admin-new-password" tabindex="0">
+        NEW PASSWORD: <code>W123456</code>
+        <span class="arg-password-warning">马上离开！</span>
+      </p>
       <p>Return to the login screen and sign in again.</p>
       <div class="arg-modal__actions arg-admin-actions">
         <button type="button" class="arg-button arg-button--primary" data-admin-login-view>返回登录</button>

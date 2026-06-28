@@ -264,7 +264,7 @@
     var recoveryError = document.getElementById("arg-admin-recovery-error");
     var placeholderMenuItems = adminMenu.querySelectorAll("[data-admin-placeholder]");
     var recoveryTimer = null;
-    var recoveryAudioContext = null;
+    var impactAudioContext = null;
 
     var viewLabels = new Map([
       [loginView, "arg-admin-login-title"],
@@ -331,38 +331,38 @@
 
     function closeModal() {
       cancelRecoveryTimer();
-      if (recoveryAudioContext && recoveryAudioContext.state !== "closed") {
-        recoveryAudioContext.close();
-        recoveryAudioContext = null;
+      if (impactAudioContext && impactAudioContext.state !== "closed") {
+        impactAudioContext.close();
+        impactAudioContext = null;
       }
       modal.hidden = true;
       document.body.classList.remove("arg-modal-open");
-      modal.classList.remove("arg-recovery-impact");
+      modal.classList.remove("arg-login-impact");
       clearMessages();
       trigger.focus();
     }
 
-    function prepareRecoverySound() {
+    function prepareLoginSound() {
       var AudioContextClass = window.AudioContext || window.webkitAudioContext;
       if (!AudioContextClass) {
         return null;
       }
 
       try {
-        if (!recoveryAudioContext || recoveryAudioContext.state === "closed") {
-          recoveryAudioContext = new AudioContextClass();
+        if (!impactAudioContext || impactAudioContext.state === "closed") {
+          impactAudioContext = new AudioContextClass();
         }
-        if (recoveryAudioContext.state === "suspended") {
-          recoveryAudioContext.resume();
+        if (impactAudioContext.state === "suspended") {
+          impactAudioContext.resume();
         }
-        return recoveryAudioContext;
+        return impactAudioContext;
       } catch (audioError) {
         return null;
       }
     }
 
-    function playRecoverySound() {
-      var context = prepareRecoverySound();
+    function playLoginSound() {
+      var context = prepareLoginSound();
       if (!context) {
         return;
       }
@@ -395,36 +395,77 @@
 
         window.setTimeout(function () {
           context.close();
-          recoveryAudioContext = null;
+          impactAudioContext = null;
         }, 600);
       } catch (audioError) {
-        // The visual recovery response remains available when audio is blocked.
+        // The visual login response remains available when audio is blocked.
       }
     }
 
-    function triggerRecoveryImpact() {
-      modal.classList.remove("arg-recovery-impact");
+    function createTurnBackOverlay() {
+      var existingOverlay = document.querySelector(".arg-login-horror");
+      if (existingOverlay) {
+        existingOverlay.remove();
+      }
+
+      var overlay = document.createElement("div");
+      overlay.className = "arg-login-horror";
+      overlay.setAttribute("aria-hidden", "true");
+
+      ["left", "right"].forEach(function (sideName, sideIndex) {
+        var side = document.createElement("div");
+        side.className = "arg-login-horror__side arg-login-horror__side--" + sideName;
+
+        for (var index = 0; index < 18; index += 1) {
+          var warning = document.createElement("span");
+          warning.textContent = index % 4 === 0 ? "回头，回头" : "回头";
+          warning.style.setProperty("--turn-top", ((index * 31 + sideIndex * 11) % 92) + "%");
+          warning.style.setProperty("--turn-left", ((index * 19 + sideIndex * 7) % 58) + "%");
+          warning.style.setProperty("--turn-delay", ((index % 5) * 0.045) + "s");
+          warning.style.setProperty("--turn-size", (1.1 + (index % 5) * 0.28) + "rem");
+          side.appendChild(warning);
+        }
+
+        overlay.appendChild(side);
+      });
+
+      document.body.appendChild(overlay);
+      window.setTimeout(function () {
+        overlay.remove();
+      }, 2050);
+    }
+
+    function triggerLoginImpact() {
+      modal.classList.remove("arg-login-impact");
       window.requestAnimationFrame(function () {
-        modal.classList.add("arg-recovery-impact");
-        playRecoverySound();
+        modal.classList.add("arg-login-impact");
+        playLoginSound();
+        createTurnBackOverlay();
         window.setTimeout(function () {
-          modal.classList.remove("arg-recovery-impact");
+          modal.classList.remove("arg-login-impact");
         }, 700);
       });
     }
 
     function attemptLogin() {
+      prepareLoginSound();
       var accountMatches = accountInput.value.trim().toUpperCase() === VALID_ACCOUNT;
       var passwordMatches = passwordInput.value.trim() === RECOVERED_PASSWORD;
 
-      if (!isRecovered() || !accountMatches || !passwordMatches) {
+      if (!accountMatches || !passwordMatches) {
+        if (impactAudioContext && impactAudioContext.state !== "closed") {
+          impactAudioContext.close();
+          impactAudioContext = null;
+        }
         loginError.textContent = "密码错误。";
         return;
       }
 
+      saveRecoveredState();
       saveLoggedInState();
       updateNavigationState();
       showView(loginSuccessView);
+      triggerLoginImpact();
     }
 
     function showRecoveryView() {
@@ -444,7 +485,6 @@
         return;
       }
 
-      prepareRecoverySound();
       var accountMatches = recoveryAccountInput.value.trim().toUpperCase() === VALID_ACCOUNT;
       var normalizedName = normalizeName(nameInput.value);
       var nameMatches = (
@@ -460,10 +500,6 @@
         recoveryTimer = null;
 
         if (!accountMatches || !nameMatches || !emailMatches || !phoneMatches) {
-          if (recoveryAudioContext && recoveryAudioContext.state !== "closed") {
-            recoveryAudioContext.close();
-            recoveryAudioContext = null;
-          }
           showView(recoveryView);
           recoveryError.textContent = "密保信息不匹配。";
           return;
@@ -471,7 +507,6 @@
 
         saveRecoveredState();
         showView(recoverySuccessView);
-        triggerRecoveryImpact();
       }, 2000);
     }
 

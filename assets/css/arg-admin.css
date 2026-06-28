@@ -350,6 +350,28 @@ body.arg-admin-page .greedy-nav .arg-admin-menu a:focus {
   background: transparent;
 }
 
+.arg-password-warning {
+  display: block;
+  max-height: 0;
+  margin-top: 0;
+  color: #d92d27;
+  font-weight: 800;
+  opacity: 0;
+  overflow: hidden;
+  transition:
+    max-height 0.18s ease,
+    margin-top 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.arg-admin-new-password:hover .arg-password-warning,
+.arg-admin-new-password:focus .arg-password-warning,
+.arg-admin-new-password:focus-within .arg-password-warning {
+  max-height: 2rem;
+  margin-top: 0.55rem;
+  opacity: 1;
+}
+
 .arg-admin-loading {
   min-height: 16rem;
   text-align: center;
@@ -392,17 +414,78 @@ body.arg-admin-page .greedy-nav .arg-admin-menu a:focus {
   letter-spacing: 0.04em;
 }
 
-.arg-admin-modal.arg-recovery-impact::after {
+.arg-admin-modal.arg-login-impact::after {
   content: "";
   position: fixed;
   z-index: 3;
   inset: 0;
   pointer-events: none;
-  animation: arg-recovery-flash 0.62s ease-out both;
+  animation: arg-login-flash 0.62s ease-out both;
 }
 
-.arg-admin-modal.arg-recovery-impact .arg-modal__dialog {
-  animation: arg-recovery-impact 0.45s steps(2, end);
+.arg-admin-modal.arg-login-impact .arg-modal__dialog {
+  animation: arg-login-impact 0.45s steps(2, end);
+}
+
+.arg-login-horror {
+  position: fixed;
+  z-index: 12000;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.arg-login-horror__side {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: clamp(9rem, 21vw, 24rem);
+  color: #d51f1b;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.98) 0,
+      rgba(0, 0, 0, 0.98) 11px,
+      rgba(245, 245, 240, 0.93) 11px,
+      rgba(245, 245, 240, 0.93) 16px
+    );
+  mix-blend-mode: normal;
+  animation: arg-login-side-flicker 0.16s steps(2, end) infinite;
+  overflow: hidden;
+}
+
+.arg-login-horror__side::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.32);
+}
+
+.arg-login-horror__side--left {
+  left: 0;
+}
+
+.arg-login-horror__side--right {
+  right: 0;
+}
+
+.arg-login-horror__side span {
+  position: absolute;
+  z-index: 1;
+  top: var(--turn-top);
+  left: var(--turn-left);
+  color: #ed1c17;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: var(--turn-size);
+  font-weight: 900;
+  line-height: 1;
+  white-space: nowrap;
+  text-shadow:
+    0 0 0.25rem #000,
+    0 0 0.8rem rgba(237, 28, 23, 0.95);
+  animation:
+    arg-login-turn-back 0.38s steps(2, end) var(--turn-delay) infinite,
+    arg-login-warning-fade 2.05s ease-out both;
 }
 
 @keyframes arg-admin-spin {
@@ -433,7 +516,7 @@ body.arg-admin-page .greedy-nav .arg-admin-menu a:focus {
   }
 }
 
-@keyframes arg-recovery-flash {
+@keyframes arg-login-flash {
   0% {
     background: rgba(230, 22, 16, 0.72);
   }
@@ -448,7 +531,7 @@ body.arg-admin-page .greedy-nav .arg-admin-menu a:focus {
   }
 }
 
-@keyframes arg-recovery-impact {
+@keyframes arg-login-impact {
   0% {
     transform: translate(0, 0) scale(1);
     border-color: #d92d27;
@@ -468,15 +551,60 @@ body.arg-admin-page .greedy-nav .arg-admin-menu a:focus {
   }
 }
 
+@keyframes arg-login-side-flicker {
+  0% {
+    background-position: 0 0;
+    opacity: 0.92;
+  }
+  50% {
+    background-position: 9px 0;
+    opacity: 1;
+  }
+  100% {
+    background-position: -7px 0;
+    opacity: 0.96;
+  }
+}
+
+@keyframes arg-login-turn-back {
+  0% {
+    transform: translate(0, 0) skewX(-4deg);
+  }
+  50% {
+    transform: translate(4px, -2px) skewX(5deg);
+  }
+  100% {
+    transform: translate(-3px, 2px) skewX(-2deg);
+  }
+}
+
+@keyframes arg-login-warning-fade {
+  0% {
+    opacity: 0;
+  }
+  8%,
+  78% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .arg-admin-spinner {
     animation-duration: 1.5s;
   }
 
-  .arg-admin-modal.arg-recovery-impact::after,
-  .arg-admin-modal.arg-recovery-impact .arg-modal__dialog,
+  .arg-admin-modal.arg-login-impact::after,
+  .arg-admin-modal.arg-login-impact .arg-modal__dialog,
   .arg-easter-egg-modal.arg-easter-egg-active .arg-easter-egg-dialog {
     animation: none;
+  }
+
+  .arg-login-horror__side,
+  .arg-login-horror__side span {
+    animation: arg-login-warning-fade 2.05s ease-out both;
   }
 }
 

@@ -388,9 +388,16 @@ async function checkReviewLogSource() {
   const recoveryFlowCorrect = page.includes('id="arg-recovery-account"')
     && page.includes('id="arg-admin-recovery-loading"')
     && page.includes('ACCESS GRANTED')
+    && page.includes('class="arg-password-warning"')
+    && page.includes('马上离开！')
     && adminScript.includes('LOGIN_STORAGE_KEY')
     && adminScript.includes('2000')
-    && adminScript.includes('playRecoverySound')
+    && adminScript.includes('playLoginSound')
+    && adminScript.includes('triggerLoginImpact')
+    && adminScript.includes('createTurnBackOverlay')
+    && adminScript.includes('2050')
+    && adminScript.includes('if (!accountMatches || !passwordMatches)')
+    && !adminScript.includes('triggerRecoveryImpact')
     && !page.includes('arg-diary-enter')
     && !page.includes('进入日记模块');
   const diaryNavigationCorrect = /^arg_admin:\s*true\s*$/m.test(diary)
@@ -582,6 +589,8 @@ async function checkRenderedArgFeatures() {
         'arg-recovery-account',
         'arg-admin-recovery-loading',
         'ACCESS GRANTED',
+        'arg-password-warning',
+        '马上离开！',
         'Abnormal message input detected.',
         'Comment module locked.',
         'Admin access verified.',

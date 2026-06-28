@@ -315,15 +315,21 @@ async function checkReviewLogSource() {
   const invalidTimestamps = timestamps.filter(
     (timestamp) => !/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(timestamp),
   );
-  const timestampsOutOfOrder = timestamps.some(
-    (timestamp, index) => index > 0 && timestamp < timestamps[index - 1],
-  );
+  const timestampInversions = timestamps.flatMap((timestamp, index) => (
+    index > 0 && timestamp < timestamps[index - 1]
+      ? [{ index, previous: timestamps[index - 1], current: timestamp }]
+      : []
+  ));
+  const intentionalTimestampAnomaly = timestampInversions.length === 1
+    && timestampInversions[0].index === 2
+    && timestampInversions[0].previous === '2026-03-04 03:18'
+    && timestampInversions[0].current === '2026-03-04 03:04';
 
   if (timestamps.length === 0 || invalidTimestamps.length > 0) {
     recordFail(`review log has invalid timestamps: ${invalidTimestamps.join(', ')}`);
   }
-  if (timestampsOutOfOrder) {
-    recordFail('review log timestamps are not chronological');
+  if (!intentionalTimestampAnomaly) {
+    recordFail('review log intentional 03:04 timestamp anomaly is missing or misplaced');
   }
 
   const commentBlocks = data.split(/(?=^\s{6}- user:)/m);
@@ -373,8 +379,9 @@ async function checkReviewLogSource() {
     '补给点门口有监控。',
     '如果之后需要核对时间，可以查这里。',
     '不代表会去。',
-    '时间怎么比前面还早？',
-    '评论排序 bug',
+    '回头回头回头',
+    '救我救我救我',
+    '它们它们它们',
   ];
   const foundForbidden = forbiddenTerms.filter(
     (term) => data.includes(term) || page.includes(term),
@@ -392,7 +399,7 @@ async function checkReviewLogSource() {
 
   if (
     invalidTimestamps.length === 0
-    && !timestampsOutOfOrder
+    && intentionalTimestampAnomaly
     && missingBadges.length === 0
     && missingAttachments.length === 0
     && !attachmentRendererMissing
@@ -470,6 +477,8 @@ async function checkRenderedArgFeatures() {
         'Comments',
         'Yuchen',
         '他们在注视你',
+        '时间怎么比前面还早？',
+        '评论排序 bug',
         'blogger-badge',
         '用户9920416',
         'sms_admin_recovery.jpg',
@@ -533,9 +542,15 @@ async function checkRenderedArgFeatures() {
   const invalidRenderedTimes = renderedTimes.filter(
     (timestamp) => !/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(timestamp),
   );
-  const renderedTimesOutOfOrder = renderedTimes.some(
-    (timestamp, index) => index > 0 && timestamp < renderedTimes[index - 1],
-  );
+  const renderedTimeInversions = renderedTimes.flatMap((timestamp, index) => (
+    index > 0 && timestamp < renderedTimes[index - 1]
+      ? [{ index, previous: renderedTimes[index - 1], current: timestamp }]
+      : []
+  ));
+  const renderedIntentionalTimestampAnomaly = renderedTimeInversions.length === 1
+    && renderedTimeInversions[0].index === 2
+    && renderedTimeInversions[0].previous === '2026-03-04 03:18'
+    && renderedTimeInversions[0].current === '2026-03-04 03:04';
   const bloggerUsers = (
     reviewLog.match(/class="review-comment__user">Heng Wei<\/span>/g) || []
   ).length;
@@ -565,15 +580,16 @@ async function checkRenderedArgFeatures() {
     '补给点门口有监控。',
     '如果之后需要核对时间，可以查这里。',
     '不代表会去。',
-    '时间怎么比前面还早？',
-    '评论排序 bug',
+    '回头回头回头',
+    '救我救我救我',
+    '它们它们它们',
   ].filter((term) => reviewLog.includes(term));
 
   if (renderedTimes.length === 0 || invalidRenderedTimes.length > 0) {
     recordFail(`rendered review log has invalid timestamps (${invalidRenderedTimes.length})`);
   }
-  if (renderedTimesOutOfOrder) {
-    recordFail('rendered review log timestamps are not chronological');
+  if (!renderedIntentionalTimestampAnomaly) {
+    recordFail('rendered review log intentional 03:04 timestamp anomaly is missing or misplaced');
   }
   if (bloggerUsers === 0 || bloggerUsers !== bloggerBadges) {
     recordFail(

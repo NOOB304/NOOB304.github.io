@@ -22,7 +22,7 @@ noindex: true
   <div class="review-archive" role="log" aria-label="留言列表">
   {% for stage in site.data.review_log.stages %}
     {% for comment in stage.comments %}
-      <article class="review-comment{% if comment.blogger %} review-comment--blogger{% endif %}{% if comment.emphasis %} review-comment--{{ comment.emphasis }}{% endif %}">
+      <article class="review-comment{% if comment.blogger %} review-comment--blogger{% endif %}{% if comment.kind %} review-comment--{{ comment.kind }}{% endif %}{% if comment.emphasis %} review-comment--{{ comment.emphasis }}{% endif %}">
         <header class="review-comment__header">
           <span class="review-comment__user">{{ comment.user }}</span>
           {% if comment.blogger %}<span class="blogger-badge">博主回复</span>{% endif %}
@@ -35,7 +35,7 @@ noindex: true
           <div class="arg-attachment-list">
             {% for attachment in comment.attachments %}
               <figure class="arg-attachment" data-arg-attachment>
-                <img class="arg-attachment__image" data-arg-attachment-image src="{{ attachment.path | relative_url }}" alt="留言附件：{{ attachment.filename }}" decoding="async" hidden>
+                <img class="arg-attachment__image" data-arg-attachment-image{% if attachment.filename == "missing_notice_wei.jpg" %} data-easter-egg-target{% endif %} src="{{ attachment.path | relative_url }}" alt="留言附件：{{ attachment.filename }}" decoding="async" hidden>
                 <div class="arg-attachment__placeholder" data-arg-attachment-placeholder>
                   <span class="arg-attachment__state">FILE UNAVAILABLE</span>
                   <span class="arg-attachment__filename">{{ attachment.filename }}</span>
@@ -54,6 +54,14 @@ noindex: true
     <span>更多记录已损坏。</span>
   </div>
 </section>
+
+<div class="arg-modal arg-easter-egg-modal" id="arg-easter-egg-modal" hidden>
+  <div class="arg-modal__backdrop" data-easter-egg-close></div>
+  <figure class="arg-easter-egg-dialog" role="dialog" aria-modal="true" aria-label="设备已封存">
+    <button type="button" class="arg-modal__close arg-easter-egg-close" data-easter-egg-close aria-label="关闭">×</button>
+    <img src="{{ '/assets/images/arg/missing-notice-easter-egg.png' | relative_url }}" alt="设备已封存" decoding="async">
+  </figure>
+</div>
 
 <div class="arg-modal arg-admin-modal" id="arg-admin-modal" data-diary-url="{{ '/diary/' | relative_url }}" hidden>
   <div class="arg-modal__backdrop" data-admin-close></div>

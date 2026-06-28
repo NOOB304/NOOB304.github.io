@@ -25,6 +25,31 @@ body.arg-admin-page .arg-record {
   border-left-color: #82734a;
 }
 
+.review-comment--system {
+  width: min(100%, 46rem);
+  margin: 1.25rem auto;
+  color: #a9b2ac;
+  background: #060806;
+  border: 1px dashed #465048;
+  border-left-width: 1px;
+}
+
+.review-comment--system .review-comment__header,
+.review-comment--system .review-comment__body {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+.review-comment--system .review-comment__user {
+  color: #b97972;
+  text-transform: lowercase;
+}
+
+.review-comment--system .review-comment__body {
+  color: #aeb8b1;
+  font-size: 0.8rem;
+  line-height: 1.65;
+}
+
 .review-comment--warning .review-comment__body {
   color: #c65a55;
 }
@@ -126,6 +151,10 @@ body.arg-admin-page .arg-record {
   width: 100%;
   height: auto;
   margin: 0;
+}
+
+.arg-attachment__image[data-easter-egg-target] {
+  cursor: zoom-in;
 }
 
 .arg-attachment__image[hidden],
@@ -247,6 +276,50 @@ body.arg-admin-page .greedy-nav .arg-admin-menu a:focus {
   width: min(100%, 38rem);
 }
 
+.arg-easter-egg-modal {
+  z-index: 11000;
+  background: #000;
+}
+
+.arg-easter-egg-modal .arg-modal__backdrop {
+  background: rgba(0, 0, 0, 0.96);
+  backdrop-filter: blur(1px);
+}
+
+.arg-easter-egg-dialog {
+  position: relative;
+  z-index: 1;
+  width: auto;
+  max-width: min(92vw, 48rem);
+  max-height: 94vh;
+  margin: 0;
+  padding: 0;
+  background: #000;
+  border: 1px solid #292d2a;
+  box-shadow: 0 0 4rem rgba(0, 0, 0, 0.95);
+  overflow: hidden;
+}
+
+.arg-easter-egg-dialog img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: 94vh;
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+.arg-easter-egg-close {
+  z-index: 2;
+  color: #d8ddda;
+  background: rgba(0, 0, 0, 0.72);
+  border: 1px solid #59615b;
+}
+
+.arg-easter-egg-modal.arg-easter-egg-active .arg-easter-egg-dialog {
+  animation: arg-easter-egg-reveal 0.32s steps(3, end);
+}
+
 .arg-admin-view[hidden] {
   display: none !important;
 }
@@ -338,6 +411,28 @@ body.arg-admin-page .greedy-nav .arg-admin-menu a:focus {
   }
 }
 
+@keyframes arg-easter-egg-reveal {
+  0% {
+    opacity: 0;
+    transform: scale(1.08);
+    filter: contrast(1.8) brightness(0.25);
+  }
+  45% {
+    opacity: 1;
+    transform: translateX(-4px) scale(0.995);
+    filter: contrast(1.25) brightness(1.25);
+  }
+  70% {
+    transform: translateX(3px) scale(1.005);
+    filter: contrast(1.1) brightness(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
 @keyframes arg-recovery-flash {
   0% {
     background: rgba(230, 22, 16, 0.72);
@@ -379,7 +474,8 @@ body.arg-admin-page .greedy-nav .arg-admin-menu a:focus {
   }
 
   .arg-admin-modal.arg-recovery-impact::after,
-  .arg-admin-modal.arg-recovery-impact .arg-modal__dialog {
+  .arg-admin-modal.arg-recovery-impact .arg-modal__dialog,
+  .arg-easter-egg-modal.arg-easter-egg-active .arg-easter-egg-dialog {
     animation: none;
   }
 }

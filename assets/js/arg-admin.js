@@ -92,6 +92,86 @@
     return value.trim().replace(/[\s-]+/g, "");
   }
 
+  function initializeMissingNoticeEasterEgg() {
+    var target = document.querySelector("[data-easter-egg-target]");
+    var modal = document.getElementById("arg-easter-egg-modal");
+
+    if (!target || !modal) {
+      return;
+    }
+
+    var closeButtons = modal.querySelectorAll("[data-easter-egg-close]");
+    var closeButton = modal.querySelector(".arg-easter-egg-close");
+    var clickCount = 0;
+    var consumed = false;
+    var resetTimer = null;
+
+    function resetSequence() {
+      clickCount = 0;
+      if (resetTimer !== null) {
+        window.clearTimeout(resetTimer);
+        resetTimer = null;
+      }
+    }
+
+    function openEasterEgg() {
+      consumed = true;
+      resetSequence();
+      modal.hidden = false;
+      modal.classList.add("arg-easter-egg-active");
+      document.body.classList.add("arg-modal-open");
+      window.setTimeout(function () {
+        closeButton.focus();
+      }, 0);
+    }
+
+    function closeEasterEgg() {
+      modal.hidden = true;
+      modal.classList.remove("arg-easter-egg-active");
+      document.body.classList.remove("arg-modal-open");
+      target.focus();
+    }
+
+    target.setAttribute("tabindex", "0");
+    target.setAttribute("role", "button");
+    target.setAttribute("aria-label", "寻人启事附件");
+
+    target.addEventListener("click", function () {
+      if (consumed) {
+        return;
+      }
+
+      clickCount += 1;
+      if (resetTimer !== null) {
+        window.clearTimeout(resetTimer);
+      }
+
+      if (clickCount >= 5) {
+        openEasterEgg();
+        return;
+      }
+
+      resetTimer = window.setTimeout(resetSequence, 1400);
+    });
+
+    target.addEventListener("keydown", function (event) {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        target.click();
+      }
+    });
+
+    closeButtons.forEach(function (button) {
+      button.addEventListener("click", closeEasterEgg);
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && !modal.hidden) {
+        closeEasterEgg();
+      }
+    });
+  }
+
   function initializeAdminModal() {
     var trigger = document.getElementById("arg-admin-open");
     var modal = document.getElementById("arg-admin-modal");
@@ -393,5 +473,6 @@
   }
 
   initializeAttachments();
+  initializeMissingNoticeEasterEgg();
   initializeAdminModal();
 })();

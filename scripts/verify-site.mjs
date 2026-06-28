@@ -29,6 +29,7 @@ const requiredFiles = [
   'assets/images/arg/missing_notice_wei.jpg',
   'assets/images/arg/cctv_0237.jpg',
   'assets/images/arg/cctv_0355.jpg',
+  'assets/images/arg/missing-notice-easter-egg.png',
   'images/arg/observation-00-figure-1.png',
   'images/arg/observation-00-figure-2.png',
   'images/profile.jpg',
@@ -106,6 +107,7 @@ const requiredBuildPaths = [
   { path: 'assets/images/arg/missing_notice_wei.jpg', type: 'file' },
   { path: 'assets/images/arg/cctv_0237.jpg', type: 'file' },
   { path: 'assets/images/arg/cctv_0355.jpg', type: 'file' },
+  { path: 'assets/images/arg/missing-notice-easter-egg.png', type: 'file' },
   { path: 'images/arg/observation-00-figure-1.png', type: 'file' },
   { path: 'images/arg/observation-00-figure-2.png', type: 'file' },
   { path: '404.html', type: 'file' },
@@ -387,8 +389,18 @@ async function checkReviewLogSource() {
     && adminScript.includes('LOGIN_STORAGE_KEY')
     && adminScript.includes('2000')
     && adminScript.includes('playRecoverySound');
-  const routeMessageCorrect = data.includes('我详细路线数据，已经私信你了。')
+  const easterEggCorrect = page.includes('data-easter-egg-target')
+    && page.includes('id="arg-easter-egg-modal"')
+    && page.includes('missing-notice-easter-egg.png')
+    && adminScript.includes('clickCount >= 5')
+    && adminScript.includes('consumed = true')
+    && adminScript.includes('1400');
+  const routeMessageCorrect = data.includes('我有详细路线数据，已私信你。')
     && data.includes('请注意，不建议公开，免得无关人员过去。');
+  const systemMessagesCorrect = data.includes('Abnormal message input detected.')
+    && data.includes('Comment module locked.')
+    && data.includes('Admin access verified.')
+    && data.includes('Comment module restored.');
   const forbiddenTerms = [
     '（楼主未关注，无历史发言）',
     '私信记录',
@@ -417,6 +429,9 @@ async function checkReviewLogSource() {
     '它们它们它们',
     '我这边碰巧有更详细的路线数据。',
     '已经私信你了。\n          不建议公开发，免得无关人员过去。',
+    '我详细路线数据，已经私信你了。',
+    '你别往里面走，就在原地等到 03:05，没东西就赶紧回来。',
+    '第 0 篇博客：一次受限时间窗内的异常观测',
   ];
   const foundForbidden = forbiddenTerms.filter(
     (term) => data.includes(term) || page.includes(term),
@@ -437,8 +452,14 @@ async function checkReviewLogSource() {
   if (!recoveryFlowCorrect) {
     recordFail('admin recovery loading, account, or success interaction is incomplete');
   }
+  if (!easterEggCorrect) {
+    recordFail('missing-notice five-click easter egg is incomplete');
+  }
   if (!routeMessageCorrect) {
     recordFail('private route message does not match the requested wording');
+  }
+  if (!systemMessagesCorrect) {
+    recordFail('review log system messages are incomplete');
   }
   if (foundForbidden.length > 0) {
     recordFail(`review log contains forbidden text: ${foundForbidden.join(', ')}`);
@@ -453,7 +474,9 @@ async function checkReviewLogSource() {
     && systemNoticeCorrect
     && adminTriggerInNavigation
     && recoveryFlowCorrect
+    && easterEggCorrect
     && routeMessageCorrect
+    && systemMessagesCorrect
     && foundForbidden.length === 0
   ) {
     recordPass(
@@ -513,7 +536,7 @@ async function checkRenderedArgFeatures() {
     {
       path: 'observation-00/index.html',
       terms: [
-        '第 0 篇博客：一次受限时间窗内的异常观测',
+        '一次受限时间窗内的异常观测（封存记录）',
         'Yuchen',
         'Lin',
         '他们在注视你',
@@ -547,6 +570,12 @@ async function checkRenderedArgFeatures() {
         'arg-recovery-account',
         'arg-admin-recovery-loading',
         'ACCESS GRANTED',
+        'Abnormal message input detected.',
+        'Comment module locked.',
+        'Admin access verified.',
+        'Comment module restored.',
+        'missing-notice-easter-egg.png',
+        'arg-easter-egg-modal',
         'arg-admin-modal',
       ],
     },

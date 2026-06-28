@@ -227,7 +227,7 @@ stages:
       - user: "用户9920416"
         time: "2026-03-05 15:21"
         body: |-
-          我详细路线数据，已经私信你了。
+          我有详细路线数据，已私信你。
           请注意，不建议公开，免得无关人员过去。
       - user: "Heng Wei"
         blogger: true
@@ -339,8 +339,7 @@ stages:
       - user: "做喵的GIS"
         time: "2026-03-06 03:02"
         body: |-
-          收到了。
-          你别往里面走，就在原地等到 03:05，没东西就赶紧回来。
+          收到了。你别往里面走了，赶紧撤吧！
       - user: "Heng Wei"
         blogger: true
         time: "2026-03-06 03:03"
@@ -410,7 +409,19 @@ stages:
         body: |-
           他说时间不是问题。
           问题从来不是时间。
+      - user: "system"
+        kind: "system"
+        time: "2026-03-06 03:47"
+        body: |-
+          Abnormal message input detected.
+          Comment module locked.
   - comments:
+      - user: "system"
+        kind: "system"
+        time: "2026-04-06 10:12"
+        body: |-
+          Admin access verified.
+          Comment module restored.
       - user: "做喵的GIS"
         time: "2026-04-06 10:17"
         body: |-

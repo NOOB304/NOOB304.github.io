@@ -1,6 +1,6 @@
 ---
 layout: arg
-title: "第 0 篇博客：一次受限时间窗内的异常观测"
+title: "一次受限时间窗内的异常观测（封存记录）"
 permalink: /observation-00/
 lang: zh
 article_id: "000"

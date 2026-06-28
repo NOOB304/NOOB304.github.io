@@ -5,6 +5,7 @@ permalink: /diary/
 lang: zh
 arg_page: true
 arg_admin_page: true
+arg_admin: true
 arg_status: "RESTORED"
 body_class: "arg-page arg-admin-page"
 author_profile: false

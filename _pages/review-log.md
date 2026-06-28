@@ -129,7 +129,6 @@ noindex: true
       <h2 id="arg-admin-login-success-title">Blog Admin Recovery</h2>
       <p>登录成功。<br>Diary module restored.</p>
       <div class="arg-modal__actions arg-admin-actions">
-        <a class="arg-button arg-button--primary" id="arg-diary-enter" href="{{ '/diary/' | relative_url }}">进入日记模块</a>
         <button type="button" class="arg-button" data-admin-close>关闭</button>
       </div>
     </div>

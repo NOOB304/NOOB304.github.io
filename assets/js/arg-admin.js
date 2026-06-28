@@ -172,6 +172,66 @@
     });
   }
 
+  function initializeStandaloneAdminNavigation() {
+    var trigger = document.getElementById("arg-admin-open");
+    var adminMenu = document.getElementById("arg-admin-menu");
+    var navWrapper = trigger ? trigger.closest(".arg-admin-nav-wrap") : null;
+    var modal = document.getElementById("arg-admin-modal");
+
+    if (!trigger || !adminMenu || !navWrapper || modal) {
+      return;
+    }
+
+    var placeholderMenuItems = adminMenu.querySelectorAll("[data-admin-placeholder]");
+
+    function closeAdminMenu() {
+      adminMenu.hidden = true;
+      trigger.setAttribute("aria-expanded", "false");
+    }
+
+    function updateNavigationState() {
+      var loggedIn = isLoggedIn();
+      trigger.textContent = loggedIn ? VALID_ACCOUNT : "登录";
+      trigger.setAttribute("aria-haspopup", loggedIn ? "menu" : "dialog");
+      closeAdminMenu();
+    }
+
+    trigger.addEventListener("click", function (event) {
+      event.preventDefault();
+
+      if (!isLoggedIn()) {
+        window.location.assign(
+          navWrapper.getAttribute("data-admin-login-url") || "/review-log/#admin-login"
+        );
+        return;
+      }
+
+      var willOpen = adminMenu.hidden;
+      adminMenu.hidden = !willOpen;
+      trigger.setAttribute("aria-expanded", String(willOpen));
+    });
+
+    placeholderMenuItems.forEach(function (item) {
+      item.addEventListener("click", function (event) {
+        event.preventDefault();
+      });
+    });
+
+    document.addEventListener("click", function (event) {
+      if (!adminMenu.hidden && !navWrapper.contains(event.target)) {
+        closeAdminMenu();
+      }
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && !adminMenu.hidden) {
+        closeAdminMenu();
+      }
+    });
+
+    updateNavigationState();
+  }
+
   function initializeAdminModal() {
     var trigger = document.getElementById("arg-admin-open");
     var modal = document.getElementById("arg-admin-modal");
@@ -470,9 +530,14 @@
     });
 
     updateNavigationState();
+
+    if (window.location.hash === "#admin-login" && !isLoggedIn()) {
+      openModal();
+    }
   }
 
   initializeAttachments();
   initializeMissingNoticeEasterEgg();
+  initializeStandaloneAdminNavigation();
   initializeAdminModal();
 })();

@@ -318,10 +318,12 @@ async function checkArticleIds() {
 async function checkReviewLogSource() {
   const dataPath = toAbsolute('_data/review_log.yml');
   const pagePath = toAbsolute('_pages/review-log.md');
+  const diaryPath = toAbsolute('_pages/diary.md');
   const mastheadPath = toAbsolute('_includes/masthead.html');
   const adminScriptPath = toAbsolute('assets/js/arg-admin.js');
   const data = await fs.readFile(dataPath, 'utf8');
   const page = await fs.readFile(pagePath, 'utf8');
+  const diary = await fs.readFile(diaryPath, 'utf8');
   const masthead = await fs.readFile(mastheadPath, 'utf8');
   const adminScript = await fs.readFile(adminScriptPath, 'utf8');
   const timestampPattern = /^\s*time:\s*"([^"]+)"\s*$/gm;
@@ -388,7 +390,12 @@ async function checkReviewLogSource() {
     && page.includes('ACCESS GRANTED')
     && adminScript.includes('LOGIN_STORAGE_KEY')
     && adminScript.includes('2000')
-    && adminScript.includes('playRecoverySound');
+    && adminScript.includes('playRecoverySound')
+    && !page.includes('arg-diary-enter')
+    && !page.includes('进入日记模块');
+  const diaryNavigationCorrect = /^arg_admin:\s*true\s*$/m.test(diary)
+    && adminScript.includes('initializeStandaloneAdminNavigation')
+    && masthead.includes('data-admin-login-url');
   const easterEggCorrect = page.includes('data-easter-egg-target')
     && page.includes('id="arg-easter-egg-modal"')
     && page.includes('missing-notice-easter-egg.png')
@@ -432,6 +439,7 @@ async function checkReviewLogSource() {
     '我详细路线数据，已经私信你了。',
     '你别往里面走，就在原地等到 03:05，没东西就赶紧回来。',
     '第 0 篇博客：一次受限时间窗内的异常观测',
+    '进入日记模块',
   ];
   const foundForbidden = forbiddenTerms.filter(
     (term) => data.includes(term) || page.includes(term),
@@ -451,6 +459,9 @@ async function checkReviewLogSource() {
   }
   if (!recoveryFlowCorrect) {
     recordFail('admin recovery loading, account, or success interaction is incomplete');
+  }
+  if (!diaryNavigationCorrect) {
+    recordFail('diary page does not preserve the authenticated navigation menu');
   }
   if (!easterEggCorrect) {
     recordFail('missing-notice five-click easter egg is incomplete');
@@ -474,6 +485,7 @@ async function checkReviewLogSource() {
     && systemNoticeCorrect
     && adminTriggerInNavigation
     && recoveryFlowCorrect
+    && diaryNavigationCorrect
     && easterEggCorrect
     && routeMessageCorrect
     && systemMessagesCorrect
@@ -586,6 +598,10 @@ async function checkRenderedArgFeatures() {
         '日志模块已恢复。',
         'D-00｜白天复核',
         'D-05｜失联后写入',
+        'arg-admin-nav-wrap',
+        '管理密钥',
+        '搜索信息',
+        '运行日志',
       ],
     },
     {
@@ -689,6 +705,7 @@ async function checkRenderedArgFeatures() {
     '回头回头回头',
     '救我救我救我',
     '它们它们它们',
+    '进入日记模块',
   ].filter((term) => reviewLog.includes(term));
 
   if (renderedTimes.length === 0 || invalidRenderedTimes.length > 0) {

@@ -49,13 +49,10 @@ noindex: true
     {% endfor %}
   {% endfor %}
   </div>
-</section>
-
-<section class="arg-admin-entry" aria-labelledby="blog-admin-recovery-title">
-  <p class="arg-modal__eyebrow">ADMINISTRATION</p>
-  <h2 id="blog-admin-recovery-title">Blog Admin Recovery</h2>
-  <p>该模块需要管理员身份验证。</p>
-  <button type="button" class="arg-admin-button" id="arg-admin-open" aria-haspopup="dialog">登录博客后台</button>
+  <div class="review-system-notice" role="status">
+    <span class="review-system-notice__label">系统提示</span>
+    <span>更多记录已损坏。</span>
+  </div>
 </section>
 
 <div class="arg-modal arg-admin-modal" id="arg-admin-modal" data-diary-url="{{ '/diary/' | relative_url }}" hidden>

@@ -2,8 +2,7 @@ body.arg-admin-page .arg-record {
   width: min(100%, 980px);
 }
 
-.review-board > h2,
-.arg-admin-entry > h2 {
+.review-board > h2 {
   margin: 0 0 1rem;
   padding: 0 0 0.55rem;
   color: #e0e4e1;
@@ -84,6 +83,30 @@ body.arg-admin-page .arg-record {
   vertical-align: middle;
 }
 
+.review-system-notice {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 1.2rem 0 0;
+  padding: 0.85rem 1rem;
+  color: #9ea8a1;
+  background: #070907;
+  border: 1px dashed #3a423b;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.76rem;
+}
+
+.review-system-notice__label {
+  flex: 0 0 auto;
+  color: #b97972;
+  letter-spacing: 0.08em;
+}
+
+.review-system-notice__label::after {
+  content: " /";
+  color: #59615b;
+}
+
 .arg-attachment-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -144,32 +167,36 @@ body.arg-admin-page .arg-record {
   overflow-wrap: anywhere;
 }
 
-.arg-admin-entry {
-  margin-top: 3.4rem;
-  padding: 1.2rem;
-  background: #090b09;
-  border: 1px solid #3a423b;
+body.arg-admin-page .greedy-nav .visible-links {
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 
-.arg-admin-entry p {
-  margin: 0.45rem 0 1rem;
+body.arg-admin-page .greedy-nav .visible-links > li {
+  display: block;
 }
 
-.arg-admin-button {
-  padding: 0.6rem 0.9rem;
+body.arg-admin-page .arg-admin-nav {
+  margin-left: auto;
+}
+
+body.arg-admin-page .greedy-nav .arg-admin-nav a {
+  margin: 0;
+  padding: 0.42rem 0.72rem;
   color: #d5dbd7;
-  background: #141714;
-  border: 1px solid #5a645d;
+  background: #0b0e0b;
+  border: 1px solid #59635c;
   border-radius: 2px;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   cursor: pointer;
 }
 
-.arg-admin-button:hover,
-.arg-admin-button:focus {
+body.arg-admin-page .greedy-nav .arg-admin-nav a:hover,
+body.arg-admin-page .greedy-nav .arg-admin-nav a:focus {
   color: #fff;
-  background: #202520;
+  background: #171b17;
   border-color: #87938b;
 }
 
@@ -227,6 +254,10 @@ body.arg-admin-page .arg-record__content > ul {
 
   .review-comment__header {
     gap: 0.25rem;
+  }
+
+  .review-system-notice {
+    align-items: flex-start;
   }
 
   .arg-admin-actions {

@@ -308,8 +308,10 @@ async function checkArticleIds() {
 async function checkReviewLogSource() {
   const dataPath = toAbsolute('_data/review_log.yml');
   const pagePath = toAbsolute('_pages/review-log.md');
+  const mastheadPath = toAbsolute('_includes/masthead.html');
   const data = await fs.readFile(dataPath, 'utf8');
   const page = await fs.readFile(pagePath, 'utf8');
+  const masthead = await fs.readFile(mastheadPath, 'utf8');
   const timestampPattern = /^\s*time:\s*"([^"]+)"\s*$/gm;
   const timestamps = [...data.matchAll(timestampPattern)].map((match) => match[1]);
   const invalidTimestamps = timestamps.filter(
@@ -320,16 +322,20 @@ async function checkReviewLogSource() {
       ? [{ index, previous: timestamps[index - 1], current: timestamp }]
       : []
   ));
-  const intentionalTimestampAnomaly = timestampInversions.length === 1
-    && timestampInversions[0].index === 2
-    && timestampInversions[0].previous === '2026-03-04 03:18'
-    && timestampInversions[0].current === '2026-03-04 03:04';
+  const expectedTimestampInversions = [
+    { index: 2, previous: '2026-03-04 03:18', current: '2026-03-04 03:04' },
+    { index: 7, previous: '2026-03-04 03:29', current: '2026-03-04 03:23' },
+    { index: 10, previous: '2026-03-04 03:27', current: '2026-03-04 03:22' },
+  ];
+  const intentionalTimestampAnomalies = (
+    JSON.stringify(timestampInversions) === JSON.stringify(expectedTimestampInversions)
+  );
 
   if (timestamps.length === 0 || invalidTimestamps.length > 0) {
     recordFail(`review log has invalid timestamps: ${invalidTimestamps.join(', ')}`);
   }
-  if (!intentionalTimestampAnomaly) {
-    recordFail('review log intentional 03:04 timestamp anomaly is missing or misplaced');
+  if (!intentionalTimestampAnomalies) {
+    recordFail('review log intentional timestamp anomalies are missing or misplaced');
   }
 
   const commentBlocks = data.split(/(?=^\s{6}- user:)/m);
@@ -356,6 +362,14 @@ async function checkReviewLogSource() {
   const attachmentRendererMissing = !page.includes('data-arg-attachment')
     || !page.includes('attachment.filename')
     || !page.includes('attachment.path');
+  const systemNoticeCorrect = !data.includes('更多记录已损坏。')
+    && page.includes('class="review-system-notice"')
+    && page.includes('<span>更多记录已损坏。</span>');
+  const adminTriggerInNavigation = masthead.includes('class="masthead__menu-item persist tail arg-admin-nav"')
+    && masthead.includes('id="arg-admin-open"')
+    && masthead.includes('登录博客后台')
+    && !page.includes('class="arg-admin-entry"')
+    && !page.includes('id="arg-admin-open"');
   const forbiddenTerms = [
     '（楼主未关注，无历史发言）',
     '私信记录',
@@ -393,16 +407,24 @@ async function checkReviewLogSource() {
   if (attachmentRendererMissing) {
     recordFail('review log attachment renderer is missing');
   }
+  if (!systemNoticeCorrect) {
+    recordFail('damaged-record text is not isolated as a system notice');
+  }
+  if (!adminTriggerInNavigation) {
+    recordFail('admin login trigger is not exclusively placed in the navigation');
+  }
   if (foundForbidden.length > 0) {
     recordFail(`review log contains forbidden text: ${foundForbidden.join(', ')}`);
   }
 
   if (
     invalidTimestamps.length === 0
-    && intentionalTimestampAnomaly
+    && intentionalTimestampAnomalies
     && missingBadges.length === 0
     && missingAttachments.length === 0
     && !attachmentRendererMissing
+    && systemNoticeCorrect
+    && adminTriggerInNavigation
     && foundForbidden.length === 0
   ) {
     recordPass(
@@ -485,6 +507,9 @@ async function checkRenderedArgFeatures() {
         'missing_notice_wei.jpg',
         'cctv_0237.jpg',
         'cctv_0301.jpg',
+        'review-system-notice',
+        '系统提示',
+        '更多记录已损坏。',
         '登录博客后台',
         'arg-admin-modal',
       ],
@@ -547,10 +572,14 @@ async function checkRenderedArgFeatures() {
       ? [{ index, previous: renderedTimes[index - 1], current: timestamp }]
       : []
   ));
-  const renderedIntentionalTimestampAnomaly = renderedTimeInversions.length === 1
-    && renderedTimeInversions[0].index === 2
-    && renderedTimeInversions[0].previous === '2026-03-04 03:18'
-    && renderedTimeInversions[0].current === '2026-03-04 03:04';
+  const expectedRenderedTimeInversions = [
+    { index: 2, previous: '2026-03-04 03:18', current: '2026-03-04 03:04' },
+    { index: 7, previous: '2026-03-04 03:29', current: '2026-03-04 03:23' },
+    { index: 10, previous: '2026-03-04 03:27', current: '2026-03-04 03:22' },
+  ];
+  const renderedIntentionalTimestampAnomalies = (
+    JSON.stringify(renderedTimeInversions) === JSON.stringify(expectedRenderedTimeInversions)
+  );
   const bloggerUsers = (
     reviewLog.match(/class="review-comment__user">Heng Wei<\/span>/g) || []
   ).length;
@@ -588,8 +617,15 @@ async function checkRenderedArgFeatures() {
   if (renderedTimes.length === 0 || invalidRenderedTimes.length > 0) {
     recordFail(`rendered review log has invalid timestamps (${invalidRenderedTimes.length})`);
   }
-  if (!renderedIntentionalTimestampAnomaly) {
-    recordFail('rendered review log intentional 03:04 timestamp anomaly is missing or misplaced');
+  if (!renderedIntentionalTimestampAnomalies) {
+    recordFail('rendered review log intentional timestamp anomalies are missing or misplaced');
+  }
+  if (
+    !reviewLog.includes('class="review-system-notice"')
+    || !reviewLog.includes('class="masthead__menu-item persist tail arg-admin-nav"')
+    || reviewLog.includes('class="arg-admin-entry"')
+  ) {
+    recordFail('rendered review log system notice or navigation login placement is incorrect');
   }
   if (bloggerUsers === 0 || bloggerUsers !== bloggerBadges) {
     recordFail(

@@ -123,7 +123,10 @@
       }, 0);
     }
 
-    function openModal() {
+    function openModal(event) {
+      if (event) {
+        event.preventDefault();
+      }
       modal.hidden = false;
       document.body.classList.add("arg-modal-open");
       accountInput.value = "";

@@ -11,16 +11,20 @@ const requiredFiles = [
   '_config.yml',
   '_data/navigation.yml',
   '_data/publications.yml',
+  '_data/review_log.yml',
   '_pages/about.md',
   '_pages/about-zh.md',
   '_pages/publications.md',
   '_pages/publications-zh.md',
   '_pages/observation-00.md',
   '_pages/review-log.md',
+  '_pages/diary.md',
   '_layouts/arg.html',
   'assets/css/arg.css',
+  'assets/css/arg-admin.css',
   'assets/js/article-router.js',
   'assets/js/arg-page.js',
+  'assets/js/arg-admin.js',
   'images/arg/observation-00-figure-1.png',
   'images/arg/observation-00-figure-2.png',
   'images/profile.jpg',
@@ -88,9 +92,12 @@ const requiredBuildPaths = [
   { path: 'zh/publications', type: 'directory' },
   { path: 'observation-00/index.html', type: 'file' },
   { path: 'review-log/index.html', type: 'file' },
+  { path: 'diary/index.html', type: 'file' },
   { path: 'assets/css/arg.css', type: 'file' },
+  { path: 'assets/css/arg-admin.css', type: 'file' },
   { path: 'assets/js/article-router.js', type: 'file' },
   { path: 'assets/js/arg-page.js', type: 'file' },
+  { path: 'assets/js/arg-admin.js', type: 'file' },
   { path: 'images/arg/observation-00-figure-1.png', type: 'file' },
   { path: 'images/arg/observation-00-figure-2.png', type: 'file' },
   { path: '404.html', type: 'file' },
@@ -298,6 +305,73 @@ async function checkArticleIds() {
   recordPass(`normal post Article IDs are sequential (${actual.join(', ')})`);
 }
 
+async function checkReviewLogSource() {
+  const dataPath = toAbsolute('_data/review_log.yml');
+  const pagePath = toAbsolute('_pages/review-log.md');
+  const data = await fs.readFile(dataPath, 'utf8');
+  const page = await fs.readFile(pagePath, 'utf8');
+  const timestampPattern = /^\s*time:\s*"([^"]+)"\s*$/gm;
+  const timestamps = [...data.matchAll(timestampPattern)].map((match) => match[1]);
+  const invalidTimestamps = timestamps.filter(
+    (timestamp) => !/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(timestamp),
+  );
+
+  if (timestamps.length === 0 || invalidTimestamps.length > 0) {
+    recordFail(`review log has invalid timestamps: ${invalidTimestamps.join(', ')}`);
+  }
+
+  const commentBlocks = data.split(/(?=^\s{6}- user:)/m);
+  const bloggerBlocks = commentBlocks.filter(
+    (block) => /^\s{6}- user:\s*"Heng Wei"/m.test(block),
+  );
+  const missingBadges = bloggerBlocks.filter(
+    (block) => !/^\s{8}blogger:\s*true\s*$/m.test(block),
+  );
+
+  if (bloggerBlocks.length === 0 || missingBadges.length > 0) {
+    recordFail(`Heng Wei comments missing blogger flag (${missingBadges.length})`);
+  }
+
+  const requiredAttachmentNames = [
+    'sms_admin_recovery.jpg',
+    'missing_notice_wei.jpg',
+    'cctv_0237.jpg',
+    'cctv_0301.jpg',
+  ];
+  const missingAttachments = requiredAttachmentNames.filter(
+    (filename) => !data.includes(filename) || !page.includes(filename),
+  );
+  const forbiddenTerms = [
+    '（楼主未关注，无历史发言）',
+    '私信记录',
+    '私信 1',
+    '私信 2',
+    '私信 3',
+    '如果旧密码失效，请使用找回密码功能。',
+  ];
+  const foundForbidden = forbiddenTerms.filter(
+    (term) => data.includes(term) || page.includes(term),
+  );
+
+  if (missingAttachments.length > 0) {
+    recordFail(`review log attachment placeholders missing: ${missingAttachments.join(', ')}`);
+  }
+  if (foundForbidden.length > 0) {
+    recordFail(`review log contains forbidden text: ${foundForbidden.join(', ')}`);
+  }
+
+  if (
+    invalidTimestamps.length === 0
+    && missingBadges.length === 0
+    && missingAttachments.length === 0
+    && foundForbidden.length === 0
+  ) {
+    recordPass(
+      `review log source rules (${timestamps.length} timestamps, ${bloggerBlocks.length} blogger replies, 4 attachments)`,
+    );
+  }
+}
+
 async function checkBuildOutput() {
   const siteDir = toAbsolute('_site');
   const siteStats = await statIfExists(siteDir);
@@ -360,7 +434,28 @@ async function checkRenderedArgFeatures() {
     },
     {
       path: 'review-log/index.html',
-      terms: ['该模块已恢复', '你们把“看见”理解得太窄', '更多记录已损坏'],
+      terms: [
+        'Hidden comment archive recovered.',
+        '阶段一：发帖当天，常规热议',
+        '阶段六：一个月后，朋友的求助帖',
+        'blogger-badge',
+        '用户9920416',
+        'sms_admin_recovery.jpg',
+        'missing_notice_wei.jpg',
+        'cctv_0237.jpg',
+        'cctv_0301.jpg',
+        '登录博客后台',
+        'arg-admin-modal',
+      ],
+    },
+    {
+      path: 'diary/index.html',
+      terms: [
+        'Diary Module',
+        '日志模块已恢复。',
+        'D-00｜白天复核',
+        'D-05｜失联后写入',
+      ],
     },
     {
       path: 'zh/blog/index.html',
@@ -382,8 +477,12 @@ async function checkRenderedArgFeatures() {
     path.join(siteDir, 'zh', 'blog', 'index.html'),
     'utf8',
   );
+  const reviewLog = await fs.readFile(
+    path.join(siteDir, 'review-log', 'index.html'),
+    'utf8',
+  );
   const sitemap = await fs.readFile(path.join(siteDir, 'sitemap.xml'), 'utf8');
-  const hiddenPaths = ['/observation-00/', '/review-log/'];
+  const hiddenPaths = ['/observation-00/', '/review-log/', '/diary/'];
 
   for (const hiddenPath of hiddenPaths) {
     if (archive.includes(hiddenPath)) {
@@ -392,6 +491,41 @@ async function checkRenderedArgFeatures() {
     if (sitemap.includes(hiddenPath)) {
       recordFail(`hidden ARG page leaked into sitemap: ${hiddenPath}`);
     }
+  }
+
+  const renderedTimes = [
+    ...reviewLog.matchAll(
+      /<time class="review-comment__time"[^>]*>([^<]+)<\/time>/g,
+    ),
+  ].map((match) => match[1]);
+  const invalidRenderedTimes = renderedTimes.filter(
+    (timestamp) => !/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(timestamp),
+  );
+  const bloggerUsers = (
+    reviewLog.match(/class="review-comment__user">Heng Wei<\/span>/g) || []
+  ).length;
+  const bloggerBadges = (
+    reviewLog.match(/class="blogger-badge">博主回复<\/span>/g) || []
+  ).length;
+  const renderedForbidden = [
+    '（楼主未关注，无历史发言）',
+    '私信记录',
+    '私信 1',
+    '私信 2',
+    '私信 3',
+    '如果旧密码失效，请使用找回密码功能。',
+  ].filter((term) => reviewLog.includes(term));
+
+  if (renderedTimes.length === 0 || invalidRenderedTimes.length > 0) {
+    recordFail(`rendered review log has invalid timestamps (${invalidRenderedTimes.length})`);
+  }
+  if (bloggerUsers === 0 || bloggerUsers !== bloggerBadges) {
+    recordFail(
+      `rendered blogger badges mismatch: users=${bloggerUsers}, badges=${bloggerBadges}`,
+    );
+  }
+  if (renderedForbidden.length > 0) {
+    recordFail(`rendered review log contains forbidden text: ${renderedForbidden.join(', ')}`);
   }
 
   if (failureCount === 0) {
@@ -404,6 +538,7 @@ async function main() {
   await checkRequiredFiles();
   await checkForbiddenStrings();
   await checkArticleIds();
+  await checkReviewLogSource();
   await checkBuildOutput();
   await checkRenderedArgFeatures();
 

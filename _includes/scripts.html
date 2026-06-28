@@ -6,5 +6,8 @@
 {% if page.arg_page %}
 <script src="{{ '/assets/js/arg-page.js' | relative_url }}"></script>
 {% endif %}
+{% if page.arg_admin %}
+<script src="{{ '/assets/js/arg-admin.js' | relative_url }}"></script>
+{% endif %}
 
 {% include analytics.html %}

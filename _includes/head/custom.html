@@ -12,6 +12,9 @@
 {% if page.arg_page or page.article_id == "001" %}
 <link rel="stylesheet" href="{{ '/assets/css/arg.css' | relative_url }}"/>
 {% endif %}
+{% if page.arg_admin_page %}
+<link rel="stylesheet" href="{{ '/assets/css/arg-admin.css' | relative_url }}"/>
+{% endif %}
 {% if page.noindex %}
 <meta name="robots" content="noindex, nofollow, noarchive"/>
 {% endif %}

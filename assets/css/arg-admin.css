@@ -1,0 +1,297 @@
+body.arg-admin-page .arg-record {
+  width: min(100%, 980px);
+}
+
+.review-recovery-note {
+  margin: 0 0 2.4rem;
+  padding: 1rem 1.15rem;
+  color: #aeb8b1;
+  background: #050705;
+  border: 1px solid #303731;
+  border-left: 3px solid #66756c;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.8rem;
+}
+
+.review-recovery-note p {
+  margin: 0.18rem 0;
+}
+
+.review-stage {
+  margin: 0 0 3rem;
+}
+
+.review-stage > h2,
+.arg-system-panel > h2,
+.arg-admin-entry > h2 {
+  margin: 0 0 1rem;
+  padding: 0 0 0.55rem;
+  color: #e0e4e1;
+  border-bottom: 1px solid #303630;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+}
+
+.review-comment {
+  margin: 0 0 0.75rem;
+  padding: 0.95rem 1rem 1rem;
+  background: #0b0e0b;
+  border: 1px solid #272d28;
+  border-left: 2px solid #3c453f;
+}
+
+.review-comment--blogger {
+  background: #0d0f0d;
+  border-left-color: #82734a;
+}
+
+.review-comment--system {
+  color: #aeb7b1;
+  background: #070907;
+  border-style: dashed;
+}
+
+.review-comment--warning .review-comment__body {
+  color: #c65a55;
+}
+
+.review-comment--corrupted {
+  border-color: #57413e;
+  background: #0d0909;
+}
+
+.review-comment--corrupted .review-comment__body {
+  color: #c9877f;
+  overflow-wrap: anywhere;
+}
+
+.review-comment__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.55rem;
+  color: #9da8a1;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.76rem;
+}
+
+.review-comment__user {
+  color: #d7dcd8;
+  font-weight: 700;
+}
+
+.review-comment__separator {
+  color: #616a64;
+}
+
+.review-comment__time {
+  color: #91a096;
+}
+
+.review-comment__body {
+  color: #d0d5d1;
+  line-height: 1.75;
+  white-space: normal;
+}
+
+.blogger-badge {
+  display: inline-block;
+  padding: 0.08rem 0.38rem;
+  color: #b9a56b;
+  background: rgba(115, 98, 54, 0.12);
+  border: 1px solid #695d3e;
+  border-radius: 999px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.62rem;
+  font-weight: 500;
+  line-height: 1.35;
+  vertical-align: middle;
+}
+
+.arg-system-panel {
+  margin: 2.8rem 0;
+}
+
+.arg-system-log {
+  padding: 1rem 1.1rem;
+  color: #aeb8b1;
+  background: #040604;
+  border: 1px solid #2d342e;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.78rem;
+}
+
+.arg-system-log p {
+  margin: 0.28rem 0;
+}
+
+.arg-system-log code {
+  color: #b8c7bd;
+  background: transparent;
+  border: 0;
+}
+
+.arg-recovered-files {
+  margin: 0.7rem 0 1.2rem;
+  color: #abb5ae;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.78rem;
+}
+
+.arg-attachment-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.arg-attachment {
+  margin: 0;
+  min-width: 0;
+  background: #060806;
+  border: 1px solid #353c36;
+}
+
+.arg-attachment__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+}
+
+.arg-attachment__image[hidden],
+.arg-attachment__placeholder[hidden] {
+  display: none !important;
+}
+
+.arg-attachment__placeholder {
+  display: grid;
+  min-height: 10rem;
+  place-content: center;
+  gap: 0.45rem;
+  padding: 1rem;
+  color: #858d87;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.025) 25%, transparent 25%) 0 0 / 14px 14px,
+    #111411;
+  text-align: center;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+.arg-attachment__state {
+  color: #696f6a;
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+}
+
+.arg-attachment__filename {
+  overflow-wrap: anywhere;
+  font-size: 0.78rem;
+}
+
+.arg-attachment figcaption {
+  padding: 0.5rem 0.65rem;
+  color: #8d968f;
+  border-top: 1px solid #2c322d;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.68rem;
+  overflow-wrap: anywhere;
+}
+
+.arg-admin-entry {
+  margin-top: 3.4rem;
+  padding: 1.2rem;
+  background: #090b09;
+  border: 1px solid #3a423b;
+}
+
+.arg-admin-entry p {
+  margin: 0.45rem 0 1rem;
+}
+
+.arg-admin-button {
+  padding: 0.6rem 0.9rem;
+  color: #d5dbd7;
+  background: #141714;
+  border: 1px solid #5a645d;
+  border-radius: 2px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.arg-admin-button:hover,
+.arg-admin-button:focus {
+  color: #fff;
+  background: #202520;
+  border-color: #87938b;
+}
+
+.arg-admin-modal__dialog {
+  width: min(100%, 38rem);
+}
+
+.arg-admin-view[hidden] {
+  display: none !important;
+}
+
+.arg-admin-view h2 {
+  margin-bottom: 0.75rem;
+}
+
+.arg-admin-actions {
+  flex-wrap: wrap;
+}
+
+.arg-admin-actions .arg-button,
+.arg-admin-actions a.arg-button {
+  text-decoration: none;
+}
+
+.arg-admin-new-password {
+  padding: 0.75rem 0.85rem;
+  color: #d5dbd7;
+  background: #050705;
+  border: 1px solid #3d463f;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+.arg-admin-new-password code {
+  color: #c7d3cb;
+  background: transparent;
+}
+
+body.arg-admin-page .arg-record__content > ul {
+  padding: 1rem 1rem 1rem 2.2rem;
+  color: #c1c8c3;
+  background: #070907;
+  border: 1px solid #2d342e;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+@media (max-width: 640px) {
+  .arg-attachment-list {
+    grid-template-columns: 1fr;
+  }
+
+  .review-comment {
+    padding-right: 0.8rem;
+    padding-left: 0.8rem;
+  }
+
+  .review-comment__header {
+    gap: 0.25rem;
+  }
+
+  .arg-admin-actions {
+    justify-content: stretch;
+  }
+
+  .arg-admin-actions .arg-button,
+  .arg-admin-actions a.arg-button {
+    width: 100%;
+    text-align: center;
+  }
+}

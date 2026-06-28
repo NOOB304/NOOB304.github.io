@@ -41,6 +41,13 @@ noindex: true
   <div>Coordinates: 26.304°N, 105.304°E</div>
 </div>
 
+<figure class="arg-figure">
+  <a href="{{ '/images/arg/observation-00-figure-1.png' | relative_url }}" class="image-popup">
+    <img src="{{ '/images/arg/observation-00-figure-1.png' | relative_url }}" alt="原始遥感影像中的 OBS-00 异常区域定位，红框标出目标范围" loading="lazy" decoding="async">
+  </a>
+  <figcaption>图 1　原始影像中的异常区域定位。红框标出后续进行局部增强与纹理复核的范围。</figcaption>
+</figure>
+
 ## 3. 时间窗特征
 
 进一步比对连续影像后发现，该目标并非完全随机出现，而是可能只在一个极短时间窗内可见。根据现有记录，其可见性主要集中在 03:04—03:07 之间，超过该窗口后，目标迅速退化为不可识别状态，最终在数据中表现为 NoData 或普通背景。
@@ -52,6 +59,13 @@ noindex: true
 ## 4. AI 增强结果
 
 由于原始影像分辨率有限，对该区域进行了 AI 超分辨率重建和局部纹理增强。该步骤原本仅用于判断边界细节是否属于压缩噪声或影像伪影，但增强结果显示出远超预期的结构复杂性。
+
+<figure class="arg-figure">
+  <a href="{{ '/images/arg/observation-00-figure-2.png' | relative_url }}" class="image-popup">
+    <img src="{{ '/images/arg/observation-00-figure-2.png' | relative_url }}" alt="AI 超分辨率增强后的 OBS-00 局部纹理，区域内出现大量眼状结构" loading="lazy" decoding="async">
+  </a>
+  <figcaption>图 2　AI 超分辨率增强后的局部纹理结果。图像仅作为异常记录展示，不代表对真实地表结构的确认。</figcaption>
+</figure>
 
 在增强后的局部影像中，异常区域内部并非均质斑块，而是出现了大量规则排列的椭圆形结构。这些结构具有以下共同特征：
 
@@ -88,7 +102,7 @@ noindex: true
 
 因此，当前将该记录标记为 NoData 异常样本，暂不进入正式分析流程。但考虑到其空间结构和可重复增强特征，保留原始记录与增强结果仍有必要。
 
-相关附图见下：
+相关附图已分别置于“初始观测”和“AI 增强结果”部分：
 
 * 图 1 原始影像中的异常区域定位
 * 图 2 AI 增强后的局部纹理结果

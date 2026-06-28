@@ -21,6 +21,8 @@ const requiredFiles = [
   'assets/css/arg.css',
   'assets/js/article-router.js',
   'assets/js/arg-page.js',
+  'images/arg/observation-00-figure-1.png',
+  'images/arg/observation-00-figure-2.png',
   'images/profile.jpg',
   'assets/js/main.min.js',
 ];
@@ -89,6 +91,8 @@ const requiredBuildPaths = [
   { path: 'assets/css/arg.css', type: 'file' },
   { path: 'assets/js/article-router.js', type: 'file' },
   { path: 'assets/js/arg-page.js', type: 'file' },
+  { path: 'images/arg/observation-00-figure-1.png', type: 'file' },
+  { path: 'images/arg/observation-00-figure-2.png', type: 'file' },
   { path: '404.html', type: 'file' },
 ];
 
@@ -349,6 +353,8 @@ async function checkRenderedArgFeatures() {
         'Reviewer_01',
         '我们在注视你',
         'review-log-trigger',
+        'observation-00-figure-1.png',
+        'observation-00-figure-2.png',
       ],
     },
     {

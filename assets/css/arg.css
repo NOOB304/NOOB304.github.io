@@ -273,6 +273,32 @@ body.arg-page .page__footer a {
   font-size: 0.86rem;
 }
 
+.arg-figure {
+  margin: 1.6rem 0 2.1rem;
+}
+
+.arg-figure > a {
+  display: block;
+  padding: 3px;
+  background: #030403;
+  border: 1px solid #343b35;
+}
+
+.arg-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+}
+
+.arg-figure figcaption {
+  margin-top: 0.65rem;
+  color: #909a93;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.76rem;
+  line-height: 1.6;
+}
+
 .arg-comments {
   margin-top: 3rem;
   padding-top: 1.4rem;

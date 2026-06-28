@@ -147,6 +147,11 @@ stages:
           拍了几张方位照片。
           从地形上看，影像中的异常区域大概对应一片林地和裸岩混合坡面。
           没有发现“眼状结构”或其他特殊地物。
+        attachments:
+          - filename: "field-check-1428.png"
+            path: "/assets/images/arg/field-check-1428.png"
+          - filename: "field-check-1430.png"
+            path: "/assets/images/arg/field-check-1430.png"
       - user: "Heng Wei"
         blogger: true
         time: "2026-03-05 14:33"

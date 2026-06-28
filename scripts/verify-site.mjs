@@ -29,6 +29,8 @@ const requiredFiles = [
   'assets/images/arg/missing_notice_wei.jpg',
   'assets/images/arg/cctv_0237.jpg',
   'assets/images/arg/cctv_0355.jpg',
+  'assets/images/arg/field-check-1428.png',
+  'assets/images/arg/field-check-1430.png',
   'assets/images/arg/missing-notice-easter-egg.png',
   'images/arg/observation-00-figure-1.png',
   'images/arg/observation-00-figure-2.png',
@@ -107,6 +109,8 @@ const requiredBuildPaths = [
   { path: 'assets/images/arg/missing_notice_wei.jpg', type: 'file' },
   { path: 'assets/images/arg/cctv_0237.jpg', type: 'file' },
   { path: 'assets/images/arg/cctv_0355.jpg', type: 'file' },
+  { path: 'assets/images/arg/field-check-1428.png', type: 'file' },
+  { path: 'assets/images/arg/field-check-1430.png', type: 'file' },
   { path: 'assets/images/arg/missing-notice-easter-egg.png', type: 'file' },
   { path: 'images/arg/observation-00-figure-1.png', type: 'file' },
   { path: 'images/arg/observation-00-figure-2.png', type: 'file' },
@@ -367,6 +371,8 @@ async function checkReviewLogSource() {
     'missing_notice_wei.jpg',
     'cctv_0237.jpg',
     'cctv_0355.jpg',
+    'field-check-1428.png',
+    'field-check-1430.png',
   ];
   const missingAttachments = requiredAttachmentNames.filter(
     (filename) => !data.includes(filename),
@@ -499,7 +505,7 @@ async function checkReviewLogSource() {
     && foundForbidden.length === 0
   ) {
     recordPass(
-      `review log source rules (${timestamps.length} timestamps, ${bloggerBlocks.length} blogger replies, 4 attachments)`,
+      `review log source rules (${timestamps.length} timestamps, ${bloggerBlocks.length} blogger replies, 6 attachments)`,
     );
   }
 }
@@ -578,6 +584,8 @@ async function checkRenderedArgFeatures() {
         'missing_notice_wei.jpg',
         'cctv_0237.jpg',
         'cctv_0355.jpg',
+        'field-check-1428.png',
+        'field-check-1430.png',
         'review-system-notice',
         '系统提示',
         '更多记录已损坏。',

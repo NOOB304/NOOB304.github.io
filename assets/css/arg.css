@@ -332,6 +332,10 @@ body.arg-page .page__footer a {
   background: #090b09;
 }
 
+.arg-comment__warning {
+  color: #d14a4a;
+}
+
 .arg-comment__header {
   display: flex;
   justify-content: space-between;

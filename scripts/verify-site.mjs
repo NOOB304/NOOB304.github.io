@@ -350,8 +350,9 @@ async function checkRenderedArgFeatures() {
       path: 'observation-00/index.html',
       terms: [
         '第 0 篇博客：一次受限时间窗内的异常观测',
-        'Reviewer_01',
-        '我们在注视你',
+        'Yuchen',
+        'Lin',
+        '他们在注视你',
         'review-log-trigger',
         'observation-00-figure-1.png',
         'observation-00-figure-2.png',

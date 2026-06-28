@@ -114,7 +114,7 @@ noindex: true
 
   <article class="arg-comment">
     <header class="arg-comment__header">
-      <strong>Reviewer_01</strong>
+      <strong>Yuchen</strong>
       <time>03:12</time>
     </header>
     <p>图 2 放大以后有点怪，里面那些椭圆结构是不是太像眼睛了？不过也可能是超分模型把纹理重建歪了？这也太尼玛哈人了。</p>
@@ -122,7 +122,7 @@ noindex: true
 
   <article class="arg-comment">
     <header class="arg-comment__header">
-      <strong>Wei</strong>
+      <strong>Lin</strong>
       <time>03:18</time>
     </header>
     <p>建议换一个增强模型再跑一遍。AI 超分很容易把重复纹理 hallucinate 成眼状结构，尤其是低分辨率影像。</p>
@@ -133,7 +133,7 @@ noindex: true
       <strong>anonymous</strong>
       <time>03:04</time>
     </header>
-    <p>我们在注视你</p>
+    <p class="arg-comment__warning">他们在注视你</p>
   </article>
 
   <button type="button" class="arg-button arg-comments__more" id="review-log-trigger" aria-haspopup="dialog">显示更多留言</button>

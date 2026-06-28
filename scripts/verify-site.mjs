@@ -315,9 +315,15 @@ async function checkReviewLogSource() {
   const invalidTimestamps = timestamps.filter(
     (timestamp) => !/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(timestamp),
   );
+  const timestampsOutOfOrder = timestamps.some(
+    (timestamp, index) => index > 0 && timestamp < timestamps[index - 1],
+  );
 
   if (timestamps.length === 0 || invalidTimestamps.length > 0) {
     recordFail(`review log has invalid timestamps: ${invalidTimestamps.join(', ')}`);
+  }
+  if (timestampsOutOfOrder) {
+    recordFail('review log timestamps are not chronological');
   }
 
   const commentBlocks = data.split(/(?=^\s{6}- user:)/m);
@@ -339,8 +345,11 @@ async function checkReviewLogSource() {
     'cctv_0301.jpg',
   ];
   const missingAttachments = requiredAttachmentNames.filter(
-    (filename) => !data.includes(filename) || !page.includes(filename),
+    (filename) => !data.includes(filename),
   );
+  const attachmentRendererMissing = !page.includes('data-arg-attachment')
+    || !page.includes('attachment.filename')
+    || !page.includes('attachment.path');
   const forbiddenTerms = [
     '（楼主未关注，无历史发言）',
     '私信记录',
@@ -348,6 +357,24 @@ async function checkReviewLogSource() {
     '私信 2',
     '私信 3',
     '如果旧密码失效，请使用找回密码功能。',
+    '阶段一：',
+    '阶段二：',
+    '阶段三：',
+    '阶段四：',
+    '阶段五：',
+    '阶段六：',
+    'Hidden comment archive recovered.',
+    'System Log',
+    'Comment Module Closed',
+    'Recovered Attachments',
+    '用户 9920416 此后未再公开发言。',
+    '该留言未检测到继续编辑记录。',
+    '由于检测到异常活动，该文章评论区已暂时关闭。',
+    '补给点门口有监控。',
+    '如果之后需要核对时间，可以查这里。',
+    '不代表会去。',
+    '时间怎么比前面还早？',
+    '评论排序 bug',
   ];
   const foundForbidden = forbiddenTerms.filter(
     (term) => data.includes(term) || page.includes(term),
@@ -356,14 +383,19 @@ async function checkReviewLogSource() {
   if (missingAttachments.length > 0) {
     recordFail(`review log attachment placeholders missing: ${missingAttachments.join(', ')}`);
   }
+  if (attachmentRendererMissing) {
+    recordFail('review log attachment renderer is missing');
+  }
   if (foundForbidden.length > 0) {
     recordFail(`review log contains forbidden text: ${foundForbidden.join(', ')}`);
   }
 
   if (
     invalidTimestamps.length === 0
+    && !timestampsOutOfOrder
     && missingBadges.length === 0
     && missingAttachments.length === 0
+    && !attachmentRendererMissing
     && foundForbidden.length === 0
   ) {
     recordPass(
@@ -435,9 +467,9 @@ async function checkRenderedArgFeatures() {
     {
       path: 'review-log/index.html',
       terms: [
-        'Hidden comment archive recovered.',
-        '阶段一：发帖当天，常规热议',
-        '阶段六：一个月后，朋友的求助帖',
+        'Comments',
+        'Yuchen',
+        '他们在注视你',
         'blogger-badge',
         '用户9920416',
         'sms_admin_recovery.jpg',
@@ -501,6 +533,9 @@ async function checkRenderedArgFeatures() {
   const invalidRenderedTimes = renderedTimes.filter(
     (timestamp) => !/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(timestamp),
   );
+  const renderedTimesOutOfOrder = renderedTimes.some(
+    (timestamp, index) => index > 0 && timestamp < renderedTimes[index - 1],
+  );
   const bloggerUsers = (
     reviewLog.match(/class="review-comment__user">Heng Wei<\/span>/g) || []
   ).length;
@@ -514,10 +549,31 @@ async function checkRenderedArgFeatures() {
     '私信 2',
     '私信 3',
     '如果旧密码失效，请使用找回密码功能。',
+    '阶段一：',
+    '阶段二：',
+    '阶段三：',
+    '阶段四：',
+    '阶段五：',
+    '阶段六：',
+    'Hidden comment archive recovered.',
+    'System Log',
+    'Comment Module Closed',
+    'Recovered Attachments',
+    '用户 9920416 此后未再公开发言。',
+    '该留言未检测到继续编辑记录。',
+    '由于检测到异常活动，该文章评论区已暂时关闭。',
+    '补给点门口有监控。',
+    '如果之后需要核对时间，可以查这里。',
+    '不代表会去。',
+    '时间怎么比前面还早？',
+    '评论排序 bug',
   ].filter((term) => reviewLog.includes(term));
 
   if (renderedTimes.length === 0 || invalidRenderedTimes.length > 0) {
     recordFail(`rendered review log has invalid timestamps (${invalidRenderedTimes.length})`);
+  }
+  if (renderedTimesOutOfOrder) {
+    recordFail('rendered review log timestamps are not chronological');
   }
   if (bloggerUsers === 0 || bloggerUsers !== bloggerBadges) {
     recordFail(

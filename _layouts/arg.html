@@ -5,12 +5,16 @@ layout: default
 <div class="arg-shell">
   <main class="arg-record" aria-labelledby="arg-page-title">
     <header class="arg-record__header">
-      <p class="arg-record__kicker">REMOTE SENSING OBSERVATION ARCHIVE</p>
+      {% unless page.arg_plain_header %}
+        <p class="arg-record__kicker">REMOTE SENSING OBSERVATION ARCHIVE</p>
+      {% endunless %}
       <h1 id="arg-page-title">{{ page.title }}</h1>
-      <div class="arg-record__meta">
-        {% if page.article_id %}<span>Article ID: {{ page.article_id }}</span>{% endif %}
-        <span>Status: {{ page.arg_status | default: "RESTRICTED" }}</span>
-      </div>
+      {% unless page.arg_plain_header %}
+        <div class="arg-record__meta">
+          {% if page.article_id %}<span>Article ID: {{ page.article_id }}</span>{% endif %}
+          <span>Status: {{ page.arg_status | default: "RESTRICTED" }}</span>
+        </div>
+      {% endunless %}
     </header>
 
     <article class="arg-record__content">

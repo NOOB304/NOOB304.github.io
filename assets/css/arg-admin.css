@@ -2,27 +2,7 @@ body.arg-admin-page .arg-record {
   width: min(100%, 980px);
 }
 
-.review-recovery-note {
-  margin: 0 0 2.4rem;
-  padding: 1rem 1.15rem;
-  color: #aeb8b1;
-  background: #050705;
-  border: 1px solid #303731;
-  border-left: 3px solid #66756c;
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-  font-size: 0.8rem;
-}
-
-.review-recovery-note p {
-  margin: 0.18rem 0;
-}
-
-.review-stage {
-  margin: 0 0 3rem;
-}
-
-.review-stage > h2,
-.arg-system-panel > h2,
+.review-board > h2,
 .arg-admin-entry > h2 {
   margin: 0 0 1rem;
   padding: 0 0 0.55rem;
@@ -44,12 +24,6 @@ body.arg-admin-page .arg-record {
 .review-comment--blogger {
   background: #0d0f0d;
   border-left-color: #82734a;
-}
-
-.review-comment--system {
-  color: #aeb7b1;
-  background: #070907;
-  border-style: dashed;
 }
 
 .review-comment--warning .review-comment__body {
@@ -108,36 +82,6 @@ body.arg-admin-page .arg-record {
   font-weight: 500;
   line-height: 1.35;
   vertical-align: middle;
-}
-
-.arg-system-panel {
-  margin: 2.8rem 0;
-}
-
-.arg-system-log {
-  padding: 1rem 1.1rem;
-  color: #aeb8b1;
-  background: #040604;
-  border: 1px solid #2d342e;
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-  font-size: 0.78rem;
-}
-
-.arg-system-log p {
-  margin: 0.28rem 0;
-}
-
-.arg-system-log code {
-  color: #b8c7bd;
-  background: transparent;
-  border: 0;
-}
-
-.arg-recovered-files {
-  margin: 0.7rem 0 1.2rem;
-  color: #abb5ae;
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-  font-size: 0.78rem;
 }
 
 .arg-attachment-list {

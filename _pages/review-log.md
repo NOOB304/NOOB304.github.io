@@ -6,7 +6,7 @@ lang: zh
 arg_page: true
 arg_admin_page: true
 arg_admin: true
-arg_status: "PARTIALLY CORRUPTED"
+arg_plain_header: true
 body_class: "arg-page arg-admin-page"
 author_profile: false
 comments: false
@@ -17,102 +17,38 @@ sitemap: false
 noindex: true
 ---
 
-<aside class="review-recovery-note" aria-label="恢复状态">
-  <p>Hidden comment archive recovered.</p>
-  <p>Source: observation record</p>
-  <p>Visibility: restored</p>
-  <p>Status: partially corrupted</p>
-</aside>
-
-<div class="review-archive" role="log" aria-label="恢复的评论归档">
+<section class="review-board" aria-labelledby="review-board-title">
+  <h2 id="review-board-title">Comments</h2>
+  <div class="review-archive" role="log" aria-label="留言列表">
   {% for stage in site.data.review_log.stages %}
-    <section class="review-stage" aria-labelledby="review-stage-{{ forloop.index }}">
-      <h2 id="review-stage-{{ forloop.index }}">{{ stage.title }}</h2>
+    {% for comment in stage.comments %}
+      <article class="review-comment{% if comment.blogger %} review-comment--blogger{% endif %}{% if comment.emphasis %} review-comment--{{ comment.emphasis }}{% endif %}">
+        <header class="review-comment__header">
+          <span class="review-comment__user">{{ comment.user }}</span>
+          {% if comment.blogger %}<span class="blogger-badge">博主回复</span>{% endif %}
+          <span class="review-comment__separator" aria-hidden="true">·</span>
+          <time class="review-comment__time" datetime="{{ comment.time | replace: ' ', 'T' }}">{{ comment.time }}</time>
+        </header>
+        <div class="review-comment__body">{{ comment.body | newline_to_br }}</div>
 
-      {% for comment in stage.comments %}
-        <article class="review-comment{% if comment.blogger %} review-comment--blogger{% endif %}{% if comment.kind %} review-comment--{{ comment.kind }}{% endif %}{% if comment.emphasis %} review-comment--{{ comment.emphasis }}{% endif %}">
-          <header class="review-comment__header">
-            <span class="review-comment__user">{{ comment.user }}</span>
-            {% if comment.blogger %}<span class="blogger-badge">博主回复</span>{% endif %}
-            <span class="review-comment__separator" aria-hidden="true">·</span>
-            <time class="review-comment__time" datetime="{{ comment.time | replace: ' ', 'T' }}">{{ comment.time }}</time>
-          </header>
-          <div class="review-comment__body">{{ comment.body | newline_to_br }}</div>
-
-          {% if comment.attachments %}
-            <div class="arg-attachment-list">
-              {% for attachment in comment.attachments %}
-                <figure class="arg-attachment" data-arg-attachment>
-                  <img class="arg-attachment__image" data-arg-attachment-image src="{{ attachment.path | relative_url }}" alt="恢复附件：{{ attachment.filename }}" decoding="async" hidden>
-                  <div class="arg-attachment__placeholder" data-arg-attachment-placeholder>
-                    <span class="arg-attachment__state">FILE UNAVAILABLE</span>
-                    <span class="arg-attachment__filename">{{ attachment.filename }}</span>
-                  </div>
-                  <figcaption>{{ attachment.filename }}</figcaption>
-                </figure>
-              {% endfor %}
-            </div>
-          {% endif %}
-        </article>
-      {% endfor %}
-    </section>
-
-    {% if forloop.index == 5 %}
-      <section class="arg-system-panel" aria-labelledby="system-log-title">
-        <h2 id="system-log-title">System Log</h2>
-        <div class="arg-system-log">
-          <p><code>&gt; comment_module status</code></p>
-          <p>Status: unstable</p>
-          <p><code>&gt; user_status</code></p>
-          <p>Unknown</p>
-          <p><code>&gt; route_cache</code></p>
-          <p>Active</p>
-          <p><code>&gt; private_message_source</code></p>
-          <p>user_9920416</p>
-          <p><code>&gt; attachment_upload</code></p>
-          <p>Failed</p>
-          <p><code>&gt; location_signal</code></p>
-          <p>Lost</p>
-          <p><code>&gt; lock comment_module</code></p>
-          <p>Comment module status changed: locked.</p>
-          <p>Reason:</p>
-          <p><code>abnormal activity detected</code></p>
-          <p>New comments rejected.</p>
-        </div>
-      </section>
-    {% endif %}
+        {% if comment.attachments %}
+          <div class="arg-attachment-list">
+            {% for attachment in comment.attachments %}
+              <figure class="arg-attachment" data-arg-attachment>
+                <img class="arg-attachment__image" data-arg-attachment-image src="{{ attachment.path | relative_url }}" alt="留言附件：{{ attachment.filename }}" decoding="async" hidden>
+                <div class="arg-attachment__placeholder" data-arg-attachment-placeholder>
+                  <span class="arg-attachment__state">FILE UNAVAILABLE</span>
+                  <span class="arg-attachment__filename">{{ attachment.filename }}</span>
+                </div>
+                <figcaption>{{ attachment.filename }}</figcaption>
+              </figure>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </article>
+    {% endfor %}
   {% endfor %}
-</div>
-
-<section class="arg-system-panel" aria-labelledby="comment-module-closed-title">
-  <h2 id="comment-module-closed-title">Comment Module Closed</h2>
-  <div class="arg-system-log">
-    <p>This module has been set to invisible.</p>
-    <p>Reason:</p>
-    <p><code>manual recovery expired</code></p>
-    <p>Last visible user:</p>
-    <p><code>做喵的GIS</code></p>
-    <p>Last visible attachment:</p>
-    <p><code>missing_notice_wei.jpg</code></p>
-    <p>New replies are no longer accepted.</p>
   </div>
-</section>
-
-<section class="arg-system-panel" aria-labelledby="recovered-attachments-title">
-  <h2 id="recovered-attachments-title">Recovered Attachments</h2>
-  <ul class="arg-recovered-files">
-    <li>missing_notice_wei.jpg</li>
-    <li>sms_admin_recovery.jpg</li>
-    <li>cctv_0237.jpg</li>
-    <li>cctv_0301.jpg</li>
-  </ul>
-  <p>Attachment status:</p>
-  <ul class="arg-recovered-files">
-    <li>missing_notice_wei.jpg: visible</li>
-    <li>sms_admin_recovery.jpg: visible</li>
-    <li>cctv_0237.jpg: partially corrupted</li>
-    <li>cctv_0301.jpg: partially corrupted</li>
-  </ul>
 </section>
 
 <section class="arg-admin-entry" aria-labelledby="blog-admin-recovery-title">

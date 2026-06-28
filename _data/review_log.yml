@@ -1,6 +1,10 @@
 stages:
-  - title: "阶段一：发帖当天，常规热议"
-    comments:
+  - comments:
+      - user: "anonymous"
+        time: "2026-03-04 03:04"
+        body: |-
+          他们在注视你
+        emphasis: "warning"
       - user: "Yuchen"
         time: "2026-03-04 03:12"
         body: |-
@@ -9,20 +13,15 @@ stages:
         time: "2026-03-04 03:18"
         body: |-
           建议换一个增强模型再跑一遍。AI 超分很容易把重复纹理 hallucinate 成眼状结构，尤其是低分辨率影像。
-      - user: "anonymous"
-        time: "2026-03-04 03:04"
-        body: |-
-          他们在注视你
-        emphasis: "warning"
       - user: "夜观星河"
         time: "2026-03-04 03:19"
         body: |-
           不是，anonymous 这条什么情况？
-          时间怎么比前面还早？
+          怎么突然来这么一句？
       - user: "老张_遥感打工人"
         time: "2026-03-04 03:20"
         body: |-
-          应该是评论排序 bug 吧。
+          估计是故意吓人的吧。
           不过这句话配图 2 确实有点阴间。
       - user: "路过摸鱼"
         time: "2026-03-04 03:21"
@@ -77,8 +76,7 @@ stages:
           说真的，损归损，楼主别一个人去啊。
           开玩笑的，但是别去。
 
-  - title: "阶段二：讨论发酵"
-    comments:
+  - comments:
       - user: "做喵的GIS"
         time: "2026-03-04 04:12"
         body: |-
@@ -129,8 +127,7 @@ stages:
           没事，白天去。
           如果现场就是普通林地，这个记录基本可以作为 AI 增强误判处理。
 
-  - title: "阶段三：白天现场复核"
-    comments:
+  - comments:
       - user: "Heng Wei"
         blogger: true
         time: "2026-03-05 14:16"
@@ -184,8 +181,7 @@ stages:
           该记录暂定为 AI 增强导致的异常纹理误判。
           后续不再更新。
 
-  - title: "阶段四：神秘坐标出现"
-    comments:
+  - comments:
       - user: "用户9920416"
         time: "2026-03-05 15:02"
         body: |-
@@ -239,7 +235,7 @@ stages:
         time: "2026-03-05 15:24"
         body: |-
           收到了，多谢。
-          我先看一下路线，不代表会去。
+          我先看一下路线。
       - user: "做喵的GIS"
         time: "2026-03-05 15:25"
         body: |-
@@ -285,14 +281,7 @@ stages:
         body: |-
           先到这里吧。
           这事不值得继续扩散。
-      - user: "系统记录"
-        kind: "system"
-        time: "2026-03-05 15:41"
-        body: |-
-          用户 9920416 此后未再公开发言。
-
-  - title: "阶段五：出发与现场留言"
-    comments:
+  - comments:
       - user: "Heng Wei"
         blogger: true
         time: "2026-03-06 02:18"
@@ -307,12 +296,6 @@ stages:
           到路边补给点了。
           这里还能联网。
           买了水和电池。
-      - user: "Heng Wei"
-        blogger: true
-        time: "2026-03-06 02:37"
-        body: |-
-          补给点门口有监控。
-          如果之后需要核对时间，可以查这里。
       - user: "做喵的GIS"
         time: "2026-03-06 02:38"
         body: |-
@@ -376,11 +359,6 @@ stages:
         time: "2026-03-06 03:04"
         body: |-
           我现在站的位置应该就是坐标点，但是
-      - user: "系统记录"
-        kind: "system"
-        time: "2026-03-06 03:04"
-        body: |-
-          该留言未检测到继续编辑记录。
       - user: "Heng Wei"
         blogger: true
         time: "2026-03-06 03:06"
@@ -441,14 +419,7 @@ stages:
         body: |-
           他说时间不是问题。
           问题从来不是时间。
-      - user: "系统通知"
-        kind: "system"
-        time: "2026-03-06 04:02"
-        body: |-
-          由于检测到异常活动，该文章评论区已暂时关闭。
-
-  - title: "阶段六：一个月后，朋友的求助帖"
-    comments:
+  - comments:
       - user: "做喵的GIS"
         time: "2026-04-06 10:17"
         body: |-

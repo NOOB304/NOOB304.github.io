@@ -589,6 +589,20 @@ async function checkRenderedArgFeatures() {
       ],
     },
     {
+      path: 'zh/index.html',
+      terms: [
+        '南京林业大学/铜仁学院',
+        '目前正在攻读博士学位。',
+      ],
+    },
+    {
+      path: 'zh/downloads/index.html',
+      terms: [
+        'download-access-password',
+        '访问密码：NOOB304',
+      ],
+    },
+    {
       path: 'zh/blog/index.html',
       terms: ['Article ID:', '008'],
     },

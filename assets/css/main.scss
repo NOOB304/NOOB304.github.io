@@ -43,3 +43,12 @@
     "vendor/font-awesome/brands",
     "vendor/magnific-popup/magnific-popup"
 ;
+
+.download-access-password {
+  color: #c62828;
+  font-weight: 700;
+}
+
+[data-theme="dark"] .download-access-password {
+  color: #ff6b6b;
+}

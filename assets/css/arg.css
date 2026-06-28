@@ -11,16 +11,16 @@
 }
 
 .arg-previous-trigger {
-  color: #fff !important;
-  background: #a82929 !important;
+  color: #b52b2b !important;
+  background: #fff !important;
   border-color: #a82929 !important;
 }
 
 .arg-previous-trigger:hover,
 .arg-previous-trigger:focus {
-  color: #fff !important;
-  background: #c43636 !important;
-  border-color: #c43636 !important;
+  color: #8f1f1f !important;
+  background: #fff !important;
+  border-color: #8f1f1f !important;
 }
 
 .arg-modal[hidden] {

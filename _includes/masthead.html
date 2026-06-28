@@ -35,7 +35,14 @@
         </ul>
         <ul class="hidden-links hidden"></ul>
         {% if page.arg_admin %}
-          <a class="arg-admin-nav" id="arg-admin-open" href="#admin-login" role="button" aria-haspopup="dialog">登录博客后台</a>
+          <div class="arg-admin-nav-wrap">
+            <a class="arg-admin-nav" id="arg-admin-open" href="#admin-login" role="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="arg-admin-menu">登录</a>
+            <div class="arg-admin-menu" id="arg-admin-menu" role="menu" hidden>
+              <a href="#manage-keys" role="menuitem" data-admin-placeholder>管理密钥</a>
+              <a href="#search-information" role="menuitem" data-admin-placeholder>搜索信息</a>
+              <a href="{{ '/diary/' | relative_url }}" role="menuitem">运行日志</a>
+            </div>
+          </div>
         {% endif %}
       </nav>
     </div>

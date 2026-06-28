@@ -80,6 +80,8 @@ noindex: true
       <p class="arg-modal__eyebrow">IDENTITY VERIFICATION</p>
       <h2 id="arg-admin-recovery-title">Password Recovery</h2>
       <p>请回答密保问题以重置后台密码。</p>
+      <label for="arg-recovery-account">账号</label>
+      <input id="arg-recovery-account" class="arg-modal__input" type="text" autocomplete="username">
       <label for="arg-security-name">密保姓名</label>
       <input id="arg-security-name" class="arg-modal__input" type="text" autocomplete="off">
       <label for="arg-security-email">密保邮箱</label>
@@ -88,18 +90,26 @@ noindex: true
       <input id="arg-security-phone" class="arg-modal__input" type="tel" autocomplete="off">
       <p id="arg-admin-recovery-error" class="arg-modal__error" role="status" aria-live="polite"></p>
       <div class="arg-modal__actions arg-admin-actions">
-        <button type="button" class="arg-button arg-button--primary" id="arg-admin-reset">确认重置</button>
+        <button type="button" class="arg-button arg-button--primary" id="arg-admin-reset">确认找回</button>
         <button type="button" class="arg-button" data-admin-login-view>返回登录</button>
         <button type="button" class="arg-button" data-admin-close>关闭</button>
       </div>
     </div>
 
+    <div class="arg-admin-view arg-admin-loading" id="arg-admin-recovery-loading" hidden>
+      <p class="arg-modal__eyebrow">IDENTITY VERIFICATION</p>
+      <h2 id="arg-admin-recovery-loading-title">Password Recovery</h2>
+      <div class="arg-admin-spinner" aria-hidden="true"></div>
+      <p class="arg-admin-loading__text">VERIFYING IDENTITY...</p>
+    </div>
+
     <div class="arg-admin-view" id="arg-admin-recovery-success" hidden>
       <p class="arg-modal__eyebrow">IDENTITY VERIFIED</p>
       <h2 id="arg-admin-recovery-success-title">Password Recovery</h2>
-      <p>身份验证通过。<br>后台密码已重置。</p>
-      <p class="arg-admin-new-password">新密码：<code>W123456</code></p>
-      <p>请返回登录页面重新登录。</p>
+      <p class="arg-recovery-alert" role="alert">ACCESS GRANTED</p>
+      <p class="arg-recovery-success-copy"><strong>IDENTITY VERIFIED.<br>PASSWORD RESET COMPLETE.</strong></p>
+      <p class="arg-admin-new-password">NEW PASSWORD: <code>W123456</code></p>
+      <p>Return to the login screen and sign in again.</p>
       <div class="arg-modal__actions arg-admin-actions">
         <button type="button" class="arg-button arg-button--primary" data-admin-login-view>返回登录</button>
         <button type="button" class="arg-button" data-admin-close>关闭</button>

@@ -172,11 +172,19 @@ body.arg-admin-page .greedy-nav {
   padding-right: 8.5rem;
 }
 
-body.arg-admin-page .greedy-nav > .arg-admin-nav {
+body.arg-admin-page .greedy-nav > .arg-admin-nav-wrap {
   position: absolute;
   top: 50%;
   right: 0;
   z-index: 101;
+  transform: translateY(-50%);
+}
+
+body.arg-admin-page .greedy-nav > button:not(.hidden) ~ .arg-admin-nav-wrap {
+  right: 3.25rem;
+}
+
+body.arg-admin-page .greedy-nav .arg-admin-nav {
   display: block;
   margin: 0;
   padding: 0.42rem 0.72rem;
@@ -188,19 +196,51 @@ body.arg-admin-page .greedy-nav > .arg-admin-nav {
   font-size: 0.72rem;
   line-height: 1.2;
   text-decoration: none;
-  transform: translateY(-50%);
   cursor: pointer;
 }
 
-body.arg-admin-page .greedy-nav > button:not(.hidden) ~ .arg-admin-nav {
-  right: 3.25rem;
-}
-
-body.arg-admin-page .greedy-nav > .arg-admin-nav:hover,
-body.arg-admin-page .greedy-nav > .arg-admin-nav:focus {
+body.arg-admin-page .greedy-nav .arg-admin-nav:hover,
+body.arg-admin-page .greedy-nav .arg-admin-nav:focus {
   color: #fff;
   background: #171b17;
   border-color: #87938b;
+}
+
+.arg-admin-menu[hidden] {
+  display: none !important;
+}
+
+.arg-admin-menu {
+  position: absolute;
+  top: calc(100% + 0.65rem);
+  right: 0;
+  width: 9.5rem;
+  padding: 0.35rem;
+  background: #080a08;
+  border: 1px solid #4a534c;
+  box-shadow: 0 0.8rem 2rem rgba(0, 0, 0, 0.55);
+}
+
+body.arg-admin-page .greedy-nav .arg-admin-menu a,
+body.arg-admin-page .greedy-nav .arg-admin-menu a:visited {
+  display: block;
+  margin: 0;
+  padding: 0.6rem 0.7rem;
+  color: #cbd1cd;
+  background: transparent;
+  border-bottom: 1px solid #252b26;
+  font-size: 0.72rem;
+  text-decoration: none;
+}
+
+body.arg-admin-page .greedy-nav .arg-admin-menu a:last-child {
+  border-bottom: 0;
+}
+
+body.arg-admin-page .greedy-nav .arg-admin-menu a:hover,
+body.arg-admin-page .greedy-nav .arg-admin-menu a:focus {
+  color: #fff;
+  background: #171b17;
 }
 
 .arg-admin-modal__dialog {
@@ -235,6 +275,113 @@ body.arg-admin-page .greedy-nav > .arg-admin-nav:focus {
 .arg-admin-new-password code {
   color: #c7d3cb;
   background: transparent;
+}
+
+.arg-admin-loading {
+  min-height: 16rem;
+  text-align: center;
+}
+
+.arg-admin-spinner {
+  width: 3.25rem;
+  height: 3.25rem;
+  margin: 3rem auto 1.4rem;
+  border: 3px solid #2d342e;
+  border-top-color: #b5c2ba;
+  border-radius: 50%;
+  animation: arg-admin-spin 0.72s linear infinite;
+}
+
+.arg-admin-loading__text {
+  color: #aab5ae;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+}
+
+.arg-recovery-alert,
+.arg-recovery-success-copy {
+  color: #db2d27;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-weight: 800;
+}
+
+.arg-recovery-alert {
+  margin: 1.1rem 0 0.7rem;
+  font-size: clamp(1.75rem, 6vw, 3.1rem);
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 1.3rem rgba(219, 45, 39, 0.45);
+}
+
+.arg-recovery-success-copy {
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+}
+
+.arg-admin-modal.arg-recovery-impact::after {
+  content: "";
+  position: fixed;
+  z-index: 3;
+  inset: 0;
+  pointer-events: none;
+  animation: arg-recovery-flash 0.62s ease-out both;
+}
+
+.arg-admin-modal.arg-recovery-impact .arg-modal__dialog {
+  animation: arg-recovery-impact 0.45s steps(2, end);
+}
+
+@keyframes arg-admin-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes arg-recovery-flash {
+  0% {
+    background: rgba(230, 22, 16, 0.72);
+  }
+  18% {
+    background: rgba(230, 22, 16, 0.08);
+  }
+  34% {
+    background: rgba(230, 22, 16, 0.42);
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+@keyframes arg-recovery-impact {
+  0% {
+    transform: translate(0, 0) scale(1);
+    border-color: #d92d27;
+  }
+  25% {
+    transform: translate(-5px, 3px) scale(1.012);
+  }
+  50% {
+    transform: translate(4px, -2px) scale(0.998);
+    border-color: #d92d27;
+  }
+  75% {
+    transform: translate(-2px, -1px) scale(1.006);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arg-admin-spinner {
+    animation-duration: 1.5s;
+  }
+
+  .arg-admin-modal.arg-recovery-impact::after,
+  .arg-admin-modal.arg-recovery-impact .arg-modal__dialog {
+    animation: none;
+  }
 }
 
 body.arg-admin-page .arg-record__content > ul {

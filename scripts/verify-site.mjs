@@ -317,9 +317,11 @@ async function checkReviewLogSource() {
   const dataPath = toAbsolute('_data/review_log.yml');
   const pagePath = toAbsolute('_pages/review-log.md');
   const mastheadPath = toAbsolute('_includes/masthead.html');
+  const adminScriptPath = toAbsolute('assets/js/arg-admin.js');
   const data = await fs.readFile(dataPath, 'utf8');
   const page = await fs.readFile(pagePath, 'utf8');
   const masthead = await fs.readFile(mastheadPath, 'utf8');
+  const adminScript = await fs.readFile(adminScriptPath, 'utf8');
   const timestampPattern = /^\s*time:\s*"([^"]+)"\s*$/gm;
   const timestamps = [...data.matchAll(timestampPattern)].map((match) => match[1]);
   const invalidTimestamps = timestamps.filter(
@@ -371,11 +373,22 @@ async function checkReviewLogSource() {
   const systemNoticeCorrect = !data.includes('更多记录已损坏。')
     && page.includes('class="review-system-notice"')
     && page.includes('<span>更多记录已损坏。</span>');
-  const adminTriggerInNavigation = masthead.includes('class="arg-admin-nav"')
+  const adminTriggerInNavigation = masthead.includes('class="arg-admin-nav-wrap"')
     && masthead.includes('id="arg-admin-open"')
-    && masthead.includes('登录博客后台')
+    && masthead.includes('>登录</a>')
+    && masthead.includes('管理密钥')
+    && masthead.includes('搜索信息')
+    && masthead.includes('运行日志')
     && !page.includes('class="arg-admin-entry"')
     && !page.includes('id="arg-admin-open"');
+  const recoveryFlowCorrect = page.includes('id="arg-recovery-account"')
+    && page.includes('id="arg-admin-recovery-loading"')
+    && page.includes('ACCESS GRANTED')
+    && adminScript.includes('LOGIN_STORAGE_KEY')
+    && adminScript.includes('2000')
+    && adminScript.includes('playRecoverySound');
+  const routeMessageCorrect = data.includes('我详细路线数据，已经私信你了。')
+    && data.includes('请注意，不建议公开，免得无关人员过去。');
   const forbiddenTerms = [
     '（楼主未关注，无历史发言）',
     '私信记录',
@@ -402,6 +415,8 @@ async function checkReviewLogSource() {
     '回头回头回头',
     '救我救我救我',
     '它们它们它们',
+    '我这边碰巧有更详细的路线数据。',
+    '已经私信你了。\n          不建议公开发，免得无关人员过去。',
   ];
   const foundForbidden = forbiddenTerms.filter(
     (term) => data.includes(term) || page.includes(term),
@@ -419,6 +434,12 @@ async function checkReviewLogSource() {
   if (!adminTriggerInNavigation) {
     recordFail('admin login trigger is not exclusively placed in the navigation');
   }
+  if (!recoveryFlowCorrect) {
+    recordFail('admin recovery loading, account, or success interaction is incomplete');
+  }
+  if (!routeMessageCorrect) {
+    recordFail('private route message does not match the requested wording');
+  }
   if (foundForbidden.length > 0) {
     recordFail(`review log contains forbidden text: ${foundForbidden.join(', ')}`);
   }
@@ -431,6 +452,8 @@ async function checkReviewLogSource() {
     && !attachmentRendererMissing
     && systemNoticeCorrect
     && adminTriggerInNavigation
+    && recoveryFlowCorrect
+    && routeMessageCorrect
     && foundForbidden.length === 0
   ) {
     recordPass(
@@ -516,7 +539,14 @@ async function checkRenderedArgFeatures() {
         'review-system-notice',
         '系统提示',
         '更多记录已损坏。',
-        '登录博客后台',
+        'arg-admin-nav-wrap',
+        '>登录</a>',
+        '管理密钥',
+        '搜索信息',
+        '运行日志',
+        'arg-recovery-account',
+        'arg-admin-recovery-loading',
+        'ACCESS GRANTED',
         'arg-admin-modal',
       ],
     },

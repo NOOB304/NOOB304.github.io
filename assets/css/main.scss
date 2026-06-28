@@ -52,3 +52,15 @@
 [data-theme="dark"] .download-access-password {
   color: #ff6b6b;
 }
+
+.blog-download-link,
+.blog-download-link:visited {
+  color: #1683bd;
+  font-weight: 600;
+}
+
+.blog-download-link:hover,
+.blog-download-link:focus {
+  color: #0e5f8b;
+  text-decoration: underline;
+}

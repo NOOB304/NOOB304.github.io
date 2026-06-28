@@ -608,6 +608,7 @@ async function checkRenderedArgFeatures() {
       path: 'zh/index.html',
       terms: [
         '南京林业大学/铜仁学院',
+        '不知名博士研究生，研究方向为全球变化与生态系统碳汇。',
         '目前正在攻读博士学位。',
       ],
     },
@@ -620,7 +621,12 @@ async function checkRenderedArgFeatures() {
     },
     {
       path: 'zh/blog/index.html',
-      terms: ['Article ID:', '008'],
+      terms: [
+        'Article ID:',
+        '008',
+        'blog-download-link',
+        'href="/zh/downloads/"',
+      ],
     },
   ];
 
@@ -652,6 +658,10 @@ async function checkRenderedArgFeatures() {
     if (sitemap.includes(hiddenPath)) {
       recordFail(`hidden ARG page leaked into sitemap: ${hiddenPath}`);
     }
+  }
+
+  if (archive.includes('[代码下载页](/zh/downloads/)')) {
+    recordFail('Chinese blog archive still exposes raw Markdown download syntax');
   }
 
   const renderedTimes = [

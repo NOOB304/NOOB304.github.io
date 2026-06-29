@@ -1,13 +1,14 @@
 ---
 layout: arg
-title: "Diary Module"
+title: "运行日志"
 permalink: /diary/
 lang: zh
 arg_page: true
 arg_admin_page: true
 arg_admin: true
+arg_console: "diary"
 arg_status: "RESTORED"
-body_class: "arg-page arg-admin-page"
+body_class: "arg-page arg-admin-page arg-console-page"
 author_profile: false
 comments: false
 share: false
@@ -17,17 +18,45 @@ sitemap: false
 noindex: true
 ---
 
-日志模块已恢复。
+<section class="backend-console diary-console" data-diary-console>
+  <div class="backend-console__view" id="diary-index-view">
+    <header class="backend-console__toolbar">
+      <span>LOG INDEX</span>
+      <span>{{ site.data.diary_entries | size }} ENTRIES</span>
+    </header>
 
-部分记录正在从本地缓存中读取。
+    <p class="backend-console__intro">Recovered entries are listed in reverse chronological order.</p>
+    <p class="backend-console__message" id="diary-index-message" role="status" aria-live="polite"></p>
 
-## Recovered entries:
+    <ol class="diary-index" aria-label="运行日志列表">
+      {% for entry in site.data.diary_entries %}
+        <li class="diary-index__item{% if entry.corrupted %} diary-index__item--damaged{% endif %}">
+          {% if entry.corrupted %}
+            <div class="diary-index__entry" aria-disabled="true">
+              <span class="diary-index__id">{{ entry.id }}</span>
+              <span class="diary-index__date">NO TIMESTAMP</span>
+              <span class="diary-index__status">【日志索引损坏，正文不可恢复】</span>
+            </div>
+          {% else %}
+            <a class="diary-index__entry" href="#{{ entry.id }}" data-diary-link="{{ entry.id }}">
+              <span class="diary-index__id">{{ entry.id }}</span>
+              <time class="diary-index__date" datetime="{{ entry.date | replace: ' ', 'T' }}">{{ entry.date }}</time>
+              <span class="diary-index__status">RECOVERED</span>
+            </a>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ol>
+  </div>
 
-* D-00｜白天复核
-* D-01｜路线私信
-* D-02｜出发前记录
-* D-03｜补给点
-* D-04｜03:04 时间窗
-* D-05｜失联后写入
+  <article class="backend-console__view diary-detail" id="diary-detail-view" aria-live="polite" hidden>
+    <a class="backend-console__back" href="#" data-diary-back>← 返回日志列表</a>
+    <header class="diary-detail__meta">
+      <span class="diary-detail__id" data-diary-id></span>
+      <time class="diary-detail__date" data-diary-date></time>
+    </header>
+    <div class="diary-detail__body" data-diary-body></div>
+  </article>
+</section>
 
-更多内容后续补充。
+<script type="application/json" id="diary-entry-data">{{ site.data.diary_entries | jsonify }}</script>

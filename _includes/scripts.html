@@ -9,5 +9,10 @@
 {% if page.arg_admin %}
 <script src="{{ '/assets/js/arg-admin.js' | relative_url }}"></script>
 {% endif %}
+{% if page.arg_console == "diary" %}
+<script src="{{ '/assets/js/arg-diary.js' | relative_url }}"></script>
+{% elsif page.arg_console == "search" %}
+<script src="{{ '/assets/js/arg-search.js' | relative_url }}"></script>
+{% endif %}
 
 {% include analytics.html %}

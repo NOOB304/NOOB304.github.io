@@ -1,0 +1,345 @@
+body.arg-console-page .arg-record {
+  width: min(100%, 860px);
+}
+
+.backend-console {
+  color: #c9d0cb;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+.backend-console__view[hidden] {
+  display: none !important;
+}
+
+.backend-console__toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 0.7rem 0.8rem;
+  color: #8fa197;
+  background: #050705;
+  border: 1px solid #344038;
+  font-size: 0.7rem;
+  letter-spacing: 0.11em;
+}
+
+.backend-console__intro {
+  margin: 0 0 1rem;
+  color: #8f9992;
+  font-size: 0.78rem;
+}
+
+.backend-console__message {
+  min-height: 1.4rem;
+  margin: 0 0 0.7rem;
+  color: #a96f69;
+  font-size: 0.76rem;
+}
+
+.backend-console__back,
+.backend-console__back:visited {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  padding: 0.4rem 0.6rem;
+  color: #aebdb4 !important;
+  background: #080b08;
+  border: 1px solid #3c493f;
+  font-size: 0.74rem;
+  text-decoration: none;
+}
+
+.backend-console__back:hover,
+.backend-console__back:focus {
+  color: #f0f2f0 !important;
+  border-color: #738178;
+}
+
+.diary-index,
+.archive-result-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.diary-index__item,
+.archive-result-list > li {
+  margin: 0 0 0.6rem;
+}
+
+.diary-index__entry {
+  display: grid;
+  grid-template-columns: 5rem 1fr auto;
+  align-items: center;
+  gap: 0.8rem;
+  min-height: 3.4rem;
+  padding: 0.7rem 0.85rem;
+  color: #cbd2cd;
+  background: #080b08;
+  border: 1px solid #2f3932;
+}
+
+a.diary-index__entry,
+a.diary-index__entry:visited {
+  color: #cbd2cd;
+  text-decoration: none;
+}
+
+a.diary-index__entry:hover,
+a.diary-index__entry:focus {
+  color: #f1f3f1;
+  background: #0d120e;
+  border-color: #66766b;
+}
+
+.diary-index__id {
+  color: #dbe0dc;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.diary-index__date {
+  color: #94a298;
+  font-size: 0.76rem;
+}
+
+.diary-index__status {
+  color: #7f9788;
+  font-size: 0.66rem;
+  letter-spacing: 0.05em;
+}
+
+.diary-index__item--damaged .diary-index__entry {
+  color: #5d625e;
+  background: #060706;
+  border-color: #222622;
+  cursor: not-allowed;
+}
+
+.diary-index__item--damaged .diary-index__id,
+.diary-index__item--damaged .diary-index__date,
+.diary-index__item--damaged .diary-index__status {
+  color: #5d625e;
+}
+
+.diary-detail__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.7rem;
+  color: #95a198;
+  border-bottom: 1px solid #303a33;
+  font-size: 0.78rem;
+}
+
+.diary-detail__id {
+  color: #dce1dd;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.diary-detail__body {
+  color: #d0d5d1;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+  font-size: 0.98rem;
+  line-height: 1.95;
+}
+
+.diary-detail__body p {
+  margin: 0 0 1.35rem;
+}
+
+.diary-detail--highlight .diary-detail__meta {
+  border-color: #59302e;
+}
+
+.diary-detail--highlight .diary-detail__id,
+.diary-detail--highlight .diary-detail__body {
+  color: #a94742;
+}
+
+.diary-detail--highlight .diary-detail__body {
+  font-size: clamp(1.15rem, 2.3vw, 1.42rem);
+  font-weight: 650;
+  line-height: 1.8;
+  text-shadow: 0 0 0.45rem rgba(126, 31, 27, 0.18);
+  animation: diary-text-fault 5.4s steps(1, end) infinite;
+}
+
+.diary-detail--highlight .diary-detail__corruption {
+  color: #795f5c;
+  font-size: 0.8em;
+  font-weight: 500;
+}
+
+.archive-search-form {
+  margin: 0 0 1rem;
+}
+
+.archive-search-form label {
+  display: block;
+  margin-bottom: 0.45rem;
+  color: #9aa69e;
+  font-size: 0.74rem;
+}
+
+.archive-search-form__controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.55rem;
+}
+
+.archive-search-form input,
+.archive-search-form button {
+  min-height: 2.8rem;
+  padding: 0.6rem 0.75rem;
+  color: #d6dcd8;
+  background: #050705;
+  border: 1px solid #435047;
+  border-radius: 0;
+  font: inherit;
+}
+
+.archive-search-form input:focus,
+.archive-search-form button:hover,
+.archive-search-form button:focus {
+  outline: none;
+  border-color: #78877d;
+}
+
+.archive-search-form button {
+  cursor: pointer;
+}
+
+.archive-search-feedback {
+  min-height: 2rem;
+  margin: 0.8rem 0;
+  color: #aab4ad;
+  font-size: 0.78rem;
+}
+
+.archive-search-feedback p {
+  margin: 0;
+  color: #a96f69;
+}
+
+.archive-search-feedback small {
+  display: block;
+  margin-top: 0.35rem;
+  color: #5f6862;
+}
+
+.archive-result {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.85rem 0.95rem;
+  color: #cbd2cd !important;
+  background: #080b08;
+  border: 1px solid #303b33;
+  text-decoration: none;
+}
+
+.archive-result:hover,
+.archive-result:focus {
+  color: #f1f3f1 !important;
+  background: #0d120e;
+  border-color: #6d7b71;
+}
+
+.archive-result strong {
+  color: inherit;
+  font-size: 0.88rem;
+}
+
+.archive-result span {
+  color: #939f97;
+  font-size: 0.76rem;
+}
+
+.archive-result .archive-result__status {
+  color: #788b7f;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.archive-record-detail__header {
+  margin-bottom: 1.3rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #303a33;
+}
+
+.archive-record-detail__header h2 {
+  margin: 0 0 0.55rem;
+  padding: 0;
+  color: #dce1dd;
+  border: 0;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 1.1rem;
+}
+
+.archive-record-detail__header p {
+  margin: 0;
+  color: #87948b;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.archive-record-detail__body {
+  min-height: 8rem;
+  padding: 1rem;
+  color: #86716e;
+  background: #060806;
+  border: 1px solid #2e3530;
+}
+
+@keyframes diary-text-fault {
+  0%,
+  91%,
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+  92% {
+    transform: translateX(1px);
+    opacity: 0.92;
+  }
+  93% {
+    transform: translateX(-1px);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .diary-detail--highlight .diary-detail__body {
+    animation: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .backend-console__toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .diary-index__entry {
+    grid-template-columns: 4rem 1fr;
+    gap: 0.35rem 0.6rem;
+  }
+
+  .diary-index__status {
+    grid-column: 1 / -1;
+  }
+
+  .diary-detail__meta {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .archive-search-form__controls {
+    grid-template-columns: 1fr;
+  }
+}

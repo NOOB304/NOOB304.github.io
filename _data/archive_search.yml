@@ -1,0 +1,33 @@
+- id: "relay_record.tmp"
+  title: "relay_record.tmp"
+  keywords:
+    - "基站"
+  summary: "检测到与“基站”相关的残留记录。"
+  status: "partially recovered"
+  body: "【内容尚未恢复】"
+
+- id: "contact_trace.wxr"
+  title: "contact_trace.wxr"
+  keywords:
+    - "王旭冉"
+  summary: "检测到联系人相关记录。"
+  status: "partially recovered"
+  body: "【内容尚未恢复】"
+
+- id: "student_info_form.cache"
+  title: "student_info_form.cache"
+  keywords:
+    - "学生个人信息表"
+    - "学生信息表"
+    - "信息表"
+  summary: "检测到一份曾被后台索引的表格记录。"
+  status: "partially recovered"
+  body: "【内容尚未恢复】"
+
+- id: "containment_notice.log"
+  title: "containment_notice.log"
+  keywords:
+    - "封存"
+  summary: "检测到封存状态相关记录。"
+  status: "partially recovered"
+  body: "【内容尚未恢复】"

@@ -12,6 +12,8 @@ const requiredFiles = [
   '_data/navigation.yml',
   '_data/publications.yml',
   '_data/review_log.yml',
+  '_data/diary_entries.yml',
+  '_data/archive_search.yml',
   '_pages/about.md',
   '_pages/about-zh.md',
   '_pages/publications.md',
@@ -19,12 +21,16 @@ const requiredFiles = [
   '_pages/observation-00.md',
   '_pages/review-log.md',
   '_pages/diary.md',
+  '_pages/archive-search.md',
   '_layouts/arg.html',
   'assets/css/arg.css',
   'assets/css/arg-admin.css',
+  'assets/css/arg-console.css',
   'assets/js/article-router.js',
   'assets/js/arg-page.js',
   'assets/js/arg-admin.js',
+  'assets/js/arg-diary.js',
+  'assets/js/arg-search.js',
   'assets/images/arg/sms_admin_recovery.jpg',
   'assets/images/arg/missing_notice_wei.jpg',
   'assets/images/arg/cctv_0237.jpg',
@@ -100,11 +106,15 @@ const requiredBuildPaths = [
   { path: 'observation-00/index.html', type: 'file' },
   { path: 'review-log/index.html', type: 'file' },
   { path: 'diary/index.html', type: 'file' },
+  { path: 'archive-search/index.html', type: 'file' },
   { path: 'assets/css/arg.css', type: 'file' },
   { path: 'assets/css/arg-admin.css', type: 'file' },
+  { path: 'assets/css/arg-console.css', type: 'file' },
   { path: 'assets/js/article-router.js', type: 'file' },
   { path: 'assets/js/arg-page.js', type: 'file' },
   { path: 'assets/js/arg-admin.js', type: 'file' },
+  { path: 'assets/js/arg-diary.js', type: 'file' },
+  { path: 'assets/js/arg-search.js', type: 'file' },
   { path: 'assets/images/arg/sms_admin_recovery.jpg', type: 'file' },
   { path: 'assets/images/arg/missing_notice_wei.jpg', type: 'file' },
   { path: 'assets/images/arg/cctv_0237.jpg', type: 'file' },
@@ -388,6 +398,7 @@ async function checkReviewLogSource() {
     && masthead.includes('>登录</a>')
     && masthead.includes('管理密钥')
     && masthead.includes('搜索信息')
+    && masthead.includes("'/archive-search/'")
     && masthead.includes('运行日志')
     && !page.includes('class="arg-admin-entry"')
     && !page.includes('id="arg-admin-open"');
@@ -510,6 +521,81 @@ async function checkReviewLogSource() {
   }
 }
 
+async function checkBackendConsoleSource() {
+  const diaryData = await fs.readFile(toAbsolute('_data/diary_entries.yml'), 'utf8');
+  const searchData = await fs.readFile(toAbsolute('_data/archive_search.yml'), 'utf8');
+  const diaryPage = await fs.readFile(toAbsolute('_pages/diary.md'), 'utf8');
+  const searchPage = await fs.readFile(toAbsolute('_pages/archive-search.md'), 'utf8');
+  const diaryScript = await fs.readFile(toAbsolute('assets/js/arg-diary.js'), 'utf8');
+  const searchScript = await fs.readFile(toAbsolute('assets/js/arg-search.js'), 'utf8');
+  const masthead = await fs.readFile(toAbsolute('_includes/masthead.html'), 'utf8');
+
+  const diaryIds = [...diaryData.matchAll(/^- id:\s*"([^"]+)"\s*$/gm)]
+    .map((match) => match[1]);
+  const expectedDiaryIds = Array.from({ length: 23 }, (_, index) => (
+    `D-${String(22 - index).padStart(2, '0')}`
+  ));
+  const diaryOrderCorrect = diaryIds.length === expectedDiaryIds.length
+    && diaryIds.every((id, index) => id === expectedDiaryIds[index]);
+  const damagedCount = (diaryData.match(/status:\s*"damaged"/g) || []).length;
+  const recoveredCount = (diaryData.match(/status:\s*"recovered"/g) || []).length;
+  const diaryContentCorrect = diaryData.includes('我是人！')
+    && diaryData.includes('人类不是宠物！')
+    && diaryData.includes('【部分内容已损坏】')
+    && diaryData.includes('【日志索引损坏，正文不可恢复】')
+    && diaryData.includes('2026-03-05 23:58');
+  const diaryRoutingCorrect = diaryPage.includes('data-diary-console')
+    && diaryPage.includes('data-diary-link')
+    && diaryPage.includes('id="diary-entry-data"')
+    && diaryScript.includes('routeDiary')
+    && diaryScript.includes('entry.corrupted')
+    && diaryScript.includes('diary-detail--highlight');
+
+  const requiredSearchTerms = [
+    '基站',
+    '王旭冉',
+    '学生个人信息表',
+    '学生信息表',
+    '信息表',
+    '封存',
+  ];
+  const searchDataCorrect = requiredSearchTerms.every((term) => searchData.includes(term))
+    && (searchData.match(/^- id:\s*"[^"]+"\s*$/gm) || []).length === 4
+    && (searchData.match(/body:\s*"【内容尚未恢复】"/g) || []).length === 4;
+  const searchRoutingCorrect = searchPage.includes('id="archive-search-form"')
+    && searchPage.includes('id="archive-search-data"')
+    && searchScript.includes('未输入关键词。')
+    && searchScript.includes('No result.')
+    && searchScript.includes('当前访问端已被临时记录。')
+    && searchScript.includes('#record/')
+    && masthead.includes("'/archive-search/'");
+
+  if (!diaryOrderCorrect) {
+    recordFail(`diary source order is invalid (${diaryIds.join(', ')})`);
+  }
+  if (recoveredCount !== 11 || damagedCount !== 12) {
+    recordFail(`diary source status counts are invalid (recovered=${recoveredCount}, damaged=${damagedCount})`);
+  }
+  if (!diaryContentCorrect || !diaryRoutingCorrect) {
+    recordFail('diary source content or hash routing is incomplete');
+  }
+  if (!searchDataCorrect || !searchRoutingCorrect) {
+    recordFail('archive search data, messages, or hash routing is incomplete');
+  }
+
+  if (
+    diaryOrderCorrect
+    && recoveredCount === 11
+    && damagedCount === 12
+    && diaryContentCorrect
+    && diaryRoutingCorrect
+    && searchDataCorrect
+    && searchRoutingCorrect
+  ) {
+    recordPass('backend console source rules (23 diary entries, 4 search records)');
+  }
+}
+
 async function checkBuildOutput() {
   const siteDir = toAbsolute('_site');
   const siteStats = await statIfExists(siteDir);
@@ -611,10 +697,35 @@ async function checkRenderedArgFeatures() {
     {
       path: 'diary/index.html',
       terms: [
-        'Diary Module',
-        '日志模块已恢复。',
-        'D-00｜白天复核',
-        'D-05｜失联后写入',
+        '运行日志',
+        'LOG INDEX',
+        'D-22',
+        'D-12',
+        'D-11',
+        '【日志索引损坏，正文不可恢复】',
+        'diary-entry-data',
+        'arg-diary.js',
+        'arg-console.css',
+        'arg-admin-nav-wrap',
+        '管理密钥',
+        '搜索信息',
+        '运行日志',
+      ],
+    },
+    {
+      path: 'archive-search/index.html',
+      terms: [
+        'Archive Search',
+        'archive-search-form',
+        'archive-search-data',
+        '基站',
+        '王旭冉',
+        '学生个人信息表',
+        '学生信息表',
+        '信息表',
+        '封存',
+        'arg-search.js',
+        'arg-console.css',
         'arg-admin-nav-wrap',
         '管理密钥',
         '搜索信息',
@@ -666,7 +777,7 @@ async function checkRenderedArgFeatures() {
     'utf8',
   );
   const sitemap = await fs.readFile(path.join(siteDir, 'sitemap.xml'), 'utf8');
-  const hiddenPaths = ['/observation-00/', '/review-log/', '/diary/'];
+  const hiddenPaths = ['/observation-00/', '/review-log/', '/diary/', '/archive-search/'];
 
   for (const hiddenPath of hiddenPaths) {
     if (archive.includes(hiddenPath)) {
@@ -768,6 +879,7 @@ async function main() {
   await checkForbiddenStrings();
   await checkArticleIds();
   await checkReviewLogSource();
+  await checkBackendConsoleSource();
   await checkBuildOutput();
   await checkRenderedArgFeatures();
 

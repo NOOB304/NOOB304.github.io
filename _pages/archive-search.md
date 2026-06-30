@@ -41,9 +41,12 @@ noindex: true
     <a class="backend-console__back" href="#" data-search-back>← 返回搜索页面</a>
     <header class="archive-record-detail__header">
       <h2 data-record-title></h2>
-      <p>Status: <span data-record-status></span></p>
+      <div class="archive-record-detail__meta">
+        <span>Status: <strong data-record-status></strong></span>
+        <span>Type: <strong data-record-type></strong></span>
+      </div>
     </header>
-    <div class="archive-record-detail__body" data-record-body></div>
+    <div class="archive-record-detail__body" data-record-body aria-live="polite"></div>
   </article>
 </section>
 

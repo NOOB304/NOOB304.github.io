@@ -1,0 +1,110 @@
+[
+  {
+    "name": "Chen Yiming",
+    "studentId": "193",
+    "major": "Environmental Science",
+    "college": "College of Ecology",
+    "age": 24
+  },
+  {
+    "name": "Li Wen",
+    "studentId": "194",
+    "major": "Geographic Information Science",
+    "college": "College of Geography",
+    "age": 25
+  },
+  {
+    "name": "Zhao Lin",
+    "studentId": "195",
+    "major": "Forestry",
+    "college": "College of Forestry",
+    "age": 24
+  },
+  {
+    "name": "Sun Yue",
+    "studentId": "196",
+    "major": "Remote Sensing",
+    "college": "College of Geography",
+    "age": 26
+  },
+  {
+    "name": "Guo Ran",
+    "studentId": "197",
+    "major": "Ecology",
+    "college": "College of Ecology",
+    "age": 25
+  },
+  {
+    "name": "He Jia",
+    "studentId": "198",
+    "major": "Data Science",
+    "college": "School of Computing",
+    "age": 24
+  },
+  {
+    "name": "Liu Shuo",
+    "studentId": "199",
+    "major": "Environmental Engineering",
+    "college": "College of Environment",
+    "age": 27
+  },
+  {
+    "name": "Tang Rui",
+    "studentId": "200",
+    "major": "Landscape Architecture",
+    "college": "College of Landscape Architecture",
+    "age": 25
+  },
+  {
+    "name": "Wang Xuran",
+    "studentId": "201",
+    "major": "Computer Science",
+    "college": "School of Computing",
+    "age": 26,
+    "aliases": [
+      "王旭冉"
+    ]
+  },
+  {
+    "name": "Xu Chen",
+    "studentId": "202",
+    "major": "Soil Science",
+    "college": "College of Resources",
+    "age": 25
+  },
+  {
+    "name": "Zhou Ning",
+    "studentId": "203",
+    "major": "Hydrology",
+    "college": "College of Environment",
+    "age": 24
+  },
+  {
+    "name": "Fang Yi",
+    "studentId": "204",
+    "major": "Statistics",
+    "college": "School of Science",
+    "age": 26
+  },
+  {
+    "name": "Luo Xin",
+    "studentId": "205",
+    "major": "Biotechnology",
+    "college": "College of Life Sciences",
+    "age": 25
+  },
+  {
+    "name": "Ma Qing",
+    "studentId": "206",
+    "major": "Urban Planning",
+    "college": "College of Architecture",
+    "age": 27
+  },
+  {
+    "name": "Deng Yu",
+    "studentId": "207",
+    "major": "Applied Mathematics",
+    "college": "School of Science",
+    "age": 24
+  }
+]

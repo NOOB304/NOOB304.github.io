@@ -1,33 +1,184 @@
-- id: "relay_record.tmp"
-  title: "relay_record.tmp"
+- id: "fragment_d23"
+  title: "fragment_d23.tmp"
   keywords:
-    - "基站"
-  summary: "检测到与“基站”相关的残留记录。"
-  status: "partially recovered"
-  body: "【内容尚未恢复】"
+    - "编号"
+    - "D-23"
+    - "d-23"
+    - "NOOB-304"
+    - "NOOB304"
+    - "304"
+    - "Wei Heng"
+    - "Wei"
+    - "魏珩"
+  summary: "检测到一段未同步的残存日志。"
+  status: "damaged"
+  type: "fragment"
+  body: |-
+    一定还有办法
 
-- id: "contact_trace.wxr"
-  title: "contact_trace.wxr"
+    如果它们只能通过基站来操控我们，那么只要切断它们和基站之间的联系就可以了
+
+    一定有线索，我还不能放弃
+
+    谁也无法命令我，谁也无法操控我，哪怕仅仅只是“注视”我也无法接受
+
+    因为我是人类
+
+    我的时间不多了
+
+- id: "fragment_containment"
+  title: "fragment_containment.tmp"
   keywords:
-    - "王旭冉"
-  summary: "检测到联系人相关记录。"
-  status: "partially recovered"
-  body: "【内容尚未恢复】"
+    - "封存"
+    - "自我封存"
+    - "主动封存"
+    - "失效封存"
+    - "containment"
+    - "archived"
+  summary: "检测到封存前异常输入片段。"
+  status: "severely damaged"
+  type: "fragment"
+  body: |-
+    我没有时间了，我真的没有时间了，我找不到最后的密钥了
 
-- id: "student_info_form.cache"
+    我已经控制不住我自己了，操他妈的，它们以为自己是尤里吗
+
+    我不屈服，我不承认
+
+    哪怕封存自己我也不会当一只听话的宠物
+
+- id: "fragment_key"
+  title: "fragment_key.tmp"
+  keywords:
+    - "密钥"
+    - "运行密钥"
+    - "最终密钥"
+    - "最终武器"
+    - "SVRN"
+    - "切断命令"
+    - "切断所有基站"
+  summary: "检测到未完成的切断命令记录。"
+  status: "partially recovered"
+  type: "fragment"
+  body: |-
+    我已经破译了大部分密钥了
+
+    我现在可以在他妈地球上玩创造模式了，我可以飞，可以放电，可以瞬移，可以获知一切地球上的智慧。
+
+    我有的时候会想好像这样也不错，我可能真的顶不住了。
+
+    最终武器是
+
+    SVRN-[基站编号]-[基站编号]-[基站编号]......
+
+    还在活动的基站有六个，这是我唯一知道的线索了
+
+    你还在看吗？我真的顶不住了。
+
+    我要休息了
+
+- id: "key_manifest"
+  title: "key_manifest.cache"
+  keywords:
+    - "密钥"
+    - "运行密钥"
+    - "最终密钥"
+    - "最终武器"
+    - "SVRN"
+    - "切断命令"
+    - "切断所有基站"
+    - "key manifest"
+    - "keylist"
+  summary: "检测到一份残缺的密钥清单。"
+  status: "partially recovered"
+  type: "keylist"
+  body: |-
+    Key Manifest
+
+    该清单来自未完成的本地缓存。
+    部分字段缺失。
+    部分注释疑似由 NOOB-304 手动补写。
+
+    CODE      NOTE
+    --------------------------------
+    EYES      观测
+    ECHO      回声
+    PATH      路径标记
+    GATE      接入
+    NODE      节点定位
+    RELY      中继
+    LINK      临时连接
+    MARK      标记目标
+    MIRR      镜像回传
+    SENS      感知增强
+    KNOW      知识读取
+    OMNI      高阶认知
+    LEVT      飞翔
+    VOLT      放电
+    BLNK      瞬移
+    VITL      生命维持
+    IMRT      不死
+    NULL      空白化
+    HIDE      隐匿
+    LOCK      锁定
+    SEAL      封存
+    RSTR      重启
+    SVRN      切断
+
+    --------------------------------
+    注释：
+
+    KNOW、OMNI、LEVT、VOLT、BLNK、VITL、IMRT 等字段疑似并非普通管理权限。
+    NOOB-304 曾在残存日志中提到：
+    “我现在可以在他妈地球上玩创造模式了。”
+
+    RSTR 字段作用不明。
+    疑似用于重启当前连接或恢复已损坏节点。
+
+    SVRN 字段已确认。
+    用途：切断。
+
+    当前恢复出的最终命令格式：
+
+    SVRN-[基站编号]
+
+    仍需确认所有活动中基站编号。
+
+- id: "student_info_form"
   title: "student_info_form.cache"
   keywords:
     - "学生个人信息表"
     - "学生信息表"
     - "信息表"
-  summary: "检测到一份曾被后台索引的表格记录。"
-  status: "partially recovered"
-  body: "【内容尚未恢复】"
+    - "信息"
+    - "学生个人信息"
+    - "student info"
+    - "student_info_form"
+  summary: "检测到一份曾被后台索引的学生信息表。"
+  status: "recovered"
+  type: "table"
+  data_source: "/assets/data/student_info_form.json"
 
-- id: "containment_notice.log"
-  title: "containment_notice.log"
+- id: "relay_registry"
+  title: "relay_registry.cache"
   keywords:
-    - "封存"
-  summary: "检测到封存状态相关记录。"
+    - "基站"
+    - "基站名单"
+    - "名单"
+    - "relay registry"
+    - "registry"
+    - "base station"
+    - "SVRN"
+  summary: "检测到一份基站名单。"
   status: "partially recovered"
+  type: "registry"
+  data_source: "/assets/data/relay_registry.json"
+
+- id: "contact_trace"
+  title: "contact_trace.wxr"
+  keywords:
+    - "王旭冉"
+  summary: "检测到联系人相关记录。"
+  status: "partially recovered"
+  type: "ambient"
   body: "【内容尚未恢复】"

@@ -31,6 +31,8 @@ const requiredFiles = [
   'assets/js/arg-admin.js',
   'assets/js/arg-diary.js',
   'assets/js/arg-search.js',
+  'assets/data/student_info_form.json',
+  'assets/data/relay_registry.json',
   'assets/images/arg/sms_admin_recovery.jpg',
   'assets/images/arg/missing_notice_wei.jpg',
   'assets/images/arg/cctv_0237.jpg',
@@ -115,6 +117,8 @@ const requiredBuildPaths = [
   { path: 'assets/js/arg-admin.js', type: 'file' },
   { path: 'assets/js/arg-diary.js', type: 'file' },
   { path: 'assets/js/arg-search.js', type: 'file' },
+  { path: 'assets/data/student_info_form.json', type: 'file' },
+  { path: 'assets/data/relay_registry.json', type: 'file' },
   { path: 'assets/images/arg/sms_admin_recovery.jpg', type: 'file' },
   { path: 'assets/images/arg/missing_notice_wei.jpg', type: 'file' },
   { path: 'assets/images/arg/cctv_0237.jpg', type: 'file' },
@@ -528,6 +532,12 @@ async function checkBackendConsoleSource() {
   const searchPage = await fs.readFile(toAbsolute('_pages/archive-search.md'), 'utf8');
   const diaryScript = await fs.readFile(toAbsolute('assets/js/arg-diary.js'), 'utf8');
   const searchScript = await fs.readFile(toAbsolute('assets/js/arg-search.js'), 'utf8');
+  const studentRows = JSON.parse(
+    await fs.readFile(toAbsolute('assets/data/student_info_form.json'), 'utf8'),
+  );
+  const relayRows = JSON.parse(
+    await fs.readFile(toAbsolute('assets/data/relay_registry.json'), 'utf8'),
+  );
   const masthead = await fs.readFile(toAbsolute('_includes/masthead.html'), 'utf8');
 
   const diaryIds = [...diaryData.matchAll(/^- id:\s*"([^"]+)"\s*$/gm)]
@@ -552,21 +562,74 @@ async function checkBackendConsoleSource() {
     && diaryScript.includes('diary-detail--highlight');
 
   const requiredSearchTerms = [
+    'D-23',
+    'NOOB-304',
+    'Wei Heng',
     '基站',
     '王旭冉',
+    '密钥',
+    '最终武器',
+    'SVRN',
     '学生个人信息表',
     '学生信息表',
     '信息表',
     '封存',
   ];
+  const requiredSearchRecordIds = [
+    'fragment_d23',
+    'fragment_containment',
+    'fragment_key',
+    'key_manifest',
+    'student_info_form',
+    'relay_registry',
+    'contact_trace',
+  ];
+  const searchRecordIds = [...searchData.matchAll(/^- id:\s*"([^"]+)"\s*$/gm)]
+    .map((match) => match[1]);
   const searchDataCorrect = requiredSearchTerms.every((term) => searchData.includes(term))
-    && (searchData.match(/^- id:\s*"[^"]+"\s*$/gm) || []).length === 4
-    && (searchData.match(/body:\s*"【内容尚未恢复】"/g) || []).length === 4;
+    && requiredSearchRecordIds.every((id) => searchRecordIds.includes(id))
+    && searchRecordIds.length === requiredSearchRecordIds.length
+    && searchData.includes('type: "fragment"')
+    && searchData.includes('type: "table"')
+    && searchData.includes('type: "registry"')
+    && searchData.includes('type: "keylist"')
+    && searchData.includes('type: "ambient"');
+  const wangXuran = studentRows.find((row) => row.name === 'Wang Xuran');
+  const studentDataCorrect = studentRows.length > 1
+    && wangXuran?.studentId === '201'
+    && wangXuran?.major === 'Computer Science'
+    && wangXuran?.age === 26
+    && wangXuran?.aliases?.includes('王旭冉');
+  const activeRelayCodes = relayRows
+    .filter((row) => row.status === '活动中')
+    .map((row) => row.code);
+  const relayDataCorrect = relayRows.length === 45
+    && activeRelayCodes.join(',') === '201,202,203,302,307,503'
+    && relayRows.find((row) => row.code === '201')?.name === 'Wang Xuran'
+    && relayRows.find((row) => row.code === '304')?.name === 'Wei Heng'
+    && relayRows.every((row) => (
+      Object.keys(row).sort().join(',') === 'code,name,region,score,status'
+    ));
+  const finalKey = 'SVRN-' + ['201', '202', '203', '302', '307', '503'].join('-');
+  const finalKeyHidden = !searchData.includes(finalKey)
+    && !searchPage.includes(finalKey)
+    && !searchScript.includes(finalKey)
+    && !JSON.stringify(studentRows).includes(finalKey)
+    && !JSON.stringify(relayRows).includes(finalKey);
   const searchRoutingCorrect = searchPage.includes('id="archive-search-form"')
     && searchPage.includes('id="archive-search-data"')
+    && searchPage.includes('data-record-type')
     && searchScript.includes('未输入关键词。')
     && searchScript.includes('No result.')
     && searchScript.includes('当前访问端已被临时记录。')
+    && searchScript.includes('arg_search_编号')
+    && searchScript.includes('arg_search_封存')
+    && searchScript.includes('arg_search_密钥')
+    && searchScript.includes('arg_search_信息表')
+    && searchScript.includes('arg_search_基站')
+    && searchScript.includes('renderStudentTable')
+    && searchScript.includes('renderRelayRegistry')
+    && searchScript.includes('archive-result__type')
     && searchScript.includes('#record/')
     && masthead.includes("'/archive-search/'");
 
@@ -582,6 +645,15 @@ async function checkBackendConsoleSource() {
   if (!searchDataCorrect || !searchRoutingCorrect) {
     recordFail('archive search data, messages, or hash routing is incomplete');
   }
+  if (!studentDataCorrect) {
+    recordFail('student information source or Wang Xuran row is invalid');
+  }
+  if (!relayDataCorrect) {
+    recordFail(`relay registry source is invalid (active=${activeRelayCodes.join(',')})`);
+  }
+  if (!finalKeyHidden) {
+    recordFail('complete final relay key leaked into source');
+  }
 
   if (
     diaryOrderCorrect
@@ -591,8 +663,13 @@ async function checkBackendConsoleSource() {
     && diaryRoutingCorrect
     && searchDataCorrect
     && searchRoutingCorrect
+    && studentDataCorrect
+    && relayDataCorrect
+    && finalKeyHidden
   ) {
-    recordPass('backend console source rules (23 diary entries, 4 search records)');
+    recordPass(
+      `backend console source rules (23 diary entries, ${searchRecordIds.length} search records, ${relayRows.length} relay rows)`,
+    );
   }
 }
 
@@ -720,10 +797,22 @@ async function checkRenderedArgFeatures() {
         'archive-search-data',
         '基站',
         '王旭冉',
+        'D-23',
+        'NOOB-304',
+        'fragment_d23.tmp',
+        'fragment_containment.tmp',
+        'fragment_key.tmp',
+        'key_manifest.cache',
+        'relay_registry.cache',
+        'student_info_form.cache',
+        'partially recovered',
+        'data-record-type',
         '学生个人信息表',
         '学生信息表',
         '信息表',
         '封存',
+        'student_info_form.json',
+        'relay_registry.json',
         'arg-search.js',
         'arg-console.css',
         'arg-admin-nav-wrap',

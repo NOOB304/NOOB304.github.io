@@ -253,6 +253,10 @@
           return true;
         }
 
+        if (/^\d+$/.test(query)) {
+          return normalize(row.studentId) === query;
+        }
+
         var searchableValues = Object.values(row).flatMap(function (value) {
           return Array.isArray(value) ? value : [value];
         });

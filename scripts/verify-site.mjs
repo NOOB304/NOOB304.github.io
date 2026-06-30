@@ -637,6 +637,7 @@ async function checkBackendConsoleSource() {
     && searchScript.includes('arg_search_信息表')
     && searchScript.includes('arg_search_基站')
     && searchScript.includes('renderStudentTable')
+    && searchScript.includes('normalize(row.studentId) === query')
     && searchScript.includes('renderRelayRegistry')
     && searchScript.includes('archive-system-message')
     && searchScript.includes('archive-result__type')

@@ -173,6 +173,7 @@
   status: "partially recovered"
   type: "registry"
   data_source: "/assets/data/relay_registry.json"
+  system_message: "系统记录：该名单最后由管理员编辑于 2026-04-06 10:01。"
 
 - id: "contact_trace"
   title: "contact_trace.wxr"

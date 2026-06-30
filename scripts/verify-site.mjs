@@ -33,6 +33,7 @@ const requiredFiles = [
   'assets/js/arg-search.js',
   'assets/data/student_info_form.json',
   'assets/data/relay_registry.json',
+  'scripts/convert-student-info.py',
   'assets/images/arg/sms_admin_recovery.jpg',
   'assets/images/arg/missing_notice_wei.jpg',
   'assets/images/arg/cctv_0237.jpg',
@@ -532,9 +533,10 @@ async function checkBackendConsoleSource() {
   const searchPage = await fs.readFile(toAbsolute('_pages/archive-search.md'), 'utf8');
   const diaryScript = await fs.readFile(toAbsolute('assets/js/arg-diary.js'), 'utf8');
   const searchScript = await fs.readFile(toAbsolute('assets/js/arg-search.js'), 'utf8');
-  const studentRows = JSON.parse(
+  const studentPayload = JSON.parse(
     await fs.readFile(toAbsolute('assets/data/student_info_form.json'), 'utf8'),
   );
+  const studentRows = studentPayload.rows;
   const relayRows = JSON.parse(
     await fs.readFile(toAbsolute('assets/data/relay_registry.json'), 'utf8'),
   );
@@ -595,17 +597,24 @@ async function checkBackendConsoleSource() {
     && searchData.includes('type: "keylist"')
     && searchData.includes('type: "ambient"');
   const wangXuran = studentRows.find((row) => row.name === 'Wang Xuran');
-  const studentDataCorrect = studentRows.length > 1
-    && wangXuran?.studentId === '201'
-    && wangXuran?.major === 'Computer Science'
-    && wangXuran?.age === 26
-    && wangXuran?.aliases?.includes('王旭冉');
+  const wangXuranChinese = studentRows.find((row) => row.name === '王旭冉');
+  const studentDataCorrect = studentPayload.sheet === '学生个人信息表'
+    && studentPayload.columns.length === 18
+    && studentRows.length === 600
+    && !wangXuran
+    && wangXuranChinese?.studentId === '201'
+    && wangXuranChinese?.major === '计算机'
+    && wangXuranChinese?.age === 26;
   const activeRelayCodes = relayRows
     .filter((row) => row.status === '活动中')
     .map((row) => row.code);
+  const hiddenRelayRow = relayRows.find(
+    (row) => row.code === 'NoData' && row.name === 'NoData',
+  );
   const relayDataCorrect = relayRows.length === 45
-    && activeRelayCodes.join(',') === '201,202,203,302,307,503'
-    && relayRows.find((row) => row.code === '201')?.name === 'Wang Xuran'
+    && activeRelayCodes.join(',') === 'NoData,202,203,302,307,503'
+    && Boolean(hiddenRelayRow)
+    && !JSON.stringify(relayRows).includes('Wang Xuran')
     && relayRows.find((row) => row.code === '304')?.name === 'Wei Heng'
     && relayRows.every((row) => (
       Object.keys(row).sort().join(',') === 'code,name,region,score,status'
@@ -629,6 +638,7 @@ async function checkBackendConsoleSource() {
     && searchScript.includes('arg_search_基站')
     && searchScript.includes('renderStudentTable')
     && searchScript.includes('renderRelayRegistry')
+    && searchScript.includes('archive-system-message')
     && searchScript.includes('archive-result__type')
     && searchScript.includes('#record/')
     && masthead.includes("'/archive-search/'");
@@ -813,6 +823,7 @@ async function checkRenderedArgFeatures() {
         '封存',
         'student_info_form.json',
         'relay_registry.json',
+        '系统记录：该名单最后由管理员编辑于 2026-04-06 10:01。',
         'arg-search.js',
         'arg-console.css',
         'arg-admin-nav-wrap',

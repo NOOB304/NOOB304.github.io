@@ -214,7 +214,16 @@
     return { wrapper: wrapper, renderRows: renderRows };
   }
 
-  function renderStudentTable(rows) {
+  function renderStudentTable(data) {
+    var rows = Array.isArray(data) ? data : data.rows;
+    var columns = Array.isArray(data.columns) ? data.columns : [
+      { key: "name", label: "Name" },
+      { key: "studentId", label: "Student ID" },
+      { key: "major", label: "Major" },
+      { key: "college", label: "College" },
+      { key: "age", label: "Age" }
+    ];
+
     if (!Array.isArray(rows) || rows.length === 0) {
       renderDataUnavailable("【学生信息表尚未载入】");
       return;
@@ -224,13 +233,6 @@
     var filterLabel = document.createElement("label");
     var filterInput = document.createElement("input");
     var count = document.createElement("p");
-    var columns = [
-      { key: "name", label: "Name" },
-      { key: "studentId", label: "Student ID" },
-      { key: "major", label: "Major" },
-      { key: "college", label: "College" },
-      { key: "age", label: "Age" }
-    ];
     var tableView = createTable(columns, rows, { id: "student-info-table" });
 
     panel.className = "archive-data-panel archive-data-panel--student";
@@ -251,13 +253,9 @@
           return true;
         }
 
-        var searchableValues = [
-          row.name,
-          row.studentId,
-          row.major,
-          row.college,
-          row.age
-        ].concat(row.aliases || []);
+        var searchableValues = Object.values(row).flatMap(function (value) {
+          return Array.isArray(value) ? value : [value];
+        });
 
         return searchableValues.some(function (value) {
           return normalize(value).includes(query);
@@ -274,7 +272,7 @@
     updateRows();
   }
 
-  function renderRelayRegistry(rows) {
+  function renderRelayRegistry(rows, record) {
     if (!Array.isArray(rows) || rows.length === 0) {
       renderDataUnavailable("【基站名单尚未载入】");
       return;
@@ -300,6 +298,14 @@
       }
     ];
     var tableView = createTable(columns, rows, { id: "relay-registry-table" });
+
+    if (record.system_message) {
+      var systemMessage = document.createElement("p");
+      systemMessage.className = "archive-system-message";
+      systemMessage.textContent = record.system_message;
+      bodyElement.appendChild(systemMessage);
+    }
+
     bodyElement.appendChild(tableView.wrapper);
   }
 
@@ -354,7 +360,7 @@
       if (record.type === "table") {
         renderStudentTable(rows);
       } else if (record.type === "registry") {
-        renderRelayRegistry(rows);
+        renderRelayRegistry(rows, record);
       } else {
         renderDataUnavailable("【内容尚未恢复】");
       }

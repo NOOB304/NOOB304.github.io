@@ -2,7 +2,7 @@
   { "code": "100", "name": "Prometheus", "region": "Ancient Greek Mythology", "score": 91, "status": "已升级" },
   { "code": "101", "name": "Johannes Gutenberg", "region": "German-speaking Europe", "score": 87, "status": "已离线" },
   { "code": "200", "name": "Kong Qiu", "region": "Ancient China", "score": 72, "status": "已离线" },
-  { "code": "201", "name": "Wang Xuran", "region": "China", "score": 49, "status": "活动中" },
+  { "code": "NoData", "name": "NoData", "region": "China", "score": 49, "status": "活动中" },
   { "code": "202", "name": "Elon Reeve Musk", "region": "South Africa / United States", "score": 86, "status": "活动中" },
   { "code": "203", "name": "Mark Zuckerberg", "region": "United States", "score": 71, "status": "活动中" },
   { "code": "204", "name": "Siddhartha Gautama", "region": "Ancient India", "score": 89, "status": "已离线" },

@@ -373,6 +373,17 @@ a.diary-index__entry:focus {
   font-size: 0.78rem;
 }
 
+.archive-system-message {
+  margin: 0 0 0.85rem;
+  padding: 0.55rem 0.7rem;
+  color: #7f8b83;
+  background: #080b08;
+  border: 1px dashed #39433c;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.68rem;
+  line-height: 1.6;
+}
+
 .archive-data-panel label {
   display: block;
   margin-bottom: 0.45rem;

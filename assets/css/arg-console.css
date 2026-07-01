@@ -413,6 +413,7 @@ a.diary-index__entry:focus {
 }
 
 .archive-table-filter {
+  box-sizing: border-box;
   width: min(100%, 24rem);
   min-height: 2.45rem;
   padding: 0.5rem 0.65rem;

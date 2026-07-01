@@ -18,7 +18,13 @@ sitemap: false
 noindex: true
 ---
 
-<section class="relay-console" id="relay-console" data-relay-console>
+<section
+  class="relay-console"
+  id="relay-console"
+  data-relay-console
+  data-ending-one-url="{{ '/relay-console/ending-1/' | relative_url }}"
+  data-final-ending-url="{{ '/relay-console/final-ending/' | relative_url }}"
+>
   <p class="relay-console__subtitle">Local client permission layer</p>
 
   <div class="relay-terminal" id="relay-terminal" role="log" aria-live="polite" aria-relevant="additions">
@@ -32,7 +38,7 @@ noindex: true
       <input
         id="relay-command-input"
         type="text"
-        placeholder="输入密钥或命令"
+        placeholder="请输入密钥"
         autocomplete="off"
         autocapitalize="characters"
         spellcheck="false"
@@ -40,6 +46,15 @@ noindex: true
       <button type="submit" id="relay-command-submit">执行</button>
     </div>
     <p class="relay-command__state" id="relay-command-state" role="status" aria-live="polite"></p>
+    <div class="relay-indicators" id="relay-indicators" aria-label="链路状态">
+      <span class="relay-indicator relay-indicator--green" data-relay-indicator="201" title="Relay 201"></span>
+      <span class="relay-indicator relay-indicator--green" data-relay-indicator="202" title="Relay 202"></span>
+      <span class="relay-indicator relay-indicator--green" data-relay-indicator="203" title="Relay 203"></span>
+      <span class="relay-indicator relay-indicator--green" data-relay-indicator="302" title="Relay 302"></span>
+      <span class="relay-indicator relay-indicator--green" data-relay-indicator="307" title="Relay 307"></span>
+      <span class="relay-indicator relay-indicator--green" data-relay-indicator="503" title="Relay 503"></span>
+      <span class="relay-indicator relay-indicator--red" data-control-indicator title="Control channel"></span>
+    </div>
   </form>
 </section>
 

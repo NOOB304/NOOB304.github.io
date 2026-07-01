@@ -26,7 +26,9 @@
             {% endif %}
             <li class="masthead__menu-item"><a href="{{ link_url }}">{{ link.title }}</a></li>
           {% endfor %}
-          {% include language-switch.html %}
+          {% unless page.arg_page %}
+            {% include language-switch.html %}
+          {% endunless %}
           {% unless page.arg_admin %}
             <li id="theme-toggle" class="masthead__menu-item persist tail">
               <a><i id="theme-icon" class="fa-solid fa-sun" aria-hidden="true" title="toggle theme"></i></a>

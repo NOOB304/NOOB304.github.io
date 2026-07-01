@@ -78,6 +78,18 @@
   color: #82958a;
 }
 
+.terminal-line--error {
+  color: #ff5a53;
+  background: #100707;
+  border-color: #612c29;
+  border-left-color: #f0443c;
+}
+
+.terminal-line--error .terminal-line__speaker,
+.terminal-line--error .terminal-line__body {
+  color: #ff5a53;
+}
+
 .speaker-anonymous {
   color: #c9c1bf;
   background: #0b0808;
@@ -195,6 +207,43 @@
   letter-spacing: 0.07em;
 }
 
+.relay-indicators {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin: 0.8rem 0 0;
+  padding: 0.65rem 0.75rem;
+  background: #050705;
+  border: 1px solid #29332c;
+}
+
+.relay-indicator {
+  display: block;
+  width: 0.62rem;
+  height: 0.62rem;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  transition: color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.relay-indicator--green {
+  color: #45e56f;
+  background: #2ad65b;
+  box-shadow: 0 0 0.5rem rgba(42, 214, 91, 0.5);
+}
+
+.relay-indicator--red {
+  color: #ff3e36;
+  background: #e92721;
+  box-shadow: 0 0 0.5rem rgba(233, 39, 33, 0.52);
+}
+
+.relay-indicator--yellow {
+  color: #ffd64a;
+  background: #efbf27;
+  box-shadow: 0 0 0.55rem rgba(239, 191, 39, 0.58);
+}
+
 .loading-dots {
   display: inline-flex;
   gap: 0.45rem;
@@ -272,6 +321,9 @@
 
 .congrats-fill {
   background: rgba(0, 0, 0, 0.94);
+  cursor: pointer;
+  pointer-events: auto;
+  outline: 0;
 }
 
 .congrats-fill span {
@@ -353,6 +405,53 @@
 
 .ending-screen--three {
   color: #d0d4d1;
+  border-color: #626a64;
+}
+
+.relay-ending-page .arg-record {
+  width: min(860px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.relay-ending-page .arg-record__header {
+  padding-block: clamp(3rem, 12vh, 7rem) 2rem;
+  text-align: center;
+}
+
+.relay-ending-page .arg-record__header h1 {
+  margin: 0;
+  color: #d7dcd8;
+  font: 700 clamp(1.25rem, 4vw, 2.1rem)/1.4 "SFMono-Regular", Consolas, monospace;
+  letter-spacing: 0.06em;
+}
+
+.relay-ending-result {
+  padding: clamp(2rem, 7vw, 4rem) 1.25rem;
+  color: #cbd1cc;
+  background: #030403;
+  border: 1px solid #414b44;
+  text-align: center;
+}
+
+.relay-ending-result p {
+  margin: 0 0 1.25rem;
+  font-size: clamp(1rem, 3vw, 1.35rem);
+  line-height: 1.8;
+}
+
+.relay-ending-result small {
+  color: #727c75;
+  font: 0.72rem/1.6 "SFMono-Regular", Consolas, monospace;
+  letter-spacing: 0.08em;
+}
+
+.relay-ending-result--one {
+  color: #e06b64;
+  border-color: #6f3733;
+}
+
+.relay-ending-result--final {
+  color: #d1d5d2;
   border-color: #626a64;
 }
 

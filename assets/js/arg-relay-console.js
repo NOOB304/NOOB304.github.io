@@ -25,6 +25,8 @@
   };
 
   var ACTIVE_RELAYS = ["201", "202", "203", "302", "307", "503"];
+  var COMMAND_DELAY = 3000;
+  var DIALOGUE_DELAY = 3000;
   var KNOWN_RELAYS = new Set([
     "100", "101", "200", "201", "202", "203", "204", "205", "206",
     "300", "301", "302", "303", "304", "305", "307",
@@ -158,14 +160,104 @@
   var submit = document.getElementById("relay-command-submit");
   var stateLabel = document.getElementById("relay-command-state");
   var endingAudio = document.getElementById("relay-ending-audio");
+  var relayIndicators = Array.from(
+    document.querySelectorAll("[data-relay-indicator]")
+  );
+  var controlIndicator = document.querySelector("[data-control-indicator]");
+  var endingOneUrl = root.getAttribute("data-ending-one-url");
+  var finalEndingUrl = root.getAttribute("data-final-ending-url");
 
   var currentState = STATES.INIT;
   var disconnectedRelays = new Set();
   var busy = false;
+  var audioContext = null;
 
   function sleep(milliseconds) {
     return new Promise(function (resolve) {
       window.setTimeout(resolve, milliseconds);
+    });
+  }
+
+  function getAudioContext() {
+    var AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) {
+      return null;
+    }
+
+    if (!audioContext) {
+      audioContext = new AudioContext();
+    }
+    if (audioContext.state === "suspended") {
+      audioContext.resume().catch(function () {
+        // Visual feedback remains available if audio cannot resume.
+      });
+    }
+    return audioContext;
+  }
+
+  function playTone(frequency, duration, options) {
+    var context = getAudioContext();
+    if (!context) {
+      return;
+    }
+
+    var settings = options || {};
+    var oscillator = context.createOscillator();
+    var gain = context.createGain();
+    var startAt = context.currentTime + (settings.delay || 0);
+    var endAt = startAt + duration;
+
+    oscillator.type = settings.type || "sine";
+    oscillator.frequency.setValueAtTime(frequency, startAt);
+    if (settings.endFrequency) {
+      oscillator.frequency.exponentialRampToValueAtTime(
+        Math.max(1, settings.endFrequency),
+        endAt
+      );
+    }
+
+    gain.gain.setValueAtTime(0.0001, startAt);
+    gain.gain.exponentialRampToValueAtTime(settings.volume || 0.035, startAt + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, endAt);
+
+    oscillator.connect(gain);
+    gain.connect(context.destination);
+    oscillator.start(startAt);
+    oscillator.stop(endAt + 0.02);
+  }
+
+  function playInputSound() {
+    playTone(880, 0.055, { type: "square", volume: 0.018 });
+    playTone(1320, 0.045, { delay: 0.06, type: "sine", volume: 0.014 });
+  }
+
+  function playRelayDisconnectSound() {
+    playTone(260, 0.42, {
+      type: "sawtooth",
+      endFrequency: 58,
+      volume: 0.045
+    });
+    playTone(92, 0.55, {
+      delay: 0.08,
+      type: "square",
+      endFrequency: 42,
+      volume: 0.025
+    });
+    playTone(1480, 0.08, {
+      delay: 0.42,
+      type: "square",
+      volume: 0.022
+    });
+  }
+
+  function playPermissionPausedSound() {
+    [0, 0.34, 0.68, 1.02, 1.36, 1.7, 2.04, 2.38].forEach(function (delay) {
+      playTone(116, 0.24, {
+        delay: delay,
+        type: "sawtooth",
+        endFrequency: 84,
+        volume: 0.04
+      });
     });
   }
 
@@ -244,6 +336,56 @@
 
     message.querySelector(".terminal-line__body").appendChild(dots);
     return message;
+  }
+
+  function clearLoading(message, keepMessage) {
+    var dots = message.querySelector(".loading-dots");
+    if (dots) {
+      dots.remove();
+    }
+    if (!keepMessage) {
+      message.remove();
+    }
+  }
+
+  async function waitForCommand(body, options) {
+    var settings = options || {};
+    setInputLocked(true);
+    var loading = appendLoading(settings.speaker || "SYSTEM", body || "正在处理命令");
+    await sleep(COMMAND_DELAY);
+    clearLoading(loading, Boolean(settings.keepMessage));
+    return loading;
+  }
+
+  function updateIndicators() {
+    relayIndicators.forEach(function (indicator) {
+      var code = indicator.getAttribute("data-relay-indicator");
+      var disconnected = disconnectedRelays.has(code);
+      indicator.classList.toggle("relay-indicator--green", !disconnected);
+      indicator.classList.toggle("relay-indicator--red", disconnected);
+      indicator.classList.remove("relay-indicator--yellow");
+    });
+
+    if (!controlIndicator) {
+      return;
+    }
+
+    controlIndicator.classList.remove(
+      "relay-indicator--green",
+      "relay-indicator--red",
+      "relay-indicator--yellow"
+    );
+
+    if (
+      currentState === STATES.NOOB_RESTORED
+      || currentState === STATES.ENDING_3
+    ) {
+      controlIndicator.classList.add("relay-indicator--green");
+    } else if (currentState === STATES.ANON_LOCK) {
+      controlIndicator.classList.add("relay-indicator--yellow");
+    } else {
+      controlIndicator.classList.add("relay-indicator--red");
+    }
   }
 
   function setInputLocked(locked, permanent) {
@@ -331,10 +473,15 @@
     return { command: upper };
   }
 
-  async function playDialogue(messages, delay) {
+  async function playDialogue(messages, delay, withLoading) {
     for (var index = 0; index < messages.length; index += 1) {
+      if (withLoading) {
+        var loading = appendLoading(messages[index].speaker, "");
+        await sleep(delay);
+        loading.remove();
+      }
       appendMessage(messages[index].speaker, messages[index].body);
-      if (index < messages.length - 1) {
+      if (!withLoading && index < messages.length - 1) {
         await sleep(delay);
       }
     }
@@ -347,13 +494,11 @@
   }
 
   async function establishLink() {
-    setInputLocked(true);
-    var loading = appendLoading("SYSTEM", "正在建立本地链接");
-    await sleep(2500);
-    loading.remove();
+    await waitForCommand("正在建立本地链接");
 
     currentState = STATES.CONNECTED;
     saveProgress();
+    updateIndicators();
     appendMessage(
       "SYSTEM",
       "链接成功。\n\n本地访问端已接入。\n当前权限层级：partial"
@@ -361,25 +506,59 @@
     setInputLocked(false);
   }
 
-  function runOrdinaryCommand(command) {
+  async function runOrdinaryCommand(command) {
+    var permissionChecks = {
+      KNOW: {
+        request: "知识读取权限检测中……",
+        result: "权限不足。"
+      },
+      LEVT: {
+        request: "飞行权限请求已提交。",
+        result: "错误：\n当前访问端未绑定稳定现实坐标。\n权限拒绝。"
+      },
+      VOLT: {
+        request: "放电权限检测中……",
+        result: "错误：\n当前访问端缺少实体输出层。\n权限拒绝。"
+      },
+      BLNK: {
+        request: "瞬移权限检测中……",
+        result: "错误：\n目标坐标未校准。\n权限拒绝。"
+      },
+      IMRT: {
+        request: "不死权限检测中……",
+        result: "错误：\n当前生命层不可写入。\n权限拒绝。"
+      }
+    };
     var responses = {
-      KNOW: "知识读取权限检测中……\n\n权限不足。",
-      LEVT: "飞行权限请求已提交。\n\n错误：\n当前访问端未绑定稳定现实坐标。\n权限拒绝。",
-      VOLT: "放电权限检测中……\n\n错误：\n当前访问端缺少实体输出层。\n权限拒绝。",
-      BLNK: "瞬移权限检测中……\n\n错误：\n目标坐标未校准。\n权限拒绝。",
-      IMRT: "不死权限检测中……\n\n错误：\n当前生命层不可写入。\n权限拒绝。",
       SEAL: "封存命令需要指定对象编号。\n\n示例：\nSEAL-304",
       "SEAL-304": "NOOB-304 已处于封存状态。\n无需重复执行。",
       "RSTR-304": "RSTR 命令需要更高权限。\n当前访问端无法重启封存对象。"
     };
 
+    if (permissionChecks[command]) {
+      await waitForCommand(permissionChecks[command].request, {
+        keepMessage: true
+      });
+      appendMessage(
+        "SYSTEM",
+        permissionChecks[command].result,
+        { className: "terminal-line--error" }
+      );
+      setInputLocked(false);
+      return true;
+    }
+
     if (responses[command]) {
+      await waitForCommand("正在验证命令");
       appendMessage("SYSTEM", responses[command]);
+      setInputLocked(false);
       return true;
     }
 
     if (command === "KEY" || command === "KEY-MANIFEST") {
+      await waitForCommand("正在读取本地密钥缓存");
       appendMessage("SYSTEM", "已破译部分密钥：\n\n" + KEY_MANIFEST.join("\n"));
+      setInputLocked(false);
       return true;
     }
 
@@ -393,33 +572,44 @@
   }
 
   async function handleSvrn(code) {
+    await waitForCommand("正在执行切断命令");
+
     if (!code) {
       appendMessage("SYSTEM", "命令格式错误。\n示例：SVRN-201");
+      setInputLocked(false);
       return;
     }
     if (code === "304") {
       appendMessage("SYSTEM", "NOOB-304 已封存。\n未检测到活动链接。");
+      setInputLocked(false);
       return;
     }
     if (!KNOWN_RELAYS.has(code)) {
       appendMessage("SYSTEM", "未识别该基站编号。\n请检查输入。");
+      setInputLocked(false);
       return;
     }
     if (!ACTIVE_RELAYS.includes(code)) {
       appendMessage("SYSTEM", "基站 " + code + " 当前不处于活动状态。");
+      setInputLocked(false);
       return;
     }
     if (disconnectedRelays.has(code)) {
       appendMessage("SYSTEM", "基站 " + code + " 已经断开。\n无需重复执行。");
+      setInputLocked(false);
       return;
     }
 
     disconnectedRelays.add(code);
     saveProgress();
+    updateIndicators();
     appendMessage("SYSTEM", "基站 " + code + " 已断开链接。");
+    playRelayDisconnectSound();
 
     if (allActiveRelaysDisconnected()) {
       await beginAnonymousTakeover();
+    } else {
+      setInputLocked(false);
     }
   }
 
@@ -445,6 +635,7 @@
     setInputLocked(true);
     root.classList.add("screen-shake", "red-alert");
     var overlay = createPermissionOverlay();
+    playPermissionPausedSound();
 
     appendMessage(
       "SYSTEM",
@@ -457,27 +648,25 @@
     currentState = STATES.ANON_LOCK;
     saveProgress();
     appendMessage("SYSTEM", "anonymous 已强制接入。");
-    await playDialogue(ANONYMOUS_DIALOGUE, 650);
+    updateIndicators();
+    await playDialogue(ANONYMOUS_DIALOGUE, DIALOGUE_DELAY, true);
     setInputLocked(false);
   }
 
   async function restoreNoob304() {
-    setInputLocked(true);
-    appendMessage(
-      "SYSTEM",
-      "检测到 RSTR 命令。\n\n目标编号：304\n目标状态：已封存\n\n正在尝试临时重启……"
+    await waitForCommand(
+      "检测到 RSTR 命令。\n\n目标编号：304\n目标状态：已封存\n\n正在尝试临时重启……",
+      { keepMessage: true }
     );
-    var loading = appendLoading("SYSTEM", "");
-    await sleep(2300);
-    loading.remove();
 
     currentState = STATES.NOOB_RESTORED;
     saveProgress();
+    updateIndicators();
     appendMessage(
       "SYSTEM",
       "NOOB-304 已恢复。\n\n警告：\n该连接不稳定。"
     );
-    await playDialogue(NOOB_DIALOGUE, 620);
+    await playDialogue(NOOB_DIALOGUE, DIALOGUE_DELAY, true);
     setInputLocked(false);
   }
 
@@ -514,7 +703,9 @@
   async function showCongratsFill() {
     var overlay = document.createElement("div");
     overlay.className = "congrats-fill";
-    overlay.setAttribute("aria-hidden", "true");
+    overlay.setAttribute("aria-label", "双击可跳过");
+    overlay.setAttribute("role", "button");
+    overlay.tabIndex = 0;
 
     for (var index = 0; index < 24; index += 1) {
       var word = document.createElement("span");
@@ -526,8 +717,33 @@
     }
 
     document.body.appendChild(overlay);
-    await sleep(2200);
-    overlay.remove();
+    await new Promise(function (resolve) {
+      var finished = false;
+      var timer = window.setTimeout(finish, 30000);
+
+      function finish() {
+        if (finished) {
+          return;
+        }
+        finished = true;
+        window.clearTimeout(timer);
+        overlay.removeEventListener("dblclick", finish);
+        overlay.removeEventListener("keydown", handleKeydown);
+        overlay.remove();
+        resolve();
+      }
+
+      function handleKeydown(event) {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          finish();
+        }
+      }
+
+      overlay.addEventListener("dblclick", finish);
+      overlay.addEventListener("keydown", handleKeydown);
+      overlay.focus({ preventScroll: true });
+    });
   }
 
   async function runEndingOne(restored) {
@@ -537,23 +753,17 @@
     setInputLocked(true, true);
 
     if (restored) {
-      appendEndingScreen(
-        "ENDING 1｜BASE STATION ONLINE",
-        "本地访问端已转为现实层基站。",
-        "LOCAL-CLIENT is no longer local.",
-        "ending-screen--one"
-      );
+      window.location.replace(endingOneUrl);
       return;
     }
 
     startEndingAudio();
     root.classList.add("ending-one-active");
-    var loading = appendLoading(
-      "SYSTEM",
+    await waitForCommand(
       "Y 已确认。\n\n本地访问端同意接入。\nNOOB-304 空缺位检测中……\n替换协议启动。"
+      ,
+      { keepMessage: true }
     );
-    await sleep(2300);
-    loading.remove();
 
     await playDialogue([
       {
@@ -580,15 +790,10 @@
         speaker: "anonymous",
         body: "我们会给你足够的权限。\n\n你可以知道你想知道的事。\n你可以得到你想得到的东西。\n\n请保持观察。\n请等待召唤。"
       }
-    ], 700);
+    ], DIALOGUE_DELAY, true);
 
     await showCongratsFill();
-    appendEndingScreen(
-      "ENDING 1｜BASE STATION ONLINE",
-      "本地访问端已转为现实层基站。",
-      "LOCAL-CLIENT is no longer local.",
-      "ending-screen--one"
-    );
+    window.location.assign(endingOneUrl);
   }
 
   async function runEndingTwo(restored) {
@@ -607,6 +812,8 @@
       return;
     }
 
+    await waitForCommand("正在确认本地访问端选择");
+    setInputLocked(true, true);
     root.classList.add("sanitized-blur");
     await playDialogue([
       {
@@ -647,22 +854,17 @@
     setInputLocked(true, true);
 
     if (restored) {
-      root.classList.add("sovereignty-clean");
-      appendEndingScreen(
-        "ENDING 3｜SOVEREIGNTY",
-        "Observation channel closed.",
-        "最终武器",
-        "ending-screen--three"
-      );
+      window.location.replace(finalEndingUrl);
       return;
     }
 
     root.classList.add("screen-shake", "red-alert", "sovereignty-impact");
-    appendMessage(
-      "SYSTEM",
+    playPermissionPausedSound();
+    await waitForCommand(
       "SOVEREIGNTY 已确认。\n\n同意层已撤销。\n外部观察权限已移除。\n基站名单已失效。\n密钥清单已销毁。\n\n正在关闭活动通道……"
+      ,
+      { keepMessage: true }
     );
-    await sleep(2200);
     root.classList.remove("screen-shake", "red-alert", "sovereignty-impact");
     root.classList.add("sovereignty-clean");
 
@@ -682,17 +884,12 @@
         speaker: "anonymous",
         body: "我们尊重你们的选择。\n\n很遗憾我们无法对地球进行后续观察。\n\n你们的表演短暂、混乱、残忍、滑稽。\n\n但也足够精彩。\n\n也许这正是我们一直不愿移开视线的原因。"
       }
-    ], 850);
-    appendEndingScreen(
-      "ENDING 3｜SOVEREIGNTY",
-      "Observation channel closed.",
-      "最终武器",
-      "ending-screen--three"
-    );
+    ], DIALOGUE_DELAY, true);
+    window.location.assign(finalEndingUrl);
   }
 
   async function handleConnectedCommand(parsed) {
-    if (runOrdinaryCommand(parsed.command)) {
+    if (await runOrdinaryCommand(parsed.command)) {
       return;
     }
     if (parsed.command.startsWith("SVRN-")) {
@@ -700,14 +897,13 @@
       return;
     }
     if (parsed.command.startsWith("SVRN")) {
-      appendMessage("SYSTEM", "命令格式错误。\n示例：SVRN-201");
+      await handleSvrn(null);
       return;
     }
 
-    appendMessage(
-      "SYSTEM",
-      "未识别命令。"
-    );
+    await waitForCommand("正在解析输入");
+    appendMessage("SYSTEM", "未识别命令。");
+    setInputLocked(false);
   }
 
   async function handleCommand(rawValue) {
@@ -717,6 +913,7 @@
     }
 
     var parsed = normalizeCommand(trimmed);
+    playInputSound();
     appendUserCommand(parsed.command);
     input.value = "";
 
@@ -724,10 +921,9 @@
       if (parsed.command === "LINK-LOCAL") {
         await establishLink();
       } else {
-        appendMessage(
-          "SYSTEM",
-          "Connection has not been established."
-        );
+        await waitForCommand("正在解析输入");
+        appendMessage("SYSTEM", "当前尚未建立链接。");
+        setInputLocked(false);
       }
       return;
     }
@@ -745,10 +941,12 @@
       } else if (parsed.command === "RSTR-304") {
         await restoreNoob304();
       } else {
+        await waitForCommand("正在验证当前输入");
         appendMessage(
           "anonymous",
           "当前不需要其他命令。\n\n请输入 Y 或 N。"
         );
+        setInputLocked(false);
       }
       return;
     }
@@ -761,7 +959,9 @@
       } else if (parsed.command === "SOVEREIGNTY") {
         await runEndingThree(false);
       } else {
+        await waitForCommand("正在验证当前输入");
         appendMessage("SYSTEM", "命令无效。");
+        setInputLocked(false);
       }
     }
   }
@@ -783,6 +983,7 @@
 
   function renderInitialState() {
     currentState = STATES.INIT;
+    updateIndicators();
     appendMessage(
       "SYSTEM",
       "Local client has entered the Relay Debug Console.\nCurrent permission level: disconnected."
@@ -811,6 +1012,7 @@
     }
     if (safeStorageGet(STORAGE.noob) === "true") {
       currentState = STATES.NOOB_RESTORED;
+      updateIndicators();
       appendMessage("SYSTEM", "不稳定连接已从本地缓存恢复。");
       renderDialogueImmediately(NOOB_DIALOGUE);
       setInputLocked(false);
@@ -818,6 +1020,7 @@
     }
     if (safeStorageGet(STORAGE.anonymous) === "true") {
       currentState = STATES.ANON_LOCK;
+      updateIndicators();
       appendMessage("SYSTEM", "anonymous 强制接入状态已恢复。");
       renderDialogueImmediately(ANONYMOUS_DIALOGUE);
       setInputLocked(false);
@@ -825,6 +1028,7 @@
     }
     if (safeStorageGet(STORAGE.linked) === "true") {
       currentState = STATES.CONNECTED;
+      updateIndicators();
       if (allActiveRelaysDisconnected()) {
         beginAnonymousTakeover();
         return;
@@ -851,5 +1055,6 @@
   });
 
   stateLabel.textContent = "STATE: INIT";
+  updateIndicators();
   restoreSession();
 })();

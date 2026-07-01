@@ -23,6 +23,8 @@ const requiredFiles = [
   '_pages/diary.md',
   '_pages/archive-search.md',
   '_pages/relay-console.md',
+  '_pages/relay-ending-1.md',
+  '_pages/relay-ending-final.md',
   '_layouts/arg.html',
   'assets/css/arg.css',
   'assets/css/arg-admin.css',
@@ -115,6 +117,8 @@ const requiredBuildPaths = [
   { path: 'diary/index.html', type: 'file' },
   { path: 'archive-search/index.html', type: 'file' },
   { path: 'relay-console/index.html', type: 'file' },
+  { path: 'relay-console/ending-1/index.html', type: 'file' },
+  { path: 'relay-console/final-ending/index.html', type: 'file' },
   { path: 'assets/css/arg.css', type: 'file' },
   { path: 'assets/css/arg-admin.css', type: 'file' },
   { path: 'assets/css/arg-console.css', type: 'file' },
@@ -722,6 +726,8 @@ async function checkRelayConsoleSource() {
   const styles = await fs.readFile(toAbsolute('assets/css/relay-console.css'), 'utf8');
   const masthead = await fs.readFile(toAbsolute('_includes/masthead.html'), 'utf8');
   const manifest = await fs.readFile(toAbsolute('_data/archive_search.yml'), 'utf8');
+  const endingOnePage = await fs.readFile(toAbsolute('_pages/relay-ending-1.md'), 'utf8');
+  const finalEndingPage = await fs.readFile(toAbsolute('_pages/relay-ending-final.md'), 'utf8');
 
   const states = [
     'INIT',
@@ -757,9 +763,7 @@ async function checkRelayConsoleSource() {
     '人类不是你们的宠物',
     '最终密钥是：',
     'SOVEREIGNTY 已确认',
-    'ENDING 1｜BASE STATION ONLINE',
     'ENDING 2｜MEMORY SANITIZED',
-    'ENDING 3｜SOVEREIGNTY',
   ];
   const requiredStyles = [
     'loading-dots',
@@ -773,20 +777,35 @@ async function checkRelayConsoleSource() {
     'congrats-fill',
     'sanitized-blur',
     'sovereignty-clean',
+    'relay-indicator--green',
+    'relay-indicator--red',
+    'relay-indicator--yellow',
+    'terminal-line--error',
   ];
 
   const pageCorrect = page.includes('title: "Relay Debug Console"')
     && page.includes('permalink: /relay-console/')
     && page.includes('Local client permission layer')
-    && page.includes('placeholder="输入密钥或命令"')
+    && page.includes('placeholder="请输入密钥"')
     && page.includes('id="relay-command-form"')
+    && page.includes('data-relay-indicator="201"')
+    && page.includes('data-control-indicator')
+    && page.includes("'/relay-console/ending-1/'")
+    && page.includes("'/relay-console/final-ending/'")
     && page.includes('id="relay-ending-audio"')
     && page.includes('ending-1-ode-to-joy.mp3')
     && page.includes('sitemap: false')
     && page.includes('noindex: true');
   const menuCorrect = masthead.includes('链路调试台')
     && masthead.includes("'/relay-console/'")
+    && masthead.includes('{% unless page.arg_page %}')
     && !masthead.includes('管理密钥');
+  const endingPagesCorrect = endingOnePage.includes('permalink: /relay-console/ending-1/')
+    && endingOnePage.includes('ENDING 1｜BASE STATION ONLINE')
+    && endingOnePage.includes('LOCAL-CLIENT is no longer local.')
+    && finalEndingPage.includes('permalink: /relay-console/final-ending/')
+    && finalEndingPage.includes('FINAL ENDING｜SOVEREIGNTY')
+    && finalEndingPage.includes('Observation channel closed.');
   const stateMachineCorrect = states.every((state) => script.includes(state))
     && commands.every((command) => script.includes(command))
     && storageKeys.every((key) => script.includes(key))
@@ -797,6 +816,16 @@ async function checkRelayConsoleSource() {
     && !script.includes('请先输入链接密钥')
     && !script.includes('已开放命令组')
     && !script.includes('当前已开放命令组')
+    && script.includes('var COMMAND_DELAY = 3000')
+    && script.includes('var DIALOGUE_DELAY = 3000')
+    && script.includes('window.setTimeout(finish, 30000)')
+    && script.includes('addEventListener("dblclick"')
+    && script.includes('playInputSound')
+    && script.includes('playRelayDisconnectSound')
+    && script.includes('playPermissionPausedSound')
+    && script.includes('updateIndicators')
+    && script.includes('terminal-line--error')
+    && script.includes('当前尚未建立链接。')
     && script.includes('new Set()')
     && script.includes('allActiveRelaysDisconnected')
     && script.includes('startEndingAudio')
@@ -815,6 +844,9 @@ async function checkRelayConsoleSource() {
   if (!stateMachineCorrect) {
     recordFail('relay console state machine, commands, endings, or storage is incomplete');
   }
+  if (!endingPagesCorrect) {
+    recordFail('relay console independent ending pages are incomplete');
+  }
   if (!styleCorrect) {
     recordFail('relay console terminal or ending effects are incomplete');
   }
@@ -825,6 +857,7 @@ async function checkRelayConsoleSource() {
   if (
     pageCorrect
     && menuCorrect
+    && endingPagesCorrect
     && stateMachineCorrect
     && styleCorrect
     && manifestCorrect
@@ -989,7 +1022,12 @@ async function checkRenderedArgFeatures() {
         'Local client permission layer',
         'relay-terminal',
         'relay-command-form',
-        '输入密钥或命令',
+        '请输入密钥',
+        'relay-indicators',
+        'data-relay-indicator="201"',
+        'data-control-indicator',
+        'data-ending-one-url="/relay-console/ending-1/"',
+        'data-final-ending-url="/relay-console/final-ending/"',
         'ending-1-ode-to-joy.mp3',
         'arg-relay-console.js',
         'relay-console.css',
@@ -997,6 +1035,26 @@ async function checkRenderedArgFeatures() {
         '链路调试台',
         '搜索信息',
         '运行日志',
+      ],
+    },
+    {
+      path: 'relay-console/ending-1/index.html',
+      terms: [
+        'ENDING 1｜BASE STATION ONLINE',
+        '本地访问端已转为现实层基站。',
+        'LOCAL-CLIENT is no longer local.',
+        'relay-ending-result--one',
+        'relay-console.css',
+      ],
+    },
+    {
+      path: 'relay-console/final-ending/index.html',
+      terms: [
+        'FINAL ENDING｜SOVEREIGNTY',
+        'Observation channel closed.',
+        '最终武器',
+        'relay-ending-result--final',
+        'relay-console.css',
       ],
     },
     {
@@ -1035,6 +1093,25 @@ async function checkRenderedArgFeatures() {
     }
   }
 
+  const argRenderedPages = [
+    'observation-00/index.html',
+    'review-log/index.html',
+    'diary/index.html',
+    'archive-search/index.html',
+    'relay-console/index.html',
+    'relay-console/ending-1/index.html',
+    'relay-console/final-ending/index.html',
+  ];
+  for (const argPagePath of argRenderedPages) {
+    const argPageContent = await fs.readFile(
+      path.join(siteDir, ...argPagePath.split('/')),
+      'utf8',
+    );
+    if (argPageContent.includes('data-language-switch=')) {
+      recordFail(`${argPagePath} still renders a language-switch control`);
+    }
+  }
+
   const archive = await fs.readFile(
     path.join(siteDir, 'zh', 'blog', 'index.html'),
     'utf8',
@@ -1050,6 +1127,8 @@ async function checkRenderedArgFeatures() {
     '/diary/',
     '/archive-search/',
     '/relay-console/',
+    '/relay-console/ending-1/',
+    '/relay-console/final-ending/',
   ];
 
   for (const hiddenPath of hiddenPaths) {

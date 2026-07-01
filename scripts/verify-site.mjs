@@ -588,6 +588,15 @@ async function checkBackendConsoleSource() {
   ];
   const searchRecordIds = [...searchData.matchAll(/^- id:\s*"([^"]+)"\s*$/gm)]
     .map((match) => match[1]);
+  const keyManifestBlock = searchData
+    .split('- id: "key_manifest"')[1]
+    ?.split('- id: "student_info_form"')[0] || '';
+  const keyManifestCorrect = keyManifestBlock.includes('summary: "已破译部分密钥"')
+    && keyManifestBlock.includes('EYES      观测')
+    && keyManifestBlock.includes('SVRN      切断')
+    && !keyManifestBlock.includes('该清单来自未完成的本地缓存')
+    && !keyManifestBlock.includes('注释：')
+    && !keyManifestBlock.includes('当前恢复出的最终命令格式');
   const searchDataCorrect = requiredSearchTerms.every((term) => searchData.includes(term))
     && requiredSearchRecordIds.every((id) => searchRecordIds.includes(id))
     && searchRecordIds.length === requiredSearchRecordIds.length
@@ -595,7 +604,8 @@ async function checkBackendConsoleSource() {
     && searchData.includes('type: "table"')
     && searchData.includes('type: "registry"')
     && searchData.includes('type: "keylist"')
-    && searchData.includes('type: "ambient"');
+    && searchData.includes('type: "ambient"')
+    && keyManifestCorrect;
   const wangXuran = studentRows.find((row) => row.name === 'Wang Xuran');
   const wangXuranChinese = studentRows.find((row) => row.name === '王旭冉');
   const studentDataCorrect = studentPayload.sheet === '学生个人信息表'

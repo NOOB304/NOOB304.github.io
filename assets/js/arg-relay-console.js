@@ -356,7 +356,7 @@
     saveProgress();
     appendMessage(
       "SYSTEM",
-      "链接成功。\n\n本地访问端已接入。\n当前权限层级：partial\n已开放命令组：SVRN / RSTR / KEY"
+      "链接成功。\n\n本地访问端已接入。\n当前权限层级：partial"
     );
     setInputLocked(false);
   }
@@ -706,7 +706,7 @@
 
     appendMessage(
       "SYSTEM",
-      "未识别命令。\n当前已开放命令组：SVRN / RSTR / KEY"
+      "未识别命令。"
     );
   }
 
@@ -726,7 +726,7 @@
       } else {
         appendMessage(
           "SYSTEM",
-          "当前尚未建立链接。\n请先输入链接密钥。"
+          "Connection has not been established."
         );
       }
       return;
@@ -785,7 +785,7 @@
     currentState = STATES.INIT;
     appendMessage(
       "SYSTEM",
-      "本地访问端已进入链路调试台。\n当前权限层级：未连接。\n\n请输入链接密钥。"
+      "Local client has entered the Relay Debug Console.\nCurrent permission level: disconnected."
     );
     setInputLocked(false);
   }

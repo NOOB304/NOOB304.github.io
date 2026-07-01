@@ -412,7 +412,7 @@ a.diary-index__entry:focus {
   font-size: 0.74rem;
 }
 
-.archive-table-filter {
+input.archive-table-filter {
   box-sizing: border-box;
   width: min(100%, 24rem);
   min-height: 2.45rem;
@@ -424,7 +424,7 @@ a.diary-index__entry:focus {
   font: 0.8rem "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
 }
 
-.archive-table-filter:focus {
+input.archive-table-filter:focus {
   outline: none;
   border-color: #748278;
 }

@@ -208,12 +208,16 @@ a.diary-index__entry:focus {
 .archive-search-form__controls {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
+  align-items: stretch;
   gap: 0.55rem;
 }
 
-.archive-search-form input,
+.archive-search-form input[type="search"],
 .archive-search-form button {
-  min-height: 2.8rem;
+  box-sizing: border-box;
+  height: 3rem;
+  min-height: 3rem;
+  margin: 0;
   padding: 0.6rem 0.75rem;
   color: #d6dcd8;
   background: #050705;
@@ -222,7 +226,7 @@ a.diary-index__entry:focus {
   font: inherit;
 }
 
-.archive-search-form input:focus,
+.archive-search-form input[type="search"]:focus,
 .archive-search-form button:hover,
 .archive-search-form button:focus {
   outline: none;

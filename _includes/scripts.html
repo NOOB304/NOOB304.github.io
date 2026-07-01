@@ -13,6 +13,8 @@
 <script src="{{ '/assets/js/arg-diary.js' | relative_url }}"></script>
 {% elsif page.arg_console == "search" %}
 <script src="{{ '/assets/js/arg-search.js' | relative_url }}"></script>
+{% elsif page.arg_console == "relay" %}
+<script src="{{ '/assets/js/arg-relay-console.js' | relative_url }}"></script>
 {% endif %}
 
 {% include analytics.html %}

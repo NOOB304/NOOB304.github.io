@@ -18,6 +18,9 @@
 {% if page.arg_console %}
 <link rel="stylesheet" href="{{ '/assets/css/arg-console.css' | relative_url }}"/>
 {% endif %}
+{% if page.arg_console == "relay" %}
+<link rel="stylesheet" href="{{ '/assets/css/relay-console.css' | relative_url }}"/>
+{% endif %}
 {% if page.noindex %}
 <meta name="robots" content="noindex, nofollow, noarchive"/>
 {% endif %}

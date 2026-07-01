@@ -93,6 +93,7 @@
   status: "partially recovered"
   type: "keylist"
   body: |-
+    LINK-LOCAL 建立链接
     EYES      观测
     ECHO      回声
     PATH      路径标记

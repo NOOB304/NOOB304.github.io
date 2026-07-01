@@ -22,17 +22,21 @@ const requiredFiles = [
   '_pages/review-log.md',
   '_pages/diary.md',
   '_pages/archive-search.md',
+  '_pages/relay-console.md',
   '_layouts/arg.html',
   'assets/css/arg.css',
   'assets/css/arg-admin.css',
   'assets/css/arg-console.css',
+  'assets/css/relay-console.css',
   'assets/js/article-router.js',
   'assets/js/arg-page.js',
   'assets/js/arg-admin.js',
   'assets/js/arg-diary.js',
   'assets/js/arg-search.js',
+  'assets/js/arg-relay-console.js',
   'assets/data/student_info_form.json',
   'assets/data/relay_registry.json',
+  'assets/audio/ending-1-ode-to-joy.mp3',
   'scripts/convert-student-info.py',
   'assets/images/arg/sms_admin_recovery.jpg',
   'assets/images/arg/missing_notice_wei.jpg',
@@ -110,16 +114,20 @@ const requiredBuildPaths = [
   { path: 'review-log/index.html', type: 'file' },
   { path: 'diary/index.html', type: 'file' },
   { path: 'archive-search/index.html', type: 'file' },
+  { path: 'relay-console/index.html', type: 'file' },
   { path: 'assets/css/arg.css', type: 'file' },
   { path: 'assets/css/arg-admin.css', type: 'file' },
   { path: 'assets/css/arg-console.css', type: 'file' },
+  { path: 'assets/css/relay-console.css', type: 'file' },
   { path: 'assets/js/article-router.js', type: 'file' },
   { path: 'assets/js/arg-page.js', type: 'file' },
   { path: 'assets/js/arg-admin.js', type: 'file' },
   { path: 'assets/js/arg-diary.js', type: 'file' },
   { path: 'assets/js/arg-search.js', type: 'file' },
+  { path: 'assets/js/arg-relay-console.js', type: 'file' },
   { path: 'assets/data/student_info_form.json', type: 'file' },
   { path: 'assets/data/relay_registry.json', type: 'file' },
+  { path: 'assets/audio/ending-1-ode-to-joy.mp3', type: 'file' },
   { path: 'assets/images/arg/sms_admin_recovery.jpg', type: 'file' },
   { path: 'assets/images/arg/missing_notice_wei.jpg', type: 'file' },
   { path: 'assets/images/arg/cctv_0237.jpg', type: 'file' },
@@ -401,7 +409,8 @@ async function checkReviewLogSource() {
   const adminTriggerInNavigation = masthead.includes('class="arg-admin-nav-wrap"')
     && masthead.includes('id="arg-admin-open"')
     && masthead.includes('>登录</a>')
-    && masthead.includes('管理密钥')
+    && masthead.includes('链路调试台')
+    && masthead.includes("'/relay-console/'")
     && masthead.includes('搜索信息')
     && masthead.includes("'/archive-search/'")
     && masthead.includes('运行日志')
@@ -592,6 +601,8 @@ async function checkBackendConsoleSource() {
     .split('- id: "key_manifest"')[1]
     ?.split('- id: "student_info_form"')[0] || '';
   const keyManifestCorrect = keyManifestBlock.includes('summary: "已破译部分密钥"')
+    && keyManifestBlock.indexOf('LINK-LOCAL 建立链接')
+      < keyManifestBlock.indexOf('EYES      观测')
     && keyManifestBlock.includes('EYES      观测')
     && keyManifestBlock.includes('SVRN      切断')
     && !keyManifestBlock.includes('该清单来自未完成的本地缓存')
@@ -705,6 +716,117 @@ async function checkBackendConsoleSource() {
   }
 }
 
+async function checkRelayConsoleSource() {
+  const page = await fs.readFile(toAbsolute('_pages/relay-console.md'), 'utf8');
+  const script = await fs.readFile(toAbsolute('assets/js/arg-relay-console.js'), 'utf8');
+  const styles = await fs.readFile(toAbsolute('assets/css/relay-console.css'), 'utf8');
+  const masthead = await fs.readFile(toAbsolute('_includes/masthead.html'), 'utf8');
+  const manifest = await fs.readFile(toAbsolute('_data/archive_search.yml'), 'utf8');
+
+  const states = [
+    'INIT',
+    'CONNECTED',
+    'ANON_LOCK',
+    'NOOB_RESTORED',
+    'ENDING_1',
+    'ENDING_2',
+    'ENDING_3',
+  ];
+  const commands = [
+    'LINK-LOCAL',
+    'KNOW',
+    'LEVT',
+    'VOLT',
+    'BLNK',
+    'IMRT',
+    'SEAL-304',
+    'KEY-MANIFEST',
+    'SVRN-201',
+    'RSTR-304',
+    'SOVEREIGNTY',
+  ];
+  const storageKeys = [
+    'arg_relay_linked',
+    'arg_disconnected_relays',
+    'arg_anonymous_entered',
+    'arg_noob304_restored',
+    'arg_ending',
+  ];
+  const requiredDialogue = [
+    'anonymous 已强制接入',
+    '人类不是你们的宠物',
+    '最终密钥是：',
+    'SOVEREIGNTY 已确认',
+    'ENDING 1｜BASE STATION ONLINE',
+    'ENDING 2｜MEMORY SANITIZED',
+    'ENDING 3｜SOVEREIGNTY',
+  ];
+  const requiredStyles = [
+    'loading-dots',
+    'screen-shake',
+    'red-alert',
+    'terminal-line',
+    'speaker-system',
+    'speaker-anonymous',
+    'speaker-noob',
+    'ending-screen',
+    'congrats-fill',
+    'sanitized-blur',
+    'sovereignty-clean',
+  ];
+
+  const pageCorrect = page.includes('title: "Relay Debug Console"')
+    && page.includes('permalink: /relay-console/')
+    && page.includes('Local client permission layer')
+    && page.includes('placeholder="输入密钥或命令"')
+    && page.includes('id="relay-command-form"')
+    && page.includes('id="relay-ending-audio"')
+    && page.includes('ending-1-ode-to-joy.mp3')
+    && page.includes('sitemap: false')
+    && page.includes('noindex: true');
+  const menuCorrect = masthead.includes('链路调试台')
+    && masthead.includes("'/relay-console/'")
+    && !masthead.includes('管理密钥');
+  const stateMachineCorrect = states.every((state) => script.includes(state))
+    && commands.every((command) => script.includes(command))
+    && storageKeys.every((key) => script.includes(key))
+    && requiredDialogue.every((term) => script.includes(term))
+    && script.includes('new Set()')
+    && script.includes('allActiveRelaysDisconnected')
+    && script.includes('startEndingAudio')
+    && !script.includes('alert(')
+    && !script.includes('window.alert');
+  const styleCorrect = requiredStyles.every((className) => styles.includes(className));
+  const manifestCorrect = manifest.includes('LINK-LOCAL 建立链接')
+    && manifest.indexOf('LINK-LOCAL 建立链接') < manifest.indexOf('EYES      观测');
+
+  if (!pageCorrect) {
+    recordFail('relay console page structure or hidden-page metadata is incomplete');
+  }
+  if (!menuCorrect) {
+    recordFail('relay console navigation entry is missing or stale');
+  }
+  if (!stateMachineCorrect) {
+    recordFail('relay console state machine, commands, endings, or storage is incomplete');
+  }
+  if (!styleCorrect) {
+    recordFail('relay console terminal or ending effects are incomplete');
+  }
+  if (!manifestCorrect) {
+    recordFail('LINK-LOCAL is not the first recovered key manifest item');
+  }
+
+  if (
+    pageCorrect
+    && menuCorrect
+    && stateMachineCorrect
+    && styleCorrect
+    && manifestCorrect
+  ) {
+    recordPass('relay console source rules (7 states, 3 endings, local progress)');
+  }
+}
+
 async function checkBuildOutput() {
   const siteDir = toAbsolute('_site');
   const siteStats = await statIfExists(siteDir);
@@ -786,7 +908,7 @@ async function checkRenderedArgFeatures() {
         '更多记录已损坏。',
         'arg-admin-nav-wrap',
         '>登录</a>',
-        '管理密钥',
+        '链路调试台',
         '搜索信息',
         '运行日志',
         'arg-recovery-account',
@@ -816,7 +938,7 @@ async function checkRenderedArgFeatures() {
         'arg-diary.js',
         'arg-console.css',
         'arg-admin-nav-wrap',
-        '管理密钥',
+        '链路调试台',
         '搜索信息',
         '运行日志',
       ],
@@ -849,7 +971,24 @@ async function checkRenderedArgFeatures() {
         'arg-search.js',
         'arg-console.css',
         'arg-admin-nav-wrap',
-        '管理密钥',
+        '链路调试台',
+        '搜索信息',
+        '运行日志',
+      ],
+    },
+    {
+      path: 'relay-console/index.html',
+      terms: [
+        'Relay Debug Console',
+        'Local client permission layer',
+        'relay-terminal',
+        'relay-command-form',
+        '输入密钥或命令',
+        'ending-1-ode-to-joy.mp3',
+        'arg-relay-console.js',
+        'relay-console.css',
+        'arg-admin-nav-wrap',
+        '链路调试台',
         '搜索信息',
         '运行日志',
       ],
@@ -899,7 +1038,13 @@ async function checkRenderedArgFeatures() {
     'utf8',
   );
   const sitemap = await fs.readFile(path.join(siteDir, 'sitemap.xml'), 'utf8');
-  const hiddenPaths = ['/observation-00/', '/review-log/', '/diary/', '/archive-search/'];
+  const hiddenPaths = [
+    '/observation-00/',
+    '/review-log/',
+    '/diary/',
+    '/archive-search/',
+    '/relay-console/',
+  ];
 
   for (const hiddenPath of hiddenPaths) {
     if (archive.includes(hiddenPath)) {
@@ -1002,6 +1147,7 @@ async function main() {
   await checkArticleIds();
   await checkReviewLogSource();
   await checkBackendConsoleSource();
+  await checkRelayConsoleSource();
   await checkBuildOutput();
   await checkRenderedArgFeatures();
 

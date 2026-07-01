@@ -101,6 +101,7 @@
     bodyElement.classList.add("archive-record-detail__body--" + record.type);
     recordView.className = "backend-console__view archive-record-detail";
     recordView.classList.add("archive-record-detail--" + record.type);
+    document.body.classList.toggle("archive-student-table-open", record.type === "table");
 
     if (record.status === "severely damaged") {
       recordView.classList.add("archive-record-detail--severely-damaged");
@@ -111,6 +112,7 @@
     routeSequence += 1;
     recordView.hidden = true;
     searchView.hidden = false;
+    document.body.classList.remove("archive-student-table-open");
 
     if (pageTitle) {
       pageTitle.textContent = defaultPageTitle;
@@ -193,6 +195,7 @@
           var cell = document.createElement("td");
           var value = row[column.key];
           cell.textContent = value === undefined || value === null ? "" : String(value);
+          cell.dataset.label = column.label;
 
           if (column.className) {
             var cellClass = typeof column.className === "function"
@@ -296,6 +299,9 @@
           }
           if (row.status === "失效封存") {
             return "registry-status registry-status--sealed";
+          }
+          if (row.status === "已升级") {
+            return "registry-status registry-status--upgraded";
           }
           return "registry-status";
         }

@@ -2,6 +2,27 @@ body.arg-console-page .arg-record {
   width: min(100%, 860px);
 }
 
+body.archive-student-table-open .arg-shell {
+  padding-right: 0.75rem;
+  padding-left: 0.75rem;
+}
+
+body.archive-student-table-open .arg-record {
+  width: min(100%, 1540px);
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+body.archive-student-table-open .arg-record__header {
+  border: 1px solid #272d28;
+}
+
+body.archive-student-table-open .arg-record__content {
+  padding-right: 0;
+  padding-left: 0;
+}
+
 .backend-console {
   color: #c9d0cb;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
@@ -441,6 +462,17 @@ a.diary-index__entry:focus {
   white-space: nowrap;
 }
 
+.archive-data-table td {
+  color: #aeb7b1;
+  background: transparent;
+}
+
+.archive-data-table td mark,
+.archive-data-table td .highlight {
+  color: inherit;
+  background: transparent;
+}
+
 .archive-data-table th {
   color: #aeb9b2;
   background: #0d110e;
@@ -458,7 +490,7 @@ a.diary-index__entry:focus {
 }
 
 .archive-data-table tbody tr:hover td {
-  background: #0b0f0c;
+  background: transparent;
 }
 
 .archive-data-table .registry-status {
@@ -466,11 +498,48 @@ a.diary-index__entry:focus {
 }
 
 .archive-data-table .registry-status--active {
-  color: #aa8555;
+  color: #20e46d;
+  font-weight: 700;
 }
 
 .archive-data-table .registry-status--sealed {
-  color: #9a5c57;
+  color: #ff2f2f;
+  font-weight: 750;
+  text-shadow: 0 0 0.35rem rgba(255, 47, 47, 0.22);
+}
+
+.archive-data-table .registry-status--upgraded {
+  color: #36adff;
+  font-weight: 700;
+}
+
+.archive-record-detail--table .archive-record-detail__body {
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+
+.archive-record-detail--table .archive-data-panel {
+  width: 100%;
+}
+
+.archive-record-detail--table .archive-table-scroll {
+  border-color: #344039;
+  overflow-x: visible;
+}
+
+.archive-record-detail--table .archive-data-table {
+  min-width: 0;
+  table-layout: fixed;
+  font-size: clamp(0.56rem, 0.7vw, 0.7rem);
+}
+
+.archive-record-detail--table .archive-data-table th,
+.archive-record-detail--table .archive-data-table td {
+  padding: 0.42rem 0.38rem;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  vertical-align: top;
 }
 
 @keyframes diary-text-fault {
@@ -543,5 +612,71 @@ a.diary-index__entry:focus {
   .archive-record-detail__meta {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  body.archive-student-table-open .arg-shell {
+    padding-right: 0.55rem;
+    padding-left: 0.55rem;
+  }
+
+  body.archive-student-table-open .arg-record__header {
+    padding-right: 0.85rem;
+    padding-left: 0.85rem;
+  }
+
+  .archive-record-detail--table .archive-table-scroll {
+    border: 0;
+    overflow: visible;
+  }
+
+  .archive-record-detail--table .archive-data-table,
+  .archive-record-detail--table .archive-data-table tbody,
+  .archive-record-detail--table .archive-data-table tr,
+  .archive-record-detail--table .archive-data-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .archive-record-detail--table .archive-data-table {
+    background: transparent;
+  }
+
+  .archive-record-detail--table .archive-data-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    border: 0;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .archive-record-detail--table .archive-data-table tr {
+    box-sizing: border-box;
+    margin-bottom: 0.75rem;
+    background: #070907;
+    border: 1px solid #313a34;
+  }
+
+  .archive-record-detail--table .archive-data-table td {
+    display: grid;
+    box-sizing: border-box;
+    grid-template-columns: minmax(6rem, 38%) minmax(0, 1fr);
+    gap: 0.65rem;
+    padding: 0.48rem 0.6rem;
+    border-right: 0;
+    white-space: normal;
+  }
+
+  .archive-record-detail--table .archive-data-table td::before {
+    color: #75837a;
+    content: attr(data-label);
+    font-weight: 600;
+  }
+
+  .archive-record-detail--table .archive-data-table td:last-child {
+    border-bottom: 0;
   }
 }

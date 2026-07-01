@@ -599,12 +599,21 @@ async function checkBackendConsoleSource() {
   const wangXuran = studentRows.find((row) => row.name === 'Wang Xuran');
   const wangXuranChinese = studentRows.find((row) => row.name === '王旭冉');
   const studentDataCorrect = studentPayload.sheet === '学生个人信息表'
-    && studentPayload.columns.length === 18
+    && studentPayload.columns.length === 13
     && studentRows.length === 600
     && !wangXuran
     && wangXuranChinese?.studentId === '201'
     && wangXuranChinese?.major === '计算机'
-    && wangXuranChinese?.age === 26;
+    && wangXuranChinese?.age === 26
+    && !studentPayload.columns.some((column) => (
+      [
+        '已发表B类及以上论文数量',
+        '信息核验状态',
+        '住宿状态',
+        '培养方式',
+        '备注',
+      ].includes(column.label)
+    ));
   const activeRelayCodes = relayRows
     .filter((row) => row.status === '活动中')
     .map((row) => row.code);
@@ -639,6 +648,8 @@ async function checkBackendConsoleSource() {
     && searchScript.includes('renderStudentTable')
     && searchScript.includes('normalize(row.studentId) === query')
     && searchScript.includes('renderRelayRegistry')
+    && searchScript.includes('archive-student-table-open')
+    && searchScript.includes('registry-status--upgraded')
     && searchScript.includes('archive-system-message')
     && searchScript.includes('archive-result__type')
     && searchScript.includes('#record/')

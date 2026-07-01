@@ -29,6 +29,14 @@ HEADER_KEYS = {
     "备注": "notes",
 }
 
+EXCLUDED_HEADERS = {
+    "已发表B类及以上论文数量",
+    "信息核验状态",
+    "住宿状态",
+    "培养方式",
+    "备注",
+}
+
 
 def normalize_value(value):
     if isinstance(value, (datetime, date)):
@@ -42,13 +50,21 @@ def convert_workbook(source: Path):
     row_iterator = worksheet.iter_rows(values_only=True)
     headers = [str(value).strip() for value in next(row_iterator)]
     keys = [HEADER_KEYS.get(header, f"field{index + 1}") for index, header in enumerate(headers)]
-    columns = [{"key": key, "label": header} for key, header in zip(keys, headers)]
+    selected_columns = [
+        (index, key, header)
+        for index, (key, header) in enumerate(zip(keys, headers))
+        if header not in EXCLUDED_HEADERS
+    ]
+    columns = [
+        {"key": key, "label": header}
+        for _, key, header in selected_columns
+    ]
     rows = []
 
     for values in row_iterator:
         row = {
-            key: normalize_value(value)
-            for key, value in zip(keys, values)
+            key: normalize_value(values[index])
+            for index, key, _ in selected_columns
         }
         if any(value != "" for value in row.values()):
             rows.append(row)

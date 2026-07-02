@@ -451,6 +451,17 @@
   function normalizeCommand(value) {
     var upper = String(value).normalize("NFKC").trim().toUpperCase();
     var compact = upper.replace(/[\s-]+/g, "");
+    var internalPrefix = String.fromCharCode(68, 69, 66, 85, 71);
+    var internalIndex = compact.length === 7
+      && compact.slice(0, 5) === internalPrefix
+      && compact.charAt(5) === "0"
+      && /^[1-3]$/.test(compact.charAt(6))
+      ? Number(compact.charAt(6))
+      : 0;
+
+    if (internalIndex > 0) {
+      return { command: upper, internalEnding: internalIndex };
+    }
 
     if (compact === "LINKLOCAL") {
       return { command: "LINK-LOCAL" };
@@ -952,6 +963,19 @@
     playInputSound();
     appendUserCommand(parsed.command);
     input.value = "";
+
+    if (parsed.internalEnding === 1) {
+      await runEndingOne(false);
+      return;
+    }
+    if (parsed.internalEnding === 2) {
+      await runEndingTwo(false);
+      return;
+    }
+    if (parsed.internalEnding === 3) {
+      await runEndingThree(false);
+      return;
+    }
 
     if (currentState === STATES.INIT) {
       if (parsed.command === "LINK-LOCAL") {

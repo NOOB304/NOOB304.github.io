@@ -320,20 +320,52 @@
 }
 
 .congrats-fill {
-  background: rgba(0, 0, 0, 0.94);
+  background:
+    radial-gradient(circle at center, rgba(42, 0, 0, 0.18), transparent 58%),
+    #000;
   cursor: pointer;
   pointer-events: auto;
   outline: 0;
 }
 
+.congrats-fill::before,
+.congrats-fill::after {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+}
+
+.congrats-fill::before {
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 3px,
+    rgba(255, 28, 20, 0.09) 4px
+  );
+  mix-blend-mode: screen;
+}
+
+.congrats-fill::after {
+  background: rgba(210, 0, 0, 0.08);
+  animation: relay-congrats-screen 0.42s steps(2, end) infinite;
+}
+
 .congrats-fill span {
   position: absolute;
+  z-index: 1;
   top: var(--congrats-y);
   left: var(--congrats-x);
-  color: #ec2a24;
-  font: 900 clamp(1.3rem, 5vw, 4.2rem)/1 "Microsoft YaHei", sans-serif;
-  text-shadow: 0 0 1rem rgba(236, 42, 36, 0.8);
-  animation: relay-congrats 0.5s steps(2, end) var(--congrats-delay) infinite;
+  color: rgba(255, 33, 25, var(--congrats-opacity));
+  font: 950 clamp(1rem, 2.7vw, 3.4rem)/0.9 "Microsoft YaHei", sans-serif;
+  letter-spacing: -0.08em;
+  white-space: nowrap;
+  text-shadow:
+    0 0 0.35rem rgba(255, 16, 10, 0.95),
+    0 0 1.1rem rgba(224, 0, 0, 0.7);
+  transform: translate(-50%, -50%) rotate(var(--congrats-tilt)) scale(var(--congrats-scale));
+  animation: relay-congrats 0.36s steps(2, end) var(--congrats-delay) infinite;
 }
 
 .relay-console.sanitized-blur .relay-terminal {
@@ -511,12 +543,30 @@
 @keyframes relay-congrats {
   0%,
   100% {
-    opacity: 0.55;
-    transform: scale(0.96);
+    opacity: 0.42;
+    filter: blur(0.4px);
+    transform:
+      translate(-50%, -50%)
+      rotate(var(--congrats-tilt))
+      scale(var(--congrats-scale));
   }
   50% {
     opacity: 1;
-    transform: scale(1.05);
+    filter: blur(0);
+    transform:
+      translate(calc(-50% + 2px), calc(-50% - 1px))
+      rotate(var(--congrats-tilt))
+      scale(calc(var(--congrats-scale) + 0.08));
+  }
+}
+
+@keyframes relay-congrats-screen {
+  0%,
+  100% {
+    opacity: 0.28;
+  }
+  50% {
+    opacity: 0.9;
   }
 }
 

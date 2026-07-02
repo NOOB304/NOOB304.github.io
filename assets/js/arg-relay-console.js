@@ -685,6 +685,25 @@
     }
   }
 
+  function primeEndingAudio() {
+    if (!endingAudio) {
+      return;
+    }
+
+    endingAudio.currentTime = 0;
+    endingAudio.volume = 0;
+    var playback = endingAudio.play();
+    if (playback && typeof playback.then === "function") {
+      playback.then(function () {
+        endingAudio.pause();
+        endingAudio.currentTime = 0;
+        endingAudio.volume = 0.95;
+      }).catch(function () {
+        endingAudio.volume = 0.95;
+      });
+    }
+  }
+
   function appendEndingScreen(title, body, footnote, className) {
     var screen = document.createElement("section");
     var heading = document.createElement("h2");
@@ -702,21 +721,38 @@
 
   async function showCongratsFill() {
     var overlay = document.createElement("div");
+    var columns = window.innerWidth < 640 ? 8 : 16;
+    var rows = window.innerHeight < 640 ? 10 : 12;
+    var wordCount = columns * rows;
     overlay.className = "congrats-fill";
     overlay.setAttribute("aria-label", "双击可跳过");
     overlay.setAttribute("role", "button");
     overlay.tabIndex = 0;
 
-    for (var index = 0; index < 24; index += 1) {
+    for (var index = 0; index < wordCount; index += 1) {
       var word = document.createElement("span");
+      var column = index % columns;
+      var row = Math.floor(index / columns);
+      var jitterX = ((index * 17) % 9) - 4;
+      var jitterY = ((index * 23) % 9) - 4;
       word.textContent = "恭喜";
-      word.style.setProperty("--congrats-x", ((index * 29) % 88) + "%");
-      word.style.setProperty("--congrats-y", ((index * 43) % 91) + "%");
-      word.style.setProperty("--congrats-delay", ((index % 8) * 0.04) + "s");
+      word.style.setProperty(
+        "--congrats-x",
+        (((column + 0.5) / columns) * 100 + jitterX * 0.32) + "%"
+      );
+      word.style.setProperty(
+        "--congrats-y",
+        (((row + 0.5) / rows) * 100 + jitterY * 0.28) + "%"
+      );
+      word.style.setProperty("--congrats-delay", ((index % 17) * 0.025) + "s");
+      word.style.setProperty("--congrats-scale", (0.78 + (index % 6) * 0.08).toFixed(2));
+      word.style.setProperty("--congrats-tilt", (((index * 11) % 13) - 6) + "deg");
+      word.style.setProperty("--congrats-opacity", (0.56 + (index % 5) * 0.1).toFixed(2));
       overlay.appendChild(word);
     }
 
     document.body.appendChild(overlay);
+    startEndingAudio();
     await new Promise(function (resolve) {
       var finished = false;
       var timer = window.setTimeout(finish, 30000);
@@ -757,7 +793,7 @@
       return;
     }
 
-    startEndingAudio();
+    primeEndingAudio();
     root.classList.add("ending-one-active");
     await waitForCommand(
       "Y 已确认。\n\n本地访问端同意接入。\nNOOB-304 空缺位检测中……\n替换协议启动。"

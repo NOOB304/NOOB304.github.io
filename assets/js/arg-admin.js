@@ -457,7 +457,7 @@
           impactAudioContext.close();
           impactAudioContext = null;
         }
-        loginError.textContent = "密码错误。";
+        loginError.textContent = "账号或密码错误。";
         return;
       }
 

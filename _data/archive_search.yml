@@ -165,11 +165,6 @@
   summary: "升级记录"
   status: "partially recovered"
   type: "upgrade_record"
-  intro:
-    - "这是一份残缺的升级记录。"
-    - "部分图像仍可读取。"
-    - "部分编号缺失。"
-    - "部分人物名称已损坏。"
   entries:
     - code: "100"
       name: "Prometheus"

@@ -385,11 +385,11 @@
     bodyElement.appendChild(tableView.wrapper);
   }
 
-  function createUpgradeImageButton(row, label, className) {
+  function createUpgradeNameButton(row) {
     var button = document.createElement("button");
     button.type = "button";
-    button.className = className;
-    button.textContent = label;
+    button.className = "archive-upgrade-name";
+    button.textContent = row.name;
     button.addEventListener("click", function () {
       openArchiveImage(
         row.image,
@@ -402,23 +402,6 @@
 
   function renderUpgradeRecord(record) {
     var rows = Array.isArray(record.entries) ? record.entries : [];
-    var intro = document.createElement("div");
-    var introLines = Array.isArray(record.intro)
-      ? record.intro
-      : [
-        "这是一份残缺的升级记录。",
-        "部分图像仍可读取。",
-        "部分编号缺失。",
-        "部分人物名称已损坏。"
-      ];
-
-    intro.className = "archive-upgrade-intro";
-    introLines.forEach(function (line) {
-      var paragraph = document.createElement("p");
-      paragraph.textContent = line;
-      intro.appendChild(paragraph);
-    });
-    bodyElement.appendChild(intro);
 
     if (rows.length === 0) {
       renderDataUnavailable("【升级记录尚未载入】");
@@ -431,32 +414,13 @@
         key: "name",
         label: "Name",
         render: function (cell, row) {
-          cell.appendChild(
-            createUpgradeImageButton(
-              row,
-              row.name,
-              "archive-upgrade-name"
-            )
-          );
+          cell.appendChild(createUpgradeNameButton(row));
         }
       },
       {
         key: "status",
         label: "Status",
         className: "registry-status registry-status--upgraded"
-      },
-      {
-        key: "image",
-        label: "Image",
-        render: function (cell, row) {
-          cell.appendChild(
-            createUpgradeImageButton(
-              row,
-              "查看图像",
-              "archive-upgrade-image-link"
-            )
-          );
-        }
       }
     ];
     var tableView = createTable(columns, rows, { id: "upgrade-record-table" });
@@ -564,7 +528,6 @@
       var item = document.createElement("li");
       var link = document.createElement("a");
       var title = document.createElement("strong");
-      var summary = document.createElement("span");
       var metadata = document.createElement("span");
       var status = document.createElement("span");
       var type = document.createElement("span");
@@ -572,7 +535,6 @@
       link.href = "#record/" + encodeURIComponent(record.id);
       link.className = "archive-result";
       title.textContent = record.title;
-      summary.textContent = record.summary;
       metadata.className = "archive-result__meta";
       status.textContent = "STATUS: " + record.status;
       status.className = "archive-result__status";
@@ -580,7 +542,7 @@
       type.className = "archive-result__type";
 
       metadata.append(status, type);
-      link.append(title, summary, metadata);
+      link.append(title, metadata);
       item.appendChild(link);
       resultList.appendChild(item);
     });

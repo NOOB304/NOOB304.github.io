@@ -588,6 +588,7 @@ async function checkBackendConsoleSource() {
   const diaryRoutingCorrect = diaryPage.includes('data-diary-console')
     && diaryPage.includes('data-diary-link')
     && diaryPage.includes('id="diary-entry-data"')
+    && !diaryPage.includes('Recovered entries are listed')
     && diaryScript.includes('routeDiary')
     && diaryScript.includes('entry.corrupted')
     && diaryScript.includes('diary-detail--highlight');
@@ -645,6 +646,8 @@ async function checkBackendConsoleSource() {
     && searchData.includes('upgrade_record.cache')
     && searchData.includes('/assets/images/upgrade/Prometheus.png')
     && searchData.includes('/assets/images/upgrade/Adolf Hitler.png')
+    && !searchData.includes('这是一份残缺的升级记录')
+    && !searchData.includes('部分图像仍可读取')
     && keyManifestCorrect;
   const wangXuran = studentRows.find((row) => row.name === 'Wang Xuran');
   const wangXuranChinese = studentRows.find((row) => row.name === '王旭冉');
@@ -706,6 +709,10 @@ async function checkBackendConsoleSource() {
     && searchScript.includes('openArchiveImage')
     && searchScript.includes('missing-notice-easter-egg.png')
     && searchScript.includes('normalize("NOOB304")')
+    && !searchScript.includes('record.summary')
+    && !searchScript.includes('查看图像')
+    && !searchScript.includes('label: "Image"')
+    && !searchScript.includes('archive-upgrade-intro')
     && searchScript.includes('archive-result__type')
     && searchPage.includes('id="archive-image-modal"')
     && searchPage.includes('id="archive-image-preview"')

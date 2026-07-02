@@ -25,7 +25,6 @@ noindex: true
       <span>{{ site.data.diary_entries | size }} ENTRIES</span>
     </header>
 
-    <p class="backend-console__intro">Recovered entries are listed in reverse chronological order.</p>
     <p class="backend-console__message" id="diary-index-message" role="status" aria-live="polite"></p>
 
     <ol class="diary-index" aria-label="运行日志列表">

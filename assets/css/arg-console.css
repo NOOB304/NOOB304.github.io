@@ -45,12 +45,6 @@ body.archive-student-table-open .arg-record__content {
   letter-spacing: 0.11em;
 }
 
-.backend-console__intro {
-  margin: 0 0 1rem;
-  color: #8f9992;
-  font-size: 0.78rem;
-}
-
 .backend-console__message {
   min-height: 1.4rem;
   margin: 0 0 0.7rem;
@@ -547,25 +541,11 @@ input.archive-table-filter:focus {
   vertical-align: top;
 }
 
-.archive-upgrade-intro {
-  margin-bottom: 1.1rem;
-  padding: 0.75rem 0.85rem;
-  color: #9ca8a0;
-  background: #080b08;
-  border: 1px dashed #39443c;
-  font: 0.76rem/1.75 "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-}
-
-.archive-upgrade-intro p {
-  margin: 0;
-}
-
 .archive-record-detail--upgrade_record .archive-data-table {
-  min-width: 36rem;
+  min-width: 30rem;
 }
 
-.archive-upgrade-name,
-.archive-upgrade-image-link {
+.archive-upgrade-name {
   margin: 0;
   padding: 0;
   color: #b9cbc0;
@@ -578,14 +558,8 @@ input.archive-table-filter:focus {
   cursor: pointer;
 }
 
-.archive-upgrade-image-link {
-  color: #7fae94;
-}
-
 .archive-upgrade-name:hover,
-.archive-upgrade-name:focus,
-.archive-upgrade-image-link:hover,
-.archive-upgrade-image-link:focus {
+.archive-upgrade-name:focus {
   color: #eef2ef;
   border-color: #c3d2c9;
   outline: 0;

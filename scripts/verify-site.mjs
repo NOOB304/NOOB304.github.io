@@ -47,6 +47,14 @@ const requiredFiles = [
   'assets/images/arg/field-check-1428.png',
   'assets/images/arg/field-check-1430.png',
   'assets/images/arg/missing-notice-easter-egg.png',
+  'assets/images/upgrade/Adolf Hitler.png',
+  'assets/images/upgrade/Alan Turing.png',
+  'assets/images/upgrade/Isaac Newton.png',
+  'assets/images/upgrade/J. Robert Oppenheimer.png',
+  'assets/images/upgrade/Jesus of Nazareth.png',
+  'assets/images/upgrade/Kong Qiu.png',
+  'assets/images/upgrade/Prometheus.png',
+  'assets/images/upgrade/Siddhartha Gautama.png',
   'images/arg/observation-00-figure-1.png',
   'images/arg/observation-00-figure-2.png',
   'images/profile.jpg',
@@ -139,6 +147,14 @@ const requiredBuildPaths = [
   { path: 'assets/images/arg/field-check-1428.png', type: 'file' },
   { path: 'assets/images/arg/field-check-1430.png', type: 'file' },
   { path: 'assets/images/arg/missing-notice-easter-egg.png', type: 'file' },
+  { path: 'assets/images/upgrade/Adolf Hitler.png', type: 'file' },
+  { path: 'assets/images/upgrade/Alan Turing.png', type: 'file' },
+  { path: 'assets/images/upgrade/Isaac Newton.png', type: 'file' },
+  { path: 'assets/images/upgrade/J. Robert Oppenheimer.png', type: 'file' },
+  { path: 'assets/images/upgrade/Jesus of Nazareth.png', type: 'file' },
+  { path: 'assets/images/upgrade/Kong Qiu.png', type: 'file' },
+  { path: 'assets/images/upgrade/Prometheus.png', type: 'file' },
+  { path: 'assets/images/upgrade/Siddhartha Gautama.png', type: 'file' },
   { path: 'images/arg/observation-00-figure-1.png', type: 'file' },
   { path: 'images/arg/observation-00-figure-2.png', type: 'file' },
   { path: '404.html', type: 'file' },
@@ -589,6 +605,10 @@ async function checkBackendConsoleSource() {
     '学生信息表',
     '信息表',
     '封存',
+    '升级',
+    '升维',
+    'upgrade record',
+    'ascension',
   ];
   const requiredSearchRecordIds = [
     'fragment_d23',
@@ -597,6 +617,7 @@ async function checkBackendConsoleSource() {
     'key_manifest',
     'student_info_form',
     'relay_registry',
+    'upgrade_record',
     'contact_trace',
   ];
   const searchRecordIds = [...searchData.matchAll(/^- id:\s*"([^"]+)"\s*$/gm)]
@@ -620,6 +641,10 @@ async function checkBackendConsoleSource() {
     && searchData.includes('type: "registry"')
     && searchData.includes('type: "keylist"')
     && searchData.includes('type: "ambient"')
+    && searchData.includes('type: "upgrade_record"')
+    && searchData.includes('upgrade_record.cache')
+    && searchData.includes('/assets/images/upgrade/Prometheus.png')
+    && searchData.includes('/assets/images/upgrade/Adolf Hitler.png')
     && keyManifestCorrect;
   const wangXuran = studentRows.find((row) => row.name === 'Wang Xuran');
   const wangXuranChinese = studentRows.find((row) => row.name === '王旭冉');
@@ -670,13 +695,20 @@ async function checkBackendConsoleSource() {
     && searchScript.includes('arg_search_密钥')
     && searchScript.includes('arg_search_信息表')
     && searchScript.includes('arg_search_基站')
+    && searchScript.includes('arg_search_升级')
     && searchScript.includes('renderStudentTable')
     && searchScript.includes('normalize(row.studentId) === query')
     && searchScript.includes('renderRelayRegistry')
     && searchScript.includes('archive-student-table-open')
     && searchScript.includes('registry-status--upgraded')
     && searchScript.includes('archive-system-message')
+    && searchScript.includes('renderUpgradeRecord')
+    && searchScript.includes('openArchiveImage')
+    && searchScript.includes('missing-notice-easter-egg.png')
+    && searchScript.includes('normalize("NOOB304")')
     && searchScript.includes('archive-result__type')
+    && searchPage.includes('id="archive-image-modal"')
+    && searchPage.includes('id="archive-image-preview"')
     && searchScript.includes('#record/')
     && masthead.includes("'/archive-search/'");
 
@@ -997,6 +1029,7 @@ async function checkRenderedArgFeatures() {
         'fragment_key.tmp',
         'key_manifest.cache',
         'relay_registry.cache',
+        'upgrade_record.cache',
         'student_info_form.cache',
         'partially recovered',
         'data-record-type',
@@ -1004,6 +1037,13 @@ async function checkRenderedArgFeatures() {
         '学生信息表',
         '信息表',
         '封存',
+        '升级记录',
+        '升维升级',
+        'archive-image-modal',
+        'archive-image-preview',
+        'missing-notice-easter-egg.png',
+        'Prometheus.png',
+        'Adolf Hitler.png',
         'student_info_form.json',
         'relay_registry.json',
         '系统记录：该名单最后由管理员编辑于 2026-04-06 10:01。',

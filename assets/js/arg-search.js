@@ -26,11 +26,19 @@
   var statusElement = recordView.querySelector("[data-record-status]");
   var typeElement = recordView.querySelector("[data-record-type]");
   var bodyElement = recordView.querySelector("[data-record-body]");
+  var imageModal = document.getElementById("archive-image-modal");
+  var imagePreview = document.getElementById("archive-image-preview");
+  var imageTitle = document.getElementById("archive-image-title");
+  var imageCloseButtons = imageModal
+    ? imageModal.querySelectorAll("[data-archive-image-close]")
+    : [];
   var pageTitle = document.getElementById("arg-page-title");
   var defaultPageTitle = pageTitle ? pageTitle.textContent : "Archive Search";
   var defaultDocumentTitle = document.title;
   var dataCache = new Map();
   var routeSequence = 0;
+  var imageReturnFocus = null;
+  var noobNoticeImage = "/assets/images/arg/missing-notice-easter-egg.png";
 
   var searchActivityGroups = [
     {
@@ -60,6 +68,21 @@
     {
       key: "arg_search_基站",
       terms: ["基站", "基站名单", "名单", "relay registry", "registry", "base station"]
+    },
+    {
+      key: "arg_search_升级",
+      terms: [
+        "升级",
+        "升维",
+        "升维升级",
+        "升级记录",
+        "已升级",
+        "upgrade",
+        "upgrade record",
+        "elevation",
+        "ascension",
+        "ascend"
+      ]
     }
   ];
 
@@ -93,6 +116,44 @@
         // Search still works when storage is unavailable.
       }
     });
+  }
+
+  function openArchiveImage(source, title, altText) {
+    if (!imageModal || !imagePreview || !imageTitle) {
+      return;
+    }
+
+    imageReturnFocus = document.activeElement;
+    imageTitle.textContent = title;
+    imagePreview.src = source;
+    imagePreview.alt = altText || title;
+    imageModal.hidden = false;
+    imageModal.classList.add("archive-image-modal--active");
+    document.body.classList.add("arg-modal-open");
+
+    var closeButton = imageModal.querySelector(".archive-image-close");
+    if (closeButton) {
+      window.setTimeout(function () {
+        closeButton.focus();
+      }, 0);
+    }
+  }
+
+  function closeArchiveImage() {
+    if (!imageModal || imageModal.hidden) {
+      return;
+    }
+
+    imageModal.hidden = true;
+    imageModal.classList.remove("archive-image-modal--active");
+    document.body.classList.remove("arg-modal-open");
+    imagePreview.removeAttribute("src");
+    imagePreview.alt = "";
+
+    if (imageReturnFocus && typeof imageReturnFocus.focus === "function") {
+      imageReturnFocus.focus();
+    }
+    imageReturnFocus = null;
   }
 
   function resetRecordBody(record) {
@@ -193,8 +254,6 @@
 
         columns.forEach(function (column) {
           var cell = document.createElement("td");
-          var value = row[column.key];
-          cell.textContent = value === undefined || value === null ? "" : String(value);
           cell.dataset.label = column.label;
 
           if (column.className) {
@@ -204,6 +263,13 @@
             if (cellClass) {
               cell.className = cellClass;
             }
+          }
+
+          if (typeof column.render === "function") {
+            column.render(cell, row);
+          } else {
+            var value = row[column.key];
+            cell.textContent = value === undefined || value === null ? "" : String(value);
           }
 
           tableRow.appendChild(cell);
@@ -319,6 +385,84 @@
     bodyElement.appendChild(tableView.wrapper);
   }
 
+  function createUpgradeImageButton(row, label, className) {
+    var button = document.createElement("button");
+    button.type = "button";
+    button.className = className;
+    button.textContent = label;
+    button.addEventListener("click", function () {
+      openArchiveImage(
+        row.image,
+        row.name,
+        row.name + " 升维升级记录"
+      );
+    });
+    return button;
+  }
+
+  function renderUpgradeRecord(record) {
+    var rows = Array.isArray(record.entries) ? record.entries : [];
+    var intro = document.createElement("div");
+    var introLines = Array.isArray(record.intro)
+      ? record.intro
+      : [
+        "这是一份残缺的升级记录。",
+        "部分图像仍可读取。",
+        "部分编号缺失。",
+        "部分人物名称已损坏。"
+      ];
+
+    intro.className = "archive-upgrade-intro";
+    introLines.forEach(function (line) {
+      var paragraph = document.createElement("p");
+      paragraph.textContent = line;
+      intro.appendChild(paragraph);
+    });
+    bodyElement.appendChild(intro);
+
+    if (rows.length === 0) {
+      renderDataUnavailable("【升级记录尚未载入】");
+      return;
+    }
+
+    var columns = [
+      { key: "code", label: "Code" },
+      {
+        key: "name",
+        label: "Name",
+        render: function (cell, row) {
+          cell.appendChild(
+            createUpgradeImageButton(
+              row,
+              row.name,
+              "archive-upgrade-name"
+            )
+          );
+        }
+      },
+      {
+        key: "status",
+        label: "Status",
+        className: "registry-status registry-status--upgraded"
+      },
+      {
+        key: "image",
+        label: "Image",
+        render: function (cell, row) {
+          cell.appendChild(
+            createUpgradeImageButton(
+              row,
+              "查看图像",
+              "archive-upgrade-image-link"
+            )
+          );
+        }
+      }
+    ];
+    var tableView = createTable(columns, rows, { id: "upgrade-record-table" });
+    bodyElement.appendChild(tableView.wrapper);
+  }
+
   function renderDataUnavailable(message) {
     var placeholder = document.createElement("p");
     placeholder.className = "archive-placeholder";
@@ -352,6 +496,10 @@
     }
     if (record.type === "ambient") {
       renderAmbient(record);
+      return;
+    }
+    if (record.type === "upgrade_record") {
+      renderUpgradeRecord(record);
       return;
     }
 
@@ -467,6 +615,14 @@
 
     feedback.textContent = matches.length + " result(s) recovered.";
     renderResults(matches);
+
+    if (normalizedQuery === normalize("NOOB304")) {
+      openArchiveImage(
+        noobNoticeImage,
+        "失效个体封存公告",
+        "失效个体封存公告"
+      );
+    }
   }
 
   function routeSearch() {
@@ -500,6 +656,16 @@
     window.history.pushState(null, "", window.location.pathname + window.location.search);
     showSearchView();
     input.focus();
+  });
+
+  imageCloseButtons.forEach(function (button) {
+    button.addEventListener("click", closeArchiveImage);
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && imageModal && !imageModal.hidden) {
+      closeArchiveImage();
+    }
   });
 
   window.addEventListener("hashchange", routeSearch);

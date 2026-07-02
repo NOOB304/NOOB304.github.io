@@ -50,4 +50,13 @@ noindex: true
   </article>
 </section>
 
+<div class="arg-modal archive-image-modal" id="archive-image-modal" hidden>
+  <div class="arg-modal__backdrop" data-archive-image-close></div>
+  <figure class="archive-image-dialog" role="dialog" aria-modal="true" aria-labelledby="archive-image-title">
+    <button type="button" class="arg-modal__close archive-image-close" data-archive-image-close aria-label="关闭">×</button>
+    <figcaption id="archive-image-title">RECOVERED IMAGE</figcaption>
+    <img id="archive-image-preview" alt="" decoding="async">
+  </figure>
+</div>
+
 <script type="application/json" id="archive-search-data">{{ site.data.archive_search | jsonify }}</script>

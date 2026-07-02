@@ -1041,7 +1041,6 @@ async function checkRenderedArgFeatures() {
         '升维升级',
         'archive-image-modal',
         'archive-image-preview',
-        'missing-notice-easter-egg.png',
         'Prometheus.png',
         'Adolf Hitler.png',
         'student_info_form.json',

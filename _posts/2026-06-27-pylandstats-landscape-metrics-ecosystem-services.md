@@ -1,5 +1,5 @@
 ---
-title: "从土地利用栅格到生态系统服务解释变量：用 pylandstats 批量计算景观格局指数"
+title: "pylandstats景观格局指数批量计算"
 date: 2026-06-27 03:28:30 +0800
 article_id: "005"
 permalink: /posts/2026/06/pylandstats-landscape-metrics-ecosystem-services/

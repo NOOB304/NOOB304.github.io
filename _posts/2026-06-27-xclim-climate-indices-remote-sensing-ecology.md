@@ -1,5 +1,5 @@
 ---
-title: "从 CMIP6/ERA5 到生态胁迫指标：用 xclim 构建碳汇与植被响应研究的气候驱动变量"
+title: "xclim气候指标构建与生态响应分析"
 date: 2026-06-27 03:20:58 +0800
 article_id: "004"
 permalink: /posts/2026/06/xclim-climate-indices-remote-sensing-ecology/

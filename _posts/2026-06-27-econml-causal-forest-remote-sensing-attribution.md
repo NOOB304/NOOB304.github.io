@@ -1,5 +1,5 @@
 ---
-title: "从相关性到因果效应：用 EconML Causal Forest 做遥感生态归因分析"
+title: "EconML Causal Forest遥感生态归因分析"
 date: 2026-06-27 03:11:51 +0800
 article_id: "003"
 permalink: /posts/2026/06/econml-causal-forest-remote-sensing-attribution/

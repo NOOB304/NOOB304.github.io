@@ -1,5 +1,5 @@
 ---
-title: "从点位数据到空间预测：Python 随机森林完整入门流程"
+title: "Python随机森林点位数据空间预测教程"
 date: 2026-06-27 00:49:17 +0800
 article_id: "001"
 permalink: /posts/2026/06/python-random-forest-point-to-surface-prediction/

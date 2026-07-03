@@ -1,0 +1,2 @@
+-r requirements.txt
+rasterio>=1.4

@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="820" viewBox="0 0 1400 820" role="img" aria-labelledby="title desc">
+  <title id="title">TimePro思想迁移到生态NPP预测的流程</title>
+  <desc id="desc">站点数据按站点划分，构造气候窗口和历史NPP，比较三类模型，再应用到栅格；稀疏站点需要面板模式而不能拼接。</desc>
+  <defs>
+    <marker id="arrow2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#475569"/>
+    </marker>
+    <filter id="shadow2" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+    <style>
+      .title{font:700 30px "Noto Sans SC","Microsoft YaHei",sans-serif;fill:#0f172a}
+      .sub{font:400 17px "Noto Sans SC","Microsoft YaHei",sans-serif;fill:#475569}
+      .head{font:700 19px "Noto Sans SC","Microsoft YaHei",sans-serif;fill:#0f172a}
+      .body{font:400 16px "Noto Sans SC","Microsoft YaHei",sans-serif;fill:#334155}
+      .small{font:400 14px "Noto Sans SC","Microsoft YaHei",sans-serif;fill:#475569}
+      .box{rx:18;ry:18;stroke-width:2;filter:url(#shadow2)}
+      .arrow{stroke:#475569;stroke-width:2.4;fill:none;marker-end:url(#arrow2)}
+    </style>
+  </defs>
+
+  <rect width="1400" height="820" fill="#f8fafc"/>
+  <text x="700" y="48" text-anchor="middle" class="title">从TimePro到气候—NPP：先改任务，再谈模型</text>
+  <text x="700" y="78" text-anchor="middle" class="sub">生态版样本：X[t−Lx+1:t] ＋ Y[t−Ly:t−1] → Yt，目标期真实Y绝不进入输入</text>
+
+  <rect x="48" y="120" width="215" height="150" class="box" fill="#dbeafe" stroke="#3b82f6"/>
+  <text x="156" y="158" text-anchor="middle" class="head">站点长表CSV</text>
+  <text x="75" y="193" class="body">site_id　date</text>
+  <text x="75" y="222" class="body">A/B/C/D…　Y</text>
+  <text x="75" y="250" class="small">同一年可有很多站点</text>
+
+  <path d="M263 195 H321" class="arrow"/>
+  <rect x="322" y="108" width="256" height="174" class="box" fill="#e0f2fe" stroke="#0284c7"/>
+  <text x="450" y="147" text-anchor="middle" class="head">按站点划分</text>
+  <rect x="345" y="169" width="91" height="60" rx="10" fill="#dcfce7" stroke="#16a34a"/>
+  <text x="391" y="194" text-anchor="middle" class="body">70%</text>
+  <text x="391" y="217" text-anchor="middle" class="small">训练池</text>
+  <rect x="461" y="169" width="91" height="60" rx="10" fill="#fee2e2" stroke="#dc2626"/>
+  <text x="507" y="194" text-anchor="middle" class="body">30%</text>
+  <text x="507" y="217" text-anchor="middle" class="small">陌生站点</text>
+  <text x="450" y="259" text-anchor="middle" class="small">调参只在70%内部完成</text>
+
+  <path d="M578 195 H636" class="arrow"/>
+  <rect x="637" y="108" width="290" height="174" class="box" fill="#f5f3ff" stroke="#8b5cf6"/>
+  <text x="782" y="147" text-anchor="middle" class="head">独立搜索两个窗口</text>
+  <text x="670" y="188" class="body">X窗口 Lx：1/3/6/12/24月</text>
+  <text x="670" y="220" class="body">Y滞后 Ly：0/1/3/6/12月</text>
+  <text x="670" y="252" class="small">年版改为1/2/3/5年等候选</text>
+
+  <path d="M927 195 H985" class="arrow"/>
+  <rect x="986" y="96" width="366" height="198" class="box" fill="#fef3c7" stroke="#d97706"/>
+  <text x="1169" y="135" text-anchor="middle" class="head">三条分支与门控融合</text>
+  <rect x="1010" y="160" width="98" height="83" rx="11" fill="#ffedd5" stroke="#f97316"/>
+  <text x="1059" y="188" text-anchor="middle" class="body">X-patch</text>
+  <text x="1059" y="213" text-anchor="middle" class="small">时间/变量</text>
+  <text x="1059" y="234" text-anchor="middle" class="small">Transformer</text>
+  <rect x="1120" y="160" width="98" height="83" rx="11" fill="#e0f2fe" stroke="#0284c7"/>
+  <text x="1169" y="188" text-anchor="middle" class="body">X-LSTM</text>
+  <text x="1169" y="218" text-anchor="middle" class="small">局部变化</text>
+  <rect x="1230" y="160" width="98" height="83" rx="11" fill="#dcfce7" stroke="#16a34a"/>
+  <text x="1279" y="188" text-anchor="middle" class="body">Y-LSTM</text>
+  <text x="1279" y="213" text-anchor="middle" class="small">仅历史Y</text>
+  <text x="1279" y="234" text-anchor="middle" class="small">可关闭</text>
+  <text x="1169" y="273" text-anchor="middle" class="small">这是TimePro-inspired版，不是原版HyperMamba复刻</text>
+
+  <text x="700" y="353" text-anchor="middle" class="title" style="font-size:25px">模型比较与栅格应用</text>
+
+  <rect x="75" y="393" width="237" height="140" class="box" fill="#ffffff" stroke="#94a3b8"/>
+  <text x="194" y="430" text-anchor="middle" class="head">M0：当期X</text>
+  <text x="194" y="463" text-anchor="middle" class="body">Xt → Yt</text>
+  <text x="194" y="493" text-anchor="middle" class="small">回答：普通回归够不够？</text>
+
+  <rect x="347" y="393" width="237" height="140" class="box" fill="#ffffff" stroke="#7c3aed"/>
+  <text x="466" y="430" text-anchor="middle" class="head">M1：时间窗口X</text>
+  <text x="466" y="463" text-anchor="middle" class="body">X窗口 → Yt</text>
+  <text x="466" y="493" text-anchor="middle" class="small">回答：气候滞后是否有用？</text>
+
+  <rect x="619" y="393" width="237" height="140" class="box" fill="#ffffff" stroke="#16a34a"/>
+  <text x="738" y="430" text-anchor="middle" class="head">M2：窗口X＋历史Y</text>
+  <text x="738" y="463" text-anchor="middle" class="body">X窗口＋Y历史 → Yt</text>
+  <text x="738" y="493" text-anchor="middle" class="small">回答：记忆效应增加多少？</text>
+
+  <path d="M856 463 H914" class="arrow"/>
+  <rect x="915" y="381" width="437" height="164" class="box" fill="#ecfdf5" stroke="#059669"/>
+  <text x="1134" y="420" text-anchor="middle" class="head">站点模型 → 栅格递推</text>
+  <text x="945" y="458" class="body">历史X栅格＋历史Y栅格＋未来Xt</text>
+  <text x="1134" y="486" text-anchor="middle" class="body">↓ 逐块预测</text>
+  <text x="945" y="516" class="body">预测Yt写入GeoTIFF，并进入下一期历史缓冲</text>
+
+  <rect x="70" y="610" width="1280" height="148" rx="20" fill="#fff7ed" stroke="#f97316" stroke-width="2"/>
+  <text x="710" y="648" text-anchor="middle" class="head">站点不连续时：不能把不同站点拼成一条“伪时间序列”</text>
+  <text x="105" y="685" class="body">当前规则序列版：只允许在同一站点的连续时间段内建窗口，跨缺测年份的样本必须跳过。</text>
+  <text x="105" y="717" class="body">推荐下一版：每个有Y的“站点—年份”作为面板样本，用连续月气候窗口＋静态空间属性预测年NPP。</text>
+  <text x="105" y="746" class="small">若保留历史Y，应同时输入缺失mask和距上次观测间隔Δt；空间站点可以增加样本，但不能替代同一地点的时间动力学。</text>
+
+  <text x="1360" y="800" text-anchor="end" class="small">原创流程图：TimePro思想的生态任务改造</text>
+</svg>
+

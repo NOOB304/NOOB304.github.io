@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760" role="img" aria-labelledby="title desc">
+  <title id="title">TimePro论文结构拆解</title>
+  <desc id="desc">从多变量历史序列，经归一化、分变量时间片、ProBlock和HyperMamba，得到多变量未来预测。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#475569"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+    <style>
+      .title{font:700 30px "Noto Sans SC","Microsoft YaHei",sans-serif;fill:#0f172a}
+      .sub{font:400 17px "Noto Sans SC","Microsoft YaHei",sans-serif;fill:#475569}
+      .head{font:700 19px "Noto Sans SC","Microsoft YaHei",sans-serif;fill:#0f172a}
+      .body{font:400 16px "Noto Sans SC","Microsoft YaHei",sans-serif;fill:#334155}
+      .small{font:400 14px "Noto Sans SC","Microsoft YaHei",sans-serif;fill:#475569}
+      .box{rx:18;ry:18;stroke-width:2;filter:url(#shadow)}
+      .arrow{stroke:#475569;stroke-width:2.4;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+
+  <rect width="1400" height="760" fill="#f8fafc"/>
+  <text x="700" y="48" text-anchor="middle" class="title">TimePro：变量关系先扫描，关键时间点再调节</text>
+  <text x="700" y="78" text-anchor="middle" class="sub">论文原始任务：历史多变量序列 X ∈ R^(L×N) → 未来多变量序列 Ŷ ∈ R^(H×N)</text>
+
+  <rect x="48" y="128" width="185" height="118" class="box" fill="#dbeafe" stroke="#3b82f6"/>
+  <text x="140" y="166" text-anchor="middle" class="head">历史序列</text>
+  <text x="140" y="198" text-anchor="middle" class="body">B × L × N</text>
+  <text x="140" y="224" text-anchor="middle" class="small">L：回看长度　N：变量数</text>
+
+  <path d="M233 187 H285" class="arrow"/>
+  <rect x="286" y="128" width="170" height="118" class="box" fill="#e0f2fe" stroke="#0284c7"/>
+  <text x="371" y="166" text-anchor="middle" class="head">RevIN</text>
+  <text x="371" y="197" text-anchor="middle" class="body">逐样本归一化</text>
+  <text x="371" y="224" text-anchor="middle" class="small">缓解训练/测试分布漂移</text>
+
+  <path d="M456 187 H508" class="arrow"/>
+  <rect x="509" y="116" width="228" height="142" class="box" fill="#ede9fe" stroke="#7c3aed"/>
+  <text x="623" y="153" text-anchor="middle" class="head">时间与变量保留嵌入</text>
+  <text x="623" y="185" text-anchor="middle" class="body">每个变量单独切重叠patch</text>
+  <text x="623" y="214" text-anchor="middle" class="small">保留变量维 N 与时间片维 P</text>
+  <text x="623" y="238" text-anchor="middle" class="small">而不是一次压成粗粒度token</text>
+
+  <path d="M737 187 H789" class="arrow"/>
+  <rect x="790" y="104" width="315" height="166" class="box" fill="#fef3c7" stroke="#d97706"/>
+  <text x="948" y="142" text-anchor="middle" class="head">ProBlock × K</text>
+  <rect x="815" y="164" width="126" height="70" rx="12" fill="#ffedd5" stroke="#f97316" stroke-width="1.8"/>
+  <text x="878" y="193" text-anchor="middle" class="body">HyperMamba</text>
+  <text x="878" y="217" text-anchor="middle" class="small">变量关系＋时间调节</text>
+  <text x="959" y="203" text-anchor="middle" class="head">＋</text>
+  <rect x="978" y="164" width="102" height="70" rx="12" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.8"/>
+  <text x="1029" y="193" text-anchor="middle" class="body">TimeFFN</text>
+  <text x="1029" y="217" text-anchor="middle" class="small">变量内变化</text>
+
+  <path d="M1105 187 H1157" class="arrow"/>
+  <rect x="1158" y="116" width="194" height="142" class="box" fill="#dcfce7" stroke="#16a34a"/>
+  <text x="1255" y="153" text-anchor="middle" class="head">展平＋线性头</text>
+  <text x="1255" y="185" text-anchor="middle" class="body">每个变量：P·D → H</text>
+  <text x="1255" y="216" text-anchor="middle" class="small">反归一化后输出</text>
+  <text x="1255" y="240" text-anchor="middle" class="small">B × H × N</text>
+
+  <text x="700" y="329" text-anchor="middle" class="title" style="font-size:25px">HyperMamba内部：multi-delay问题在这里处理</text>
+
+  <rect x="72" y="377" width="205" height="105" class="box" fill="#fff7ed" stroke="#f97316"/>
+  <text x="175" y="414" text-anchor="middle" class="head">双向变量扫描</text>
+  <text x="175" y="444" text-anchor="middle" class="body">沿N维正向/反向Mamba</text>
+  <text x="175" y="468" text-anchor="middle" class="small">先取得变量间plain state</text>
+
+  <path d="M277 430 H337" class="arrow"/>
+  <rect x="338" y="377" width="205" height="105" class="box" fill="#fefce8" stroke="#eab308"/>
+  <text x="441" y="414" text-anchor="middle" class="head">恢复时间结构</text>
+  <text x="441" y="444" text-anchor="middle" class="body">state重排为P × N网格</text>
+  <text x="441" y="468" text-anchor="middle" class="small">保留每个变量的细时间片</text>
+
+  <path d="M543 430 H603" class="arrow"/>
+  <rect x="604" y="365" width="235" height="129" class="box" fill="#f5f3ff" stroke="#8b5cf6"/>
+  <text x="722" y="405" text-anchor="middle" class="head">Time tune</text>
+  <text x="722" y="437" text-anchor="middle" class="body">学习offset与采样坐标</text>
+  <text x="722" y="464" text-anchor="middle" class="small">3×3稀疏采样约9个位置</text>
+  <text x="722" y="486" text-anchor="middle" class="small">线性插值保证可微</text>
+
+  <path d="M839 430 H899" class="arrow"/>
+  <rect x="900" y="377" width="205" height="105" class="box" fill="#ecfeff" stroke="#0891b2"/>
+  <text x="1003" y="414" text-anchor="middle" class="head">Hyper-state</text>
+  <text x="1003" y="444" text-anchor="middle" class="body">融合变量＋关键时间点</text>
+  <text x="1003" y="468" text-anchor="middle" class="small">替代只含变量关系的状态</text>
+
+  <path d="M1105 430 H1165" class="arrow"/>
+  <rect x="1166" y="377" width="170" height="105" class="box" fill="#ecfdf5" stroke="#10b981"/>
+  <text x="1251" y="414" text-anchor="middle" class="head">SiLU门控</text>
+  <text x="1251" y="444" text-anchor="middle" class="body">调制输出特征</text>
+  <text x="1251" y="468" text-anchor="middle" class="small">再接残差与FFN</text>
+
+  <rect x="115" y="555" width="1170" height="132" rx="20" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="700" y="594" text-anchor="middle" class="head">读论文时最容易误解的三点</text>
+  <text x="155" y="632" class="body">① 核心Mamba主要沿变量维扫描，不是简单地沿时间轴再跑一遍Mamba。</text>
+  <text x="155" y="661" class="body">② Time tune会自适应选择隐状态中的时间位置，但不会直接输出“降水滞后3个月”这样的生态参数。</text>
+  <text x="155" y="690" class="body">③ 原版是规则、完整的多变量长序列预测；稀疏站点、单目标X→Y和栅格递推都需要另做数据与模型设计。</text>
+
+  <text x="1360" y="742" text-anchor="end" class="small">原创重绘：基于 Ma et al. (ICML 2025) 论文与官方代码</text>
+</svg>
+

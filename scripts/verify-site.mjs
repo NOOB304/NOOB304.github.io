@@ -1106,7 +1106,7 @@ async function checkRenderedArgFeatures() {
     {
       path: 'zh/index.html',
       terms: [
-        '南京林业大学/铜仁学院',
+        '河南郑州',
         '不知名博士研究生，研究方向为全球变化与生态系统碳汇。',
         '目前正在攻读博士学位。',
       ],

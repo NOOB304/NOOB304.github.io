@@ -1107,7 +1107,7 @@ async function checkRenderedArgFeatures() {
       path: 'zh/index.html',
       terms: [
         '河南郑州',
-        '不知名博士研究生，研究方向为全球变化与生态系统碳汇。',
+        '个人研究生，胎教肄业学历，研究方向为全球变化与生态系统碳汇。',
         '目前正在攻读博士学位。',
       ],
     },

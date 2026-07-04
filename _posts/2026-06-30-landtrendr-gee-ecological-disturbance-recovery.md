@@ -1,6 +1,6 @@
 ---
 title: "LandTrendr与GEE生态退化及恢复年份识别"
-date: 2026-06-27 22:53:08 +0800
+date: 2026-06-30 18:30:00 +0800
 article_id: "008"
 permalink: /posts/2026/06/landtrendr-gee-ecological-disturbance-recovery/
 lang: zh

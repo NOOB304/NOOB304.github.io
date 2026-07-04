@@ -1,6 +1,6 @@
 ---
 title: "机器学习点位数据栅格预测教程"
-date: 2026-06-27 02:09:04 +0800
+date: 2026-06-21 14:10:00 +0800
 article_id: "002"
 permalink: /posts/2026/06/machine-learning-point-to-raster-prediction-tutorial/
 redirect_from:

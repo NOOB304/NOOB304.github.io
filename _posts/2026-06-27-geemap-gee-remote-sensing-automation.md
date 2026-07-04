@@ -1,6 +1,6 @@
 ---
 title: "geemap批量提取遥感气候与土地利用数据"
-date: 2026-06-27 03:39:38 +0800
+date: 2026-06-27 16:20:00 +0800
 article_id: "006"
 permalink: /posts/2026/06/geemap-gee-remote-sensing-automation/
 lang: zh

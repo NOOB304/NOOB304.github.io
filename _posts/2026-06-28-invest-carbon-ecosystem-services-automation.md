@@ -1,6 +1,6 @@
 ---
 title: "InVEST 3.20生态系统服务评估流程"
-date: 2026-06-27 12:40:02 +0800
+date: 2026-06-28 10:05:00 +0800
 article_id: "007"
 permalink: /posts/2026/06/invest-carbon-ecosystem-services-automation/
 lang: zh

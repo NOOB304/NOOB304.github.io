@@ -1,6 +1,6 @@
 ---
 title: "xclim气候指标构建与生态响应分析"
-date: 2026-06-27 03:20:58 +0800
+date: 2026-06-24 19:40:00 +0800
 article_id: "004"
 permalink: /posts/2026/06/xclim-climate-indices-remote-sensing-ecology/
 lang: zh

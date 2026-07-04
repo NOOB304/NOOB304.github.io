@@ -1,6 +1,6 @@
 ---
 title: "顶会论文拆解｜TimePro时序预测与生态学建模思路"
-date: 2026-07-03 21:30:00 +0800
+date: 2026-07-01 20:10:00 +0800
 article_id: "009"
 permalink: /posts/2026/07/timepro-ecology-npp-forecasting-code/
 lang: zh

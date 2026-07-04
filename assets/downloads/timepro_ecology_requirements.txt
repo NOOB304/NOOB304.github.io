@@ -1,0 +1,7 @@
+numpy>=1.26
+pandas>=2.0
+scikit-learn>=1.4
+matplotlib>=3.8
+torch>=2.5
+# 只有运行栅格预测时才需要下一项
+rasterio>=1.4

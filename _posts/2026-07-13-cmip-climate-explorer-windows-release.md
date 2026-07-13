@@ -24,8 +24,6 @@ excerpt: "发布面向Windows用户的CMIP Climate Explorer，用图形界面完
 [下载Windows安装版](https://github.com/NOOB304/cmip-climate-data-explorer/releases/latest){: .btn .btn--primary}
 [查看项目源码](https://github.com/NOOB304/cmip-climate-data-explorer){: .btn .btn--inverse}
 
-当前正式版为 **v0.3.1**。
-
 ## 它能做什么
 
 ### 1. 用中文查找气候变量

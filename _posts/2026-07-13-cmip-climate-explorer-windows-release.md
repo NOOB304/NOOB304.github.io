@@ -1,5 +1,5 @@
 ---
-title: "【软件发布】CMIP Climate Explorer：气候数据下载与TIF处理工具"
+title: "【软件发布】CMIP Climate Explorer：一键搜索下载 CMIP6 未来情景数据"
 date: 2026-07-13 17:08:00 +0800
 article_id: "011"
 permalink: /posts/2026/07/cmip-climate-explorer-windows-release/
